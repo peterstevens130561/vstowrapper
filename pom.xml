@@ -2,9 +2,10 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.stevpet.sonar</groupId>
   <artifactId>plugins-dotnet-utils</artifactId>
-  <version>1.0-SNAPHOT</version>
+  <version>1.0-SNAPSHOT</version>
   <name>VisualStudio wrapper</name>
   <description>Simple wrapper for the visualstudio solution &amp; project</description>
+  <packaging>jar</packaging>
     <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sonar.buildVersion>5.0</sonar.buildVersion>
@@ -56,4 +57,18 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+    <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.sonar</groupId>
+        <artifactId>sonar-packaging-maven-plugin</artifactId>
+        <version>1.3</version>
+        <extensions>true</extensions>
+        <configuration>
+          <pluginClass>com.stevpet.sonar.plugins.dotnet.mscover.plugin.MsCoverPlugin</pluginClass>
+        </configuration>
+      </plugin>
+      </plugins>
+      </build>
+  
 </project>

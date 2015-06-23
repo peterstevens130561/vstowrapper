@@ -37,25 +37,33 @@ import java.util.List;
 public class SimpleVisualStudioProject implements VisualStudioProject {
 
     private final File projectFile ;
-  private final List<File> sourceFiles;
+  private final List<String> files;
   private final String outputType;
   private final String assemblyName;
   private final List<String> outputPaths;
   
   private boolean isTest;
-private File assemblyFile;
+  private File assemblyFile;
 
+/**
+ * 
+ * @param projectFile - the csproj file
+ * @param files - all sourcefiles relative to the project dir
+ * @param outputType 
+ * @param assemblyName - name of assembly
+ * @param outputPaths
+ */
   public SimpleVisualStudioProject(File projectFile,List<String> files,  @Nullable String outputType, @Nullable String assemblyName,
     List<String> outputPaths) {
     this.projectFile = projectFile;
     this.outputType = outputType;
     this.assemblyName = assemblyName;
     this.outputPaths = outputPaths;
-    this.sourceFiles = createFiles(projectFile,files);
+    this.files = files;
   }
 
   public List<File> getSourceFiles() {
-    return sourceFiles;
+    return createFiles(projectFile,files);
   }
 
 
