@@ -23,7 +23,7 @@
 package com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation;
 
 
-class VisualStudioPlugin {
+public class VisualStudioPlugin {
 
   static final String VISUAL_STUDIO_SOLUTION_PROPERTY_KEY = "sonar.visualstudio.solution";
   static final String VISUAL_STUDIO_ENABLE_PROPERTY_KEY = "sonar.visualstudio.enable";

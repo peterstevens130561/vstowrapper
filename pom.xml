@@ -5,6 +5,12 @@
   <version>1.0-SNAPHOT</version>
   <name>VisualStudio wrapper</name>
   <description>Simple wrapper for the visualstudio solution &amp; project</description>
+    <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <sonar.buildVersion>5.0</sonar.buildVersion>
+    <jdk.min.version>1.7</jdk.min.version>
+    <powermock.version>1.4.10</powermock.version>
+  </properties>
    <dependencies>
     <dependency>
       <groupId>org.codehaus.sonar</groupId>
@@ -16,6 +22,25 @@
         <groupId>org.codehaus.sonar</groupId>
     <artifactId>sonar-core</artifactId>
     <version>4.1-SNAPSHOT</version>
+    </dependency>
+            <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-junit4</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+   </dependency>
+   <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-mockito</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- unit tests -->
+    <dependency>
+      <groupId>org.codehaus.sonar</groupId>
+      <artifactId>sonar-testing-harness</artifactId>
+      <version>${sonar.buildVersion}</version>
+      <scope>test</scope>
     </dependency>
     <!-- unit tests -->
     <dependency>
