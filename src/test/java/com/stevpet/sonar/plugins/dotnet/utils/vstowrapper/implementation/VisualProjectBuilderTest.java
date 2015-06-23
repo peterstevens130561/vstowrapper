@@ -34,6 +34,9 @@ public class VisualProjectBuilderTest {
     private @Mock Context context ;
     private @Mock AssemblyLocator  assemblyLocator;
     private File baseDir;
+    /**
+     * Note that these tests use file resources, but for the dlls we use some mocking, so if you're looking for them, see the mocking below!
+     */
     @Before
     public void setup() {
         initMocks(this);
@@ -45,7 +48,9 @@ public class VisualProjectBuilderTest {
         when(settings.getString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY)).thenReturn("CodeCoverage.sln");
         baseDir = TestUtils.getResource("VstoWrapper");
         projectDefinition.setBaseDir(baseDir);
-        when(assemblyLocator.locateAssembly(eq("CodeCoverage"), any(File.class),any(VisualStudioProject.class))).thenReturn(new File(baseDir,"CodeCoverage.UnitTests/bin/codecoverage.unittests.dll"));
+        when(assemblyLocator.locateAssembly(eq("CodeCoverage"), any(File.class),any(VisualStudioProject.class))).thenReturn(new File(baseDir,"CodeCoverage/bin/codecoverage.dll"));
+        when(assemblyLocator.locateAssembly(eq("CodeCoverage.UnitTests"), any(File.class),any(VisualStudioProject.class))).thenReturn(new File(baseDir,"CodeCoverage.UnitTests/bin/codecoverage.unittests.dll"));
+
     }
     
     @Test
