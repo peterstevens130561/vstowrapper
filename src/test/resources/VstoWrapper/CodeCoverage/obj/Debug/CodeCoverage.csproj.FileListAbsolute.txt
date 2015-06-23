@@ -1,0 +1,1 @@
+E:\Users\stevpet\My Documents\GitHub\sonar-mscover\src\test\resources\VstoWrapper\CodeCoverage\bin\Debug\CodeCoverage.exe.config

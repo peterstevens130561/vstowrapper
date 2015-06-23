@@ -8,10 +8,13 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import static org.mockito.MockitoAnnotations.initMocks;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
-import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.bootstrap.ProjectBuilder.Context;
 import org.sonar.api.batch.bootstrap.ProjectDefinition;
 import org.sonar.api.batch.bootstrap.ProjectReactor;
 import org.sonar.api.config.Settings;
@@ -19,38 +22,37 @@ import org.sonar.test.TestUtils;
 
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.AssemblyLocator;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.MicrosoftWindowsEnvironment;
+import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
+import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioSolution;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation.VisualStudioProjectBuilder;
-
 
 public class VisualProjectBuilderTest {
 
     private @Mock Settings  settings ;
     private MicrosoftWindowsEnvironment microsoftWindowsEnvironment = new SimpleMicrosoftWindowsEnvironment();
-    private VisualStudioProjectBuilder visualProjectBuilder = new VisualStudioProjectBuilder(settings,microsoftWindowsEnvironment);
-    private @Mock SensorContext sensorContext ;
+    private VisualStudioProjectBuilder visualProjectBuilder;
+    private @Mock Context context ;
     private @Mock AssemblyLocator  assemblyLocator;
     private File baseDir;
     @Before
     public void setup() {
-
+        initMocks(this);
         ProjectDefinition projectDefinition = ProjectDefinition.create();
         ProjectReactor projectReactor = new ProjectReactor(projectDefinition);
-        when(sensorContext).thenReturn(projectReactor);
+        visualProjectBuilder = new VisualStudioProjectBuilder(settings,microsoftWindowsEnvironment);
+        when(context.projectReactor()).thenReturn(projectReactor);
         
-        when()
         when(settings.getString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY)).thenReturn("CodeCoverage.sln");
         baseDir = TestUtils.getResource("VstoWrapper");
         projectDefinition.setBaseDir(baseDir);
-        when(assemblyLocator.locateAssembly("CodeCoverage",new File(baseDir),"CodeCoverage/bin/codecoverage.dll");
-        
-        assemblyLocatorMock.givenLocate("CodeCoverage.UnitTests",new File(baseDir,"CodeCoverage.UnitTests/bin/codecoverage.unittests.dll"));
+        when(assemblyLocator.locateAssembly(eq("CodeCoverage"), any(File.class),any(VisualStudioProject.class))).thenReturn(new File(baseDir,"CodeCoverage.UnitTests/bin/codecoverage.unittests.dll"));
     }
     
     @Test
     public void NoSolutionSpecified_ShouldFindSolution() {
         //when
-        settingsMock.givenString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY,null);
-        visualProjectBuilder.build(contextMock.getMock(), assemblyLocatorMock.getMock());
+        when(settings.getString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY)).thenReturn(null);
+        visualProjectBuilder.build(context, assemblyLocator);
         
         //expect solution to be found
         File solutionDir=microsoftWindowsEnvironment.getCurrentSolution().getSolutionDir();
@@ -63,9 +65,9 @@ public class VisualProjectBuilderTest {
     @Test
     public void ReadSolution_ShouldHAveOneProjectAndOneTestProject() {
         //when
-        when(settings.getString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY).thenReturn("CodeCoverage.sln");
+        when(settings.getString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY)).thenReturn("CodeCoverage.sln");
         
-        visualProjectBuilder.build(sensorContext, assemblyLocator);
+        visualProjectBuilder.build(context, assemblyLocator);
         
         thenExpectBothCSharpProjectsToBeFound();
     }
@@ -73,8 +75,8 @@ public class VisualProjectBuilderTest {
     @Test
     public void WrongSolution_ShouldHaveNoSolution() {
         //when
-        settingsMock.givenString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY,"Bogus.sln");
-        visualProjectBuilder.build(contextMock.getMock(), assemblyLocatorMock.getMock());
+        when(settings.getString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY)).thenReturn("Bogus.sln");
+        visualProjectBuilder.build(context, assemblyLocator);
         
         //check artifactNames
         VisualStudioSolution solution= microsoftWindowsEnvironment.getCurrentSolution();
@@ -84,15 +86,16 @@ public class VisualProjectBuilderTest {
     public void NosolutionSpecified_ShouldHAveOneProjectAndOneTestProject() {
         //when
 
-        visualProjectBuilder.build(contextMock.getMock(), assemblyLocatorMock.getMock());
+        visualProjectBuilder.build(context, assemblyLocator);
         
         thenExpectBothCSharpProjectsToBeFound();
     }
     @Test
     public void ReadSolution_SkipOneProject() {
-        settingsMock.givenString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY,"CodeCoverage.sln");
-        settingsMock.givenString(VisualStudioPlugin.VISUAL_STUDIO_OLD_SKIPPED_PROJECTS,"CodeCoverage");
-        visualProjectBuilder.build(contextMock.getMock(), assemblyLocatorMock.getMock());
+        when(settings.getString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY)).thenReturn("CodeCoverage.sln");
+        when(settings.getString(VisualStudioPlugin.VISUAL_STUDIO_OLD_SKIPPED_PROJECTS)).thenReturn("CodeCoverage");
+
+        visualProjectBuilder.build(context, assemblyLocator);
         //check artifactNames
         List<String> artifacts= microsoftWindowsEnvironment.getArtifactNames();
         assertEquals("1 artifacts expected",1,artifacts.size());

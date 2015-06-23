@@ -30,19 +30,25 @@ import java.io.File;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
-import com.stevpet.sonar.plugins.dotnet.mscover.sonarmocks.SettingsMock;
-import com.stevpet.sonar.plugins.dotnet.mscover.vstowrapper.VisualStudioProjectMock;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
+import org.sonar.api.config.Settings;
+
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.AssemblyLocator;
+import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation.VisualStudioAssemblyLocator;
 
 public class VisualStudioAssemblyLocatorTest {
-    private SettingsMock settingsMock = new SettingsMock();
+    private @Mock Settings settings;
+    private @Mock VisualStudioProject visualStudioProject;
     private AssemblyLocator locator ;
     
     @Before
     public void before() {
-        locator = new VisualStudioAssemblyLocator(settingsMock.getMock());
+        initMocks(this);
+        locator = new VisualStudioAssemblyLocator(settings);
     }
     
     @Test
@@ -76,7 +82,8 @@ public class VisualStudioAssemblyLocatorTest {
         String outputType = "library";
         String assemblyName="myproject";
         String path=null;
-        settingsMock.givenString("sonar.visualstudio.outputPaths",path);
+
+        when(settings.getString("sonar.visualstudio.outputPaths")).thenReturn(path);
         File locatedAssembly = whenLocatingAssembly(projectFile, outputType,
                 assemblyName);
         assertNull(locatedAssembly);
@@ -91,7 +98,7 @@ public class VisualStudioAssemblyLocatorTest {
         String outputType = "library";
         String assemblyName="myproject";
         String path="C:/Development/Jewel.Release.Oahu/bin/Debug";
-        settingsMock.givenString("sonar.visualstudio.outputPaths",path);
+        when(settings.getString("sonar.visualstudio.outputPaths")).thenReturn(path);
         File locatedAssembly = whenLocatingAssembly(projectFile, outputType,
                 assemblyName);
         assertNotNull(locatedAssembly);
@@ -109,7 +116,7 @@ public class VisualStudioAssemblyLocatorTest {
         String outputType = "library";
         String assemblyName="myproject";
         String path="bin/Debug";
-        settingsMock.givenString("sonar.visualstudio.outputPaths",path);
+        when(settings.getString("sonar.visualstudio.outputPaths")).thenReturn(path);
         File locatedAssembly = whenLocatingAssembly(projectFile, outputType,
                 assemblyName);
         assertNotNull(locatedAssembly);
@@ -117,10 +124,10 @@ public class VisualStudioAssemblyLocatorTest {
     }
     private File whenLocatingAssembly(File projectFile, String outputType,
             String assemblyName) {
-        VisualStudioProjectMock projectMock = new VisualStudioProjectMock();
-        projectMock.givenOutputType(outputType);
-        projectMock.givenAssemblyName(assemblyName);
-        File locatedAssembly=locator.locateAssembly("myproject", projectFile, projectMock.getMock());
+        when(visualStudioProject.getAssemblyName()).thenReturn(assemblyName);
+        when(visualStudioProject.outputType()).thenReturn(outputType);
+
+        File locatedAssembly=locator.locateAssembly("myproject", projectFile, visualStudioProject);
         return locatedAssembly;
     }
 }

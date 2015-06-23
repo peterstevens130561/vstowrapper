@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCoverage", "CodeCoverage\CodeCoverage.csproj", "{5C68E0C2-F918-4B08-8586-7D0C7E3BD957}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCoverage.UnitTests", "CodeCoverage.UnitTests\CodeCoverage.UnitTests.csproj", "{7BF8929B-7500-4AC0-84F0-38DABC1D58A8}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharpLib", "FSharpLib\FSharpLib.fsproj", "{A3074C3D-698D-44BB-8D35-7F469E74E138}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5C68E0C2-F918-4B08-8586-7D0C7E3BD957}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C68E0C2-F918-4B08-8586-7D0C7E3BD957}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C68E0C2-F918-4B08-8586-7D0C7E3BD957}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C68E0C2-F918-4B08-8586-7D0C7E3BD957}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BF8929B-7500-4AC0-84F0-38DABC1D58A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BF8929B-7500-4AC0-84F0-38DABC1D58A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BF8929B-7500-4AC0-84F0-38DABC1D58A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BF8929B-7500-4AC0-84F0-38DABC1D58A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3074C3D-698D-44BB-8D35-7F469E74E138}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3074C3D-698D-44BB-8D35-7F469E74E138}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3074C3D-698D-44BB-8D35-7F469E74E138}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3074C3D-698D-44BB-8D35-7F469E74E138}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
