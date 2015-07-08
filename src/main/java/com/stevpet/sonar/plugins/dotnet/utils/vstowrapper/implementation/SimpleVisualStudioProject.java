@@ -41,8 +41,12 @@ public class SimpleVisualStudioProject implements VisualStudioProject {
   private final String outputType;
   private final String assemblyName;
   private final List<String> outputPaths;
-  
-  private boolean isTest;
+  private String language ;
+  public void setLanguage(String language) {
+	this.language = language;
+}
+
+private boolean isTest;
   private File assemblyFile;
 
 /**
@@ -134,5 +138,10 @@ private List<File> createFiles(File projectFile,List<String> pathsList) {
         }
     }
     return filesList;
+}
+
+@Override
+public String getLanguage() {
+	return language;
 }
 }

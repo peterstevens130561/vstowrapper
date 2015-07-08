@@ -85,7 +85,7 @@ public class VisualProjectBuilderTest {
         
         //check artifactNames
         VisualStudioSolution solution= microsoftWindowsEnvironment.getCurrentSolution();
-        assertNull("no solution expected",solution);
+        assertNull("no solution expected",solution.getSolutionFile());
     }
     @Test
     public void NosolutionSpecified_ShouldHAveOneProjectAndOneTestProject() {

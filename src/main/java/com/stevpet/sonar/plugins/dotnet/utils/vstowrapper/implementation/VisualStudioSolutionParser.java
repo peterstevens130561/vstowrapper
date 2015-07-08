@@ -46,7 +46,7 @@ class VisualStudioSolutionParser {
       for (String line : Files.readLines(file, Charsets.UTF_8)) {
         if (line.startsWith(PROJECT_LINE_LOOKAHEAD)) {
           VisualStudioSolutionProject visualStudioSolutionProject = parseProjectLine(file, lineNumber, line);
-          if(isCSharpProject(visualStudioSolutionProject)) {
+          if(isSupportedProject(visualStudioSolutionProject)) {
               projectsBuilder.add(visualStudioSolutionProject);
           }
         }
@@ -59,9 +59,9 @@ class VisualStudioSolutionParser {
     return new SimpleVisualStudioSolution(file,projectsBuilder.build());
   }
 
-  private boolean isCSharpProject(
-        VisualStudioSolutionProject visualStudioSolutionProject) {
-        return visualStudioSolutionProject.path().endsWith("csproj");
+  private boolean isSupportedProject(VisualStudioSolutionProject visualStudioSolutionProject) {
+          String path=visualStudioSolutionProject.path();
+        return path.endsWith("csproj") || path.endsWith("vcxproj");
 }
 
 private VisualStudioSolutionProject parseProjectLine(File file, int lineNumber, String line) {

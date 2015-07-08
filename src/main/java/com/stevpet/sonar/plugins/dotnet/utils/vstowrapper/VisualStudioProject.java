@@ -54,5 +54,7 @@ public interface VisualStudioProject {
     String outputType();
     
     List<File> getSourceFiles();
+    
+    String getLanguage();
 
 }

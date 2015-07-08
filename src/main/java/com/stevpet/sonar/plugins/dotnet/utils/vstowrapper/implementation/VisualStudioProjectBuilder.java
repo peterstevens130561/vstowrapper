@@ -47,6 +47,13 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.regex.PatternSyntaxException;
 
+/**
+ * ProjectBuilder for dotnet projects
+ * 
+ * The build method will be invoked by sonar in the ProjectBuild phase, and populates the MicrosoftWindowsEnvironment
+ * @author stevpet
+ *
+ */
 public class VisualStudioProjectBuilder extends ProjectBuilder {
 
   private static final String SONAR_MODULES_PROPERTY_KEY = "sonar.modules";
@@ -55,7 +62,13 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
   private final Settings settings;
 private MicrosoftWindowsEnvironment microsoftWindowsEnvironment;
 
-  @SuppressWarnings("ucd")
+
+ 
+  /**
+   * @param settings - standard settings
+   * @param microsoftWindowsEnvironment - populated, include SimpleMicrosoftWindowsEnvironment, or another implementation of MicrosoftWindowsEnvironment
+   * in the plugin extensions.
+   */
   public VisualStudioProjectBuilder(Settings settings,MicrosoftWindowsEnvironment microsoftWindowsEnvironment) {
     this.settings = settings;
     this.microsoftWindowsEnvironment = microsoftWindowsEnvironment;
@@ -66,7 +79,7 @@ private MicrosoftWindowsEnvironment microsoftWindowsEnvironment;
     build(context, new VisualStudioAssemblyLocator(settings));
   }
 
-  @SuppressWarnings("ucd")
+
   public void build(Context context, AssemblyLocator assemblyLocator) {
     ProjectDefinition sonarProject = context.projectReactor().getRoot();
 
@@ -91,7 +104,7 @@ private MicrosoftWindowsEnvironment microsoftWindowsEnvironment;
     boolean hasModules = false;
 
     SimpleVisualStudioSolution currentSolution = new VisualStudioSolutionParser().parse(solutionFile);
-    VisualStudioProjectParser projectParser = new VisualStudioProjectParser();
+
     for (VisualStudioSolutionProject solutionProject : currentSolution.projects()) {
       if (skippedProjects.contains(solutionProject.name())) {
         logSkippedProject(solutionProject, "because it is listed in the property \"" + VisualStudioPlugin.VISUAL_STUDIO_OLD_SKIPPED_PROJECTS + "\".");
@@ -102,8 +115,9 @@ private MicrosoftWindowsEnvironment microsoftWindowsEnvironment;
         if (!projectFile.isFile()) {
           LOG.warn("Unable to find the Visual Studio project file " + projectFile.getAbsolutePath());
         } else {
+            String solutionName = solutionProject.name();
+            VisualStudioProjectParser projectParser = getProjectParser(projectFile);
           SimpleVisualStudioProject project = projectParser.parse(projectFile);
-          String solutionName = solutionProject.name();
           File assembly = assemblyLocator.locateAssembly(solutionName, projectFile, project);
           if (skipNotBuildProjects() && assembly == null) {
             logSkippedProject(solutionProject, "because it is not built and \"" + VisualStudioPlugin.VISUAL_STUDIO_SKIP_IF_NOT_BUILT + "\" is set.");
@@ -130,6 +144,19 @@ private MicrosoftWindowsEnvironment microsoftWindowsEnvironment;
     Preconditions.checkState(hasModules, "No Visual Studio projects were found.");
     microsoftWindowsEnvironment.setCurrentSolution(currentSolution);
   }
+
+private VisualStudioProjectParser getProjectParser(File project) {
+    VisualStudioProjectParser projectParser;
+    String name=project.getName();
+    if(name.endsWith(".csproj")) {
+       projectParser = new VisualStudioCsProjectParser();
+    } else if(name.endsWith(".vcxproj")) {
+        projectParser = new CppProjectParser();
+    } else {
+        throw new VsToWrapperException("unknown project type " + project.getAbsolutePath());
+    }
+    return projectParser;
+}
 
 
 private static void logSkippedProject(VisualStudioSolutionProject solutionProject, String reason) {

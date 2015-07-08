@@ -33,7 +33,6 @@ import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioSolutionPr
 /**
  * All information which can be extracted solely out of a .sln file.
  */
-@SuppressWarnings("ucd")
 public class SimpleVisualStudioSolution implements VisualStudioSolution{
 
   private final List<VisualStudioSolutionProject> projects;

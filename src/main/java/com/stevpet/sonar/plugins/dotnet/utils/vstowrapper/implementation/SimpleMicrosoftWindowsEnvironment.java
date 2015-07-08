@@ -37,14 +37,15 @@ import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioSolution;
 
 /**
  * Intended to replace the dotnet fun, so is a minimalistic implementation
+ * 
+ * Include in the extensionlist of the plugin
  * @author stevpet
  *
  */
-
 public class SimpleMicrosoftWindowsEnvironment implements BatchExtension,MicrosoftWindowsEnvironment {
 
     Logger LOG = LoggerFactory.getLogger(SimpleMicrosoftWindowsEnvironment.class);
-    private VisualStudioSolution solution=null;
+    private VisualStudioSolution solution=new NullVisualStudioSolution();
 
     
     /* (non-Javadoc)
