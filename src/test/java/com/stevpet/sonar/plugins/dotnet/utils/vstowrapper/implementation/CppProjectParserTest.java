@@ -6,6 +6,7 @@ import java.io.File;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.sonar.test.TestUtils;
 
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
 
@@ -17,21 +18,26 @@ import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
 public class CppProjectParserTest  {
 
 	private VisualStudioProject project;
+    private VisualStudioProjectParser parser;
 
 	@Before
 	public void before() {
-		VisualStudioProjectParser parser = new CppProjectParser();
-		File someFile=new File("bogus.vcxproj");
-		project = parser.parse(someFile);
+		parser = new CppProjectParser();
 	}
 	
 	@Test
-	public void assemblyNameIsProjectName() {
-		assertEquals("expect bogusd.dll to be the name, as it is the project name","bogusd.dll",project.getAssemblyName());
+	public void assemblyNameIsDefinedProjectName() {
+	       File someFile=TestUtils.getResource("VstoWrapper/CppProject/joaObjects/joaObjects.vcxproj");
+	       parser.setName("ProjectName");
+	        project = parser.parse(someFile);
+		assertEquals("expect to be the defined name + d.dll","ProjectNamed.dll",project.getAssemblyName());
 	}
 
-	@Test
-	public void langugageIsCpp() {
-		assertEquals("language is cpp","cpp",project.getLanguage());
-	}
+	   @Test
+	    public void assemblyNameIsDefaultProjectName() {
+	           File someFile=TestUtils.getResource("VstoWrapper/CppProject/joaBasicObjectsUnitTests/joaBasicObjectsUnitTests.vcxproj");
+	           parser.setName("ProjectName");
+	            project = parser.parse(someFile);
+	        assertEquals("expect to be the defined name","ProjectName.dll",project.getAssemblyName());
+	    }
 }

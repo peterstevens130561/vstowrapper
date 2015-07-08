@@ -28,6 +28,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
+
 import org.sonar.api.utils.SonarException;
 
 import javax.annotation.Nullable;
@@ -198,5 +199,10 @@ public SimpleVisualStudioProject parse(File file) {
     }
 
   }
+
+@Override
+public void setName(String solutionName) {
+    //not used in cs
+}
 
 }

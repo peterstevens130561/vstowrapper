@@ -117,6 +117,7 @@ private MicrosoftWindowsEnvironment microsoftWindowsEnvironment;
         } else {
             String solutionName = solutionProject.name();
             VisualStudioProjectParser projectParser = getProjectParser(projectFile);
+            projectParser.setName(solutionName);
           SimpleVisualStudioProject project = projectParser.parse(projectFile);
           File assembly = assemblyLocator.locateAssembly(solutionName, projectFile, project);
           if (skipNotBuildProjects() && assembly == null) {
