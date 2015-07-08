@@ -152,7 +152,7 @@ private VisualStudioProjectParser getProjectParser(File project) {
     if(name.endsWith(".csproj")) {
        projectParser = new VisualStudioCsProjectParser();
     } else if(name.endsWith(".vcxproj")) {
-        projectParser = new CppProjectParser();
+        projectParser = new CppProjectParser(settings);
     } else {
         throw new VsToWrapperException("unknown project type " + project.getAbsolutePath());
     }

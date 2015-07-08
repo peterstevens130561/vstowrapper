@@ -34,4 +34,9 @@ public class VisualStudioPlugin {
 
   static final String VISUAL_STUDIO_OLD_SKIPPED_PROJECTS = "sonar.visualstudio.skippedProjects";
   static final String VISUAL_STUDIO_OLD_SOLUTION_PROPERTY_KEY = "sonar.dotnet.visualstudio.solution.file";
+  public static final String BUILD_CONFIGURATION_KEY = "sonar.dotnet.buildConfiguration";
+  public static final String BUILD_CONFIGURATIONS_DEFVALUE = "Debug";
+
+  public static final String BUILD_PLATFORM_KEY = "sonar.dotnet.buildPlatform";
+  public static final String BUILD_PLATFORM_DEFVALUE = "x64";
 }

@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "joaObjects", "joaObjects\joaObjects.vcxproj", "{DAEB0E81-1415-4CDE-9275-B6600A131B7E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "joaBasicObjects.UnitTest", "joaBasicObjectsUnitTests\joaBasicObjectsUnitTests.vcxproj", "{EF1A910F-E589-46BD-AD0A-B1ADED0D4D2F}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://bhiabztfs01:8080/jewelsuite
+		SccProjectUniqueName0 = joaObjects\\joaObjects.vcxproj
+		SccProjectName0 = joaObjects
+		SccAuxPath0 = http://bhiabztfs01:8080/jewelsuite
+		SccLocalPath0 = joaObjects
+		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName1 = joaBasicObjectsUnitTests\\joaBasicObjectsUnitTests.vcxproj
+		SccProjectName1 = joaBasicObjectsUnitTests
+		SccAuxPath1 = http://bhiabztfs01:8080/jewelsuite
+		SccLocalPath1 = joaBasicObjectsUnitTests
+		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DAEB0E81-1415-4CDE-9275-B6600A131B7E}.Debug|x64.ActiveCfg = Debug|x64
+		{DAEB0E81-1415-4CDE-9275-B6600A131B7E}.Debug|x64.Build.0 = Debug|x64
+		{DAEB0E81-1415-4CDE-9275-B6600A131B7E}.Release|x64.ActiveCfg = Release|x64
+		{DAEB0E81-1415-4CDE-9275-B6600A131B7E}.Release|x64.Build.0 = Release|x64
+		{EF1A910F-E589-46BD-AD0A-B1ADED0D4D2F}.Debug|x64.ActiveCfg = Debug|x64
+		{EF1A910F-E589-46BD-AD0A-B1ADED0D4D2F}.Debug|x64.Build.0 = Debug|x64
+		{EF1A910F-E589-46BD-AD0A-B1ADED0D4D2F}.Release|x64.ActiveCfg = Release|x64
+		{EF1A910F-E589-46BD-AD0A-B1ADED0D4D2F}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

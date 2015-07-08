@@ -14,6 +14,8 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.lang.StringUtils;
+import org.jfree.util.Log;
+import org.sonar.api.config.Settings;
 import org.sonar.api.utils.SonarException;
 
 import com.google.common.base.Charsets;
@@ -30,12 +32,18 @@ public class CppProjectParser implements VisualStudioProjectParser {
     private String targetName;
 
     private XMLStreamReader stream;
+
+    private Settings settings;
+    
+    public CppProjectParser(Settings settings) {
+        this.settings=settings;
+    }
 	@Override
 	public SimpleVisualStudioProject parse(File file) {
 	    parseFile(file);
 		File projectFile = file;
 		List<String> files= new ArrayList<String>();
-		String outputType = "assembly"; 
+		String outputType = "library"; 
 		String assemblyName = createAssemblyName();
 		List<String> outputPaths = new ArrayList<String>();
 		project = new SimpleVisualStudioProject(projectFile, files, outputType, assemblyName, outputPaths);
@@ -79,7 +87,18 @@ public class CppProjectParser implements VisualStudioProjectParser {
                   if (inItemGroup && inItemGroupNestingLevel == 0 && PROJECT_ITEM_TYPES.contains(tagName)) {
                     handleProjectItemTag();
                   } else if ("TargetName".equals(tagName)) {
-                      targetName = stream.getElementText();
+                      boolean useName=true;
+                      int attributes=stream.getAttributeCount();
+                      if(attributes==1) {
+                          String name=stream.getAttributeName(0).getLocalPart();
+                          String value=stream.getAttributeValue(0);
+                          if("Condition".equals(name)) {
+                              useName=evalCondition(value);
+                          }
+                      }
+                      if(useName) {
+                          targetName = stream.getElementText();
+                      }
                   }
                   if ("ItemGroup".equals(tagName)) {
                     inItemGroup = true;
@@ -105,6 +124,25 @@ public class CppProjectParser implements VisualStudioProjectParser {
               closeXmlStream();
               Closeables.closeQuietly(reader);
             }
+    }
+    private boolean evalCondition(String value) {
+        value=replaceProperty(value,"Configuration", VisualStudioPlugin.BUILD_CONFIGURATION_KEY,VisualStudioPlugin.BUILD_CONFIGURATIONS_DEFVALUE);
+        value=replaceProperty(value,"Platform",VisualStudioPlugin.BUILD_PLATFORM_KEY,VisualStudioPlugin.BUILD_PLATFORM_DEFVALUE);
+        String parts[]=value.split("==");
+        if(parts.length!=2) { 
+            throw new VsToWrapperException("unsupported condition" + value);
+        }
+        return parts[0].equalsIgnoreCase(parts[1]);
+    }
+
+    private String replaceProperty(String original,String variable,String key,String defaultValue) {
+        String property=settings.getString(key);
+        if(StringUtils.isEmpty(property)) {
+            property=defaultValue;
+        }
+        String result=original.replaceAll("\\$\\(" + variable + "\\)", property);
+        return result;
+        
     }
     private void closeXmlStream() {
         if (stream != null) {

@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\..\Packages\BHI.BuildSystem.2.3.0\build\BHI.BuildSystem.props" Condition="Exists('..\..\..\..\Packages\BHI.BuildSystem.2.3.0\build\BHI.BuildSystem.props')" />
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{DAEB0E81-1415-4CDE-9275-B6600A131B7E}</ProjectGuid>
+    <RootNamespace>joaObjects</RootNamespace>
+    <SccProjectName>SAK</SccProjectName>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccProvider>SAK</SccProvider>
+    <Keyword>UnmanagedCProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectName)d</TargetName>
+    <NuGetPackageImportStamp>17dc9b27</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>x64;WIN32;NDEBUG;_WINDOWS;_USRDLL;JOAOBJECTS_EXPORTS;LM_INTERNAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>joaObjects.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>joaXML.lib;joaBasics.lib;wsock32.lib;comctl32.lib;user32.lib;netapi32.lib;oldnames.lib;wbemuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>joaObjects64.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>x64;WIN32;_DEBUG;_WINDOWS;_USRDLL;JOAOBJECTS_EXPORTS;LM_INTERNAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>joaObjects.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>joaXMLd.lib;joaBasicsd.lib;wsock32.lib;comctl32.lib;user32.lib;netapi32.lib;oldnames.lib;wbemuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>/NODEFAULTLIB:MSVCR80.DLL;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="joaCommandBase.cpp" />
+    <ClCompile Include="joaCommandParameterBase.cpp" />
+    <ClCompile Include="joaCustomDeleteObject.cpp" />
+    <ClCompile Include="joaParameterBox3D.cpp" />
+    <ClCompile Include="joaParameterColor.cpp" />
+    <ClCompile Include="joaParameterEnum.cpp" />
+    <ClCompile Include="joaParameterFile.cpp" />
+    <ClCompile Include="joaParameterLocation3D.cpp" />
+    <ClCompile Include="joaParameterObject.cpp" />
+    <ClCompile Include="joaParameterObjectVector.cpp" />
+    <ClCompile Include="joaCommandExport.cpp" />
+    <ClCompile Include="joaCommandImport.cpp" />
+    <ClCompile Include="joaCommandObject.cpp" />
+    <ClCompile Include="joaCommandObjectAndObjectVector.cpp" />
+    <ClCompile Include="joaCommandObjectBool.cpp" />
+    <ClCompile Include="joaCommandObjectColor.cpp" />
+    <ClCompile Include="joaCommandObjectDouble.cpp" />
+    <ClCompile Include="joaCommandObjectEnum.cpp" />
+    <ClCompile Include="joaCommandObjectFloat.cpp" />
+    <ClCompile Include="joaCommandObjectInt.cpp" />
+    <ClCompile Include="joaCommandObjectString.cpp" />
+    <ClCompile Include="joaCommandObjectVector.cpp" />
+    <ClCompile Include="joaCommandClearDeathRow.cpp" />
+    <ClCompile Include="joaCommandDeleteObject.cpp" />
+    <ClCompile Include="joaCommandSetName.cpp" />
+    <ClCompile Include="joaAdmin.cpp" />
+    <ClCompile Include="joaColor.cpp" />
+    <ClCompile Include="joaDomainObject.cpp" />
+    <ClCompile Include="joaDomainObjectDeathRow.cpp" />
+    <ClCompile Include="joaIApplicationBasic.cpp" />
+    <ClCompile Include="joaISolutionBasic.cpp" />
+    <ClCompile Include="joaModelObserver.cpp" />
+    <ClCompile Include="joaModelObserverAdmin.cpp" />
+    <ClCompile Include="joaModelObserverEventArgs.cpp" />
+    <ClCompile Include="joaNullSolution.cpp" />
+    <ClCompile Include="joaObject.cpp" />
+    <ClCompile Include="joaObjectAdmin.cpp" />
+    <ClCompile Include="joaObjectCreationInformation.cpp" />
+    <ClCompile Include="joaObjectGraphicsAdmin.cpp" />
+    <ClCompile Include="joaObjectGraphicsObserver.cpp" />
+    <ClCompile Include="joaObjectIOAdmin.cpp" />
+    <ClCompile Include="joaObjectIOObserver.cpp" />
+    <ClCompile Include="joaObjectObserver.cpp" />
+    <ClCompile Include="joaObjectSafeRenameQueue.cpp" />
+    <ClCompile Include="joaObjectVisitor.cpp" />
+    <ClCompile Include="joaReferenceResolved.cpp" />
+    <ClCompile Include="joaRelation.cpp" />
+    <ClCompile Include="joaSerializationHelper.cpp" />
+    <ClCompile Include="joaUnresolvedReference.cpp" />
+    <ClCompile Include="joaUnresolvedReferences.cpp" />
+    <ClCompile Include="joaHeartBeatEvents.cpp" />
+    <ClCompile Include="joaLicenseManager.cpp" />
+    <ClCompile Include="joaException.cpp" />
+    <ClCompile Include="joaObjects.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="joaCommandBase.h" />
+    <ClInclude Include="joaCommandParameterBase.h" />
+    <ClInclude Include="joaCommandParameterTemplate.h" />
+    <ClInclude Include="joaCommandParameterVector.h" />
+    <ClInclude Include="joaCustomDeleteObject.h" />
+    <ClInclude Include="joaParameterBox3D.h" />
+    <ClInclude Include="joaParameterColor.h" />
+    <ClInclude Include="joaParameterEnum.h" />
+    <ClInclude Include="joaParameterFile.h" />
+    <ClInclude Include="joaParameterLocation3D.h" />
+    <ClInclude Include="joaParameterObject.h" />
+    <ClInclude Include="joaParameterObjectVector.h" />
+    <ClInclude Include="joaCommandExport.h" />
+    <ClInclude Include="joaCommandImport.h" />
+    <ClInclude Include="joaCommandObject.h" />
+    <ClInclude Include="joaCommandObjectAndObjectVector.h" />
+    <ClInclude Include="joaCommandObjectBool.h" />
+    <ClInclude Include="joaCommandObjectColor.h" />
+    <ClInclude Include="joaCommandObjectDouble.h" />
+    <ClInclude Include="joaCommandObjectEnum.h" />
+    <ClInclude Include="joaCommandObjectFloat.h" />
+    <ClInclude Include="joaCommandObjectInt.h" />
+    <ClInclude Include="joaCommandObjectString.h" />
+    <ClInclude Include="joaCommandObjectVector.h" />
+    <ClInclude Include="joaCommandClearDeathRow.h" />
+    <ClInclude Include="joaCommandDeleteObject.h" />
+    <ClInclude Include="joaCommandSetName.h" />
+    <ClInclude Include="joaAdmin.h" />
+    <ClInclude Include="joaColor.h" />
+    <ClInclude Include="joaDomainObject.h" />
+    <ClInclude Include="joaDomainObjectDeathRow.h" />
+    <ClInclude Include="joaIApplicationBasic.h" />
+    <ClInclude Include="joaISolutionBasic.h" />
+    <ClInclude Include="joaModelObserver.h" />
+    <ClInclude Include="joaModelObserverAdmin.h" />
+    <ClInclude Include="joaModelObserverEventArgs.h" />
+    <ClInclude Include="joaNullSolution.h" />
+    <ClInclude Include="joaObject.h" />
+    <ClInclude Include="joaObjectAdmin.h" />
+    <ClInclude Include="joaObjectCreationInformation.h" />
+    <ClInclude Include="joaObjectGraphicsAdmin.h" />
+    <ClInclude Include="joaObjectGraphicsObserver.h" />
+    <ClInclude Include="joaObjectIOAdmin.h" />
+    <ClInclude Include="joaObjectIOObserver.h" />
+    <ClInclude Include="joaObjectObserver.h" />
+    <ClInclude Include="joaObjectSafeRenameQueue.h" />
+    <ClInclude Include="joaObjectVisitor.h" />
+    <ClInclude Include="joaReferenceResolved.h" />
+    <ClInclude Include="joaRelation.h" />
+    <ClInclude Include="joaSerializationHelper.h" />
+    <ClInclude Include="joaUnresolvedReference.h" />
+    <ClInclude Include="joaUnresolvedReferences.h" />
+    <ClInclude Include="joaHeartBeatEvents.h" />
+    <ClInclude Include="joaLicenseManager.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="version.h" />
+    <ClInclude Include="joaException.h" />
+    <ClInclude Include="joaObjects.h" />
+    <ClInclude Include="joaObjectsDefines.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="joaObjects.rc" />
+    <ResourceCompile Include="version.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="version.ver" />
+    <None Include="joaObjects64.def" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <Import Project="$(ProjectDir)..\..\..\..\Build\Targets\CopyHeaderFiles.targets" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="..\..\..\..\Packages\BHI.BuildSystem.2.3.0\build\BHI.BuildSystem.targets" Condition="Exists('..\..\..\..\Packages\BHI.BuildSystem.2.3.0\build\BHI.BuildSystem.targets')" />
+    <Import Project="..\..\..\..\Packages\FlexLM.11.9.1.0\build\native\FlexLM.targets" Condition="Exists('..\..\..\..\Packages\FlexLM.11.9.1.0\build\native\FlexLM.targets')" />
+    <Import Project="..\..\..\..\Packages\Boost.1.57.0.1\build\native\Boost.targets" Condition="Exists('..\..\..\..\Packages\Boost.1.57.0.1\build\native\Boost.targets')" />
+  </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\..\..\Packages\BHI.BuildSystem.2.3.0\build\BHI.BuildSystem.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\Packages\BHI.BuildSystem.2.3.0\build\BHI.BuildSystem.props'))" />
+    <Error Condition="!Exists('..\..\..\..\Packages\BHI.BuildSystem.2.3.0\build\BHI.BuildSystem.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\Packages\BHI.BuildSystem.2.3.0\build\BHI.BuildSystem.targets'))" />
+    <Error Condition="!Exists('..\..\..\..\Packages\FlexLM.11.9.1.0\build\native\FlexLM.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\Packages\FlexLM.11.9.1.0\build\native\FlexLM.targets'))" />
+    <Error Condition="!Exists('..\..\..\..\Packages\Boost.1.57.0.1\build\native\Boost.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\Packages\Boost.1.57.0.1\build\native\Boost.targets'))" />
+  </Target>
+</Project>

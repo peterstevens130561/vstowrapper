@@ -6,9 +6,14 @@ import java.io.File;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.sonar.api.config.Settings;
 import org.sonar.test.TestUtils;
 
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
+
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * parsers Cpp project definitions
@@ -19,10 +24,12 @@ public class CppProjectParserTest  {
 
 	private VisualStudioProject project;
     private VisualStudioProjectParser parser;
+    @Mock private Settings settings;
 
 	@Before
 	public void before() {
-		parser = new CppProjectParser();
+	    initMocks(this);
+		parser = new CppProjectParser(settings);
 	}
 	
 	@Test
