@@ -24,13 +24,13 @@ public class CppWithSettingsSociableTest extends CppSociableBase {
     @Test
     public void firstAssembly() {
         assertEquals("expect first one to be joaObjects.dll as we're on release platform, so use the projectname",
-            "joaObjects.dll",microsoftWindowsEnvironment.getAssemblies().get(0));      
+            "joaObjects",microsoftWindowsEnvironment.getAssemblies().get(0));      
     }
     
     @Test
     public void secondAssembly() {
         shouldHaveTwoProjects();    
-        assertEquals("expect second one","joaBasicObjects.UnitTest.dll",microsoftWindowsEnvironment.getAssemblies().get(1));      
+        assertEquals("expect second one","joaBasicObjects.UnitTest",microsoftWindowsEnvironment.getAssemblies().get(1));      
     }
 }
 

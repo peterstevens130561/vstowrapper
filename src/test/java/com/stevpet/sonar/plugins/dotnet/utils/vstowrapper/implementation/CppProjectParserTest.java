@@ -37,7 +37,7 @@ public class CppProjectParserTest  {
 	       File someFile=TestUtils.getResource("VstoWrapper/CppProject/joaObjects/joaObjects.vcxproj");
 	       parser.setName("ProjectName");
 	        project = parser.parse(someFile);
-		assertEquals("expect to be the defined name + d.dll","ProjectNamed.dll",project.getAssemblyName());
+		assertEquals("expect to be the defined name + d.dll","ProjectNamed",project.getAssemblyName());
 	}
 
 	   @Test
@@ -45,6 +45,6 @@ public class CppProjectParserTest  {
 	           File someFile=TestUtils.getResource("VstoWrapper/CppProject/joaBasicObjectsUnitTests/joaBasicObjectsUnitTests.vcxproj");
 	           parser.setName("ProjectName");
 	            project = parser.parse(someFile);
-	        assertEquals("expect to be the defined name","ProjectName.dll",project.getAssemblyName());
+	        assertEquals("expect to be the defined name","ProjectName",project.getAssemblyName());
 	    }
 }

@@ -54,10 +54,10 @@ public class CppProjectParser implements VisualStudioProjectParser {
     private String createAssemblyName() {
         String assemblyName;
 		if(StringUtils.isEmpty(targetName)) {
-		    assemblyName=projectName + ".dll";
+		    assemblyName=projectName;
 		} else {
 		    String evaluatedName = targetName.replaceFirst("\\$\\(ProjectName\\)", projectName);
-		    assemblyName=evaluatedName + ".dll";
+		    assemblyName=evaluatedName;
 		}
         return assemblyName;
     }

@@ -38,12 +38,12 @@ public class CppSociableTest extends CppSociableBase{
     
     @Test
     public void firstAssembly() {
-        assertEquals("expect first one to be joaObjectsd.dll should pick debug|x64 config","joaObjectsd.dll",microsoftWindowsEnvironment.getAssemblies().get(0));      
+        assertEquals("expect first one to be joaObjectsd should pick debug|x64 config","joaObjectsd",microsoftWindowsEnvironment.getAssemblies().get(0));      
     }
     
     @Test
     public void secondAssembly() {
         shouldHaveTwoProjects();    
-        assertEquals("expect second one","joaBasicObjects.UnitTest.dll",microsoftWindowsEnvironment.getAssemblies().get(1));      
+        assertEquals("expect second one","joaBasicObjects.UnitTest",microsoftWindowsEnvironment.getAssemblies().get(1));      
     }
 }

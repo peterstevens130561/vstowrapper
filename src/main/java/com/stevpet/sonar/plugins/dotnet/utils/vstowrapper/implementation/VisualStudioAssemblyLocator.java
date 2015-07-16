@@ -28,6 +28,7 @@ import com.google.common.collect.Lists;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.AssemblyLocator;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.config.Settings;
@@ -110,8 +111,10 @@ public File locateAssembly(String projectName, File projectFile, VisualStudioPro
       List<File> candidates = Lists.newArrayList();
 
       String explicitOutputPaths = settings.getString(VisualStudioPlugin.VISUAL_STUDIO_OUTPUT_PATHS_PROPERTY_KEY);
-      if (explicitOutputPaths != null) {
-          LOG.info("Using the assembly output paths specified using the property \"" + VisualStudioPlugin.VISUAL_STUDIO_OUTPUT_PATHS_PROPERTY_KEY
+      if(StringUtils.isEmpty(explicitOutputPaths)) {
+          throw new VstoWrapperNoOutputPathsDefinedException();
+      } else {
+          LOG.debug("Using the assembly output paths specified using the property \"" + VisualStudioPlugin.VISUAL_STUDIO_OUTPUT_PATHS_PROPERTY_KEY
                   + "\" set to: " + explicitOutputPaths);
 
           for (String explicitOutputPath : Splitter.on(',').omitEmptyStrings().split(explicitOutputPaths)) {

@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCoverage", "CodeCoverage\CodeCoverage.csproj", "{5C68E0C2-F918-4B08-8586-7D0C7E3BD957}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCoverage.UnitTests", "CodeCoverage.UnitTests\CodeCoverage.UnitTests.csproj", "{7BF8929B-7500-4AC0-84F0-38DABC1D58A8}"

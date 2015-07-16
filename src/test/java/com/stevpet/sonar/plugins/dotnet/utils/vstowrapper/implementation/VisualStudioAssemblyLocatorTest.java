@@ -25,6 +25,7 @@ package com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 
@@ -34,6 +35,7 @@ import org.mockito.Mock;
 
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+
 import org.sonar.api.config.Settings;
 
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.AssemblyLocator;
@@ -84,9 +86,13 @@ public class VisualStudioAssemblyLocatorTest {
         String path=null;
 
         when(settings.getString("sonar.visualstudio.outputPaths")).thenReturn(path);
-        File locatedAssembly = whenLocatingAssembly(projectFile, outputType,
+        try {
+            whenLocatingAssembly(projectFile, outputType,
                 assemblyName);
-        assertNull(locatedAssembly);
+        } catch (VstoWrapperNoOutputPathsDefinedException e) {
+            return;
+        }
+        fail("should have raised exception as outputpaths is not set");
     }
 
     /**
