@@ -2,25 +2,8 @@ package com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.eq;
-
-import org.sonar.api.batch.bootstrap.ProjectBuilder.Context;
-import org.sonar.api.batch.bootstrap.ProjectDefinition;
-import org.sonar.api.batch.bootstrap.ProjectReactor;
-import org.sonar.api.config.Settings;
-import org.sonar.test.TestUtils;
-
-import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.AssemblyLocator;
-import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.MicrosoftWindowsEnvironment;
-import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
 
 public class CppSociableTest extends CppSociableBase{
 

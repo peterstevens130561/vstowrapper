@@ -29,6 +29,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
 
+import org.apache.commons.lang.StringUtils;
 import org.sonar.api.utils.SonarException;
 
 import javax.annotation.Nullable;
@@ -45,164 +46,163 @@ import java.util.Set;
 
 public class VisualStudioCsProjectParser implements VisualStudioProjectParser {
 
-  /* (non-Javadoc)
- * @see com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation.VisualStudioProjectParser#parse(java.io.File)
- */
-@Override
-public SimpleVisualStudioProject parse(File file) {
-    return new Parser().parse(file);
-  }
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation.
+     * VisualStudioProjectParser#parse(java.io.File)
+     */
+    @Override
+    public SimpleVisualStudioProject parse(File file) {
+        return new Parser().parse(file);
+    }
 
-  private static class Parser {
+    private static class Parser {
 
-    private static final Set<String> PROJECT_ITEM_TYPES = ImmutableSet.of("Compile", "Content", "EmbeddedResource", "None", "ClCompile", "Page");
+        private static final Set<String> PROJECT_ITEM_TYPES = ImmutableSet.of("Compile", "Content", "EmbeddedResource", "None",
+            "ClCompile", "Page");
 
-    private File file;
-    private XMLStreamReader stream;
-    private final ImmutableList.Builder<String> filesBuilder = ImmutableList.builder();
-    private String projectTypeGuids;
-    private String outputType;
-    private String assemblyName;
-    private String currentCondition;
-    private final ImmutableList.Builder<String> propertyGroupConditionsBuilder = ImmutableList.builder();
-    private final ImmutableList.Builder<String> outputPathsBuilder = ImmutableList.builder();
+        private File file;
+        private XMLStreamReader stream;
+        private final ImmutableList.Builder<String> filesBuilder = ImmutableList.builder();
+        private String projectTypeGuids;
+        private String outputType;
+        private String assemblyName;
+        private String currentCondition;
+        private final ImmutableList.Builder<String> propertyGroupConditionsBuilder = ImmutableList.builder();
+        private final ImmutableList.Builder<String> outputPathsBuilder = ImmutableList.builder();
 
-    public SimpleVisualStudioProject parse(File projectFile) {
-      this.file = projectFile;
+        public SimpleVisualStudioProject parse(File projectFile) {
+            this.file = projectFile;
 
-      InputStreamReader reader = null;
-      XMLInputFactory xmlFactory = XMLInputFactory.newInstance();
+            InputStreamReader reader = null;
+            XMLInputFactory xmlFactory = XMLInputFactory.newInstance();
 
-      try {
-        reader = new InputStreamReader(new FileInputStream(projectFile), Charsets.UTF_8);
-        stream = xmlFactory.createXMLStreamReader(reader);
+            try {
+                reader = new InputStreamReader(new FileInputStream(projectFile), Charsets.UTF_8);
+                stream = xmlFactory.createXMLStreamReader(reader);
 
-        boolean inItemGroup = false;
-        int inItemGroupNestingLevel = 0;
+                boolean inItemGroup = false;
+                int inItemGroupNestingLevel = 0;
 
-        while (stream.hasNext()) {
-          int next = stream.next();
-          if (next == XMLStreamConstants.START_ELEMENT) {
-            String tagName = stream.getLocalName();
+                while (stream.hasNext()) {
+                    int next = stream.next();
+                    if (next == XMLStreamConstants.START_ELEMENT) {
+                        String tagName = stream.getLocalName();
 
-            if (inItemGroup && inItemGroupNestingLevel == 0 && PROJECT_ITEM_TYPES.contains(tagName)) {
-              handleProjectItemTag();
-            } else if ("ProjectTypeGuids".equals(tagName)) {
-              handleProjectTypeGuids();
-            } else if ("OutputType".equals(tagName)) {
-              handleOutputTypeTag();
-            } else if ("AssemblyName".equals(tagName)) {
-              handleAssemblyNameTag();
-            } else if ("PropertyGroup".equals(tagName)) {
-              handlePropertyGroupTag();
-            } else if ("OutputPath".equals(tagName)) {
-              handleOutputPathTag();
+                        if (inItemGroup && inItemGroupNestingLevel == 0 && PROJECT_ITEM_TYPES.contains(tagName)) {
+                            handleProjectItemTag();
+                        } else if ("ProjectTypeGuids".equals(tagName)) {
+                            handleProjectTypeGuids();
+                        } else if ("OutputType".equals(tagName)) {
+                            handleOutputTypeTag();
+                        } else if ("AssemblyName".equals(tagName)) {
+                            handleAssemblyNameTag();
+                        } else if ("PropertyGroup".equals(tagName)) {
+                            handlePropertyGroupTag();
+                        } else if ("OutputPath".equals(tagName)) {
+                            handleOutputPathTag();
+                        }
+
+                        if ("ItemGroup".equals(tagName)) {
+                            inItemGroup = true;
+                            inItemGroupNestingLevel = 0;
+                        } else if (inItemGroup) {
+                            inItemGroupNestingLevel++;
+                        }
+                    } else if (next == XMLStreamConstants.END_ELEMENT) {
+                        String tagName = stream.getLocalName();
+
+                        if ("ItemGroup".equals(tagName)) {
+                            inItemGroup = false;
+                        } else if (inItemGroup) {
+                            inItemGroupNestingLevel--;
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                throw Throwables.propagate(e);
+            } catch (XMLStreamException e) {
+                throw new SonarException("Error while parsing the Visual Studio project file: " + projectFile.getAbsolutePath(), e);
+            } finally {
+                closeXmlStream();
+                Closeables.closeQuietly(reader);
+            }
+            SimpleVisualStudioProject project = new SimpleVisualStudioProject(projectFile, filesBuilder.build(), outputType,
+                assemblyName, outputPathsBuilder.build());
+            project.setLanguage("cs");
+            return project;
+        }
+
+        private void closeXmlStream() {
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (XMLStreamException e) {
+                    throw Throwables.propagate(e);
+                }
+            }
+        }
+
+        private void handleProjectItemTag() {
+            String include = getAttribute("Include");
+            if (StringUtils.isNotEmpty(include)) {
+                filesBuilder.add(include);
+            }
+        }
+
+        private void handleProjectTypeGuids() throws XMLStreamException {
+            projectTypeGuids = stream.getElementText();
+        }
+
+        private void handleOutputTypeTag() throws XMLStreamException {
+            outputType = stream.getElementText();
+        }
+
+        private void handleAssemblyNameTag() throws XMLStreamException {
+            assemblyName = stream.getElementText();
+        }
+
+        private void handlePropertyGroupTag() throws XMLStreamException {
+            currentCondition = Strings.nullToEmpty(getAttribute("Condition"));
+        }
+
+        private void handleOutputPathTag() throws XMLStreamException {
+            propertyGroupConditionsBuilder.add(currentCondition);
+            outputPathsBuilder.add(stream.getElementText());
+        }
+
+        @Nullable
+        private String getAttribute(String name) {
+            for (int i = 0; i < stream.getAttributeCount(); i++) {
+                if (name.equals(stream.getAttributeLocalName(i))) {
+                    return stream.getAttributeValue(i);
+                }
             }
 
-            if ("ItemGroup".equals(tagName)) {
-              inItemGroup = true;
-              inItemGroupNestingLevel = 0;
-            } else if (inItemGroup) {
-              inItemGroupNestingLevel++;
-            }
-          } else if (next == XMLStreamConstants.END_ELEMENT) {
-            String tagName = stream.getLocalName();
-
-            if ("ItemGroup".equals(tagName)) {
-              inItemGroup = false;
-            } else if (inItemGroup) {
-              inItemGroupNestingLevel--;
-            }
-          }
+            return null;
         }
-      } catch (IOException e) {
-        throw Throwables.propagate(e);
-      } catch (XMLStreamException e) {
-        throw new SonarException("Error while parsing the Visual Studio project file: " + projectFile.getAbsolutePath(), e);
-      } finally {
-        closeXmlStream();
-        Closeables.closeQuietly(reader);
-      }
-      SimpleVisualStudioProject project= new SimpleVisualStudioProject(projectFile,filesBuilder.build(),  outputType, assemblyName, outputPathsBuilder.build());
-      project.setLanguage("cs");
-      return project;
-    }
 
-    private void closeXmlStream() {
-      if (stream != null) {
-        try {
-          stream.close();
-        } catch (XMLStreamException e) {
-          throw Throwables.propagate(e);
+        private ParseErrorException parseError(String message) {
+            return new ParseErrorException(message + " in " + file.getAbsolutePath() + " at line "
+                + stream.getLocation().getLineNumber());
         }
-      }
+
     }
 
-    private void handleProjectItemTag() {
-      String include = getRequiredAttribute("Include");
-      filesBuilder.add(include);
-    }
+    private static class ParseErrorException extends RuntimeException {
 
-    private void handleProjectTypeGuids() throws XMLStreamException {
-      projectTypeGuids = stream.getElementText();
-    }
+        private static final long serialVersionUID = 1L;
 
-    private void handleOutputTypeTag() throws XMLStreamException {
-      outputType = stream.getElementText();
-    }
-
-    private void handleAssemblyNameTag() throws XMLStreamException {
-      assemblyName = stream.getElementText();
-    }
-
-    private void handlePropertyGroupTag() throws XMLStreamException {
-      currentCondition = Strings.nullToEmpty(getAttribute("Condition"));
-    }
-
-    private void handleOutputPathTag() throws XMLStreamException {
-      propertyGroupConditionsBuilder.add(currentCondition);
-      outputPathsBuilder.add(stream.getElementText());
-    }
-
-    private String getRequiredAttribute(String name) {
-      String value = getAttribute(name);
-      if (value == null) {
-        throw parseError("Missing attribute \"" + name + "\" in element <" + stream.getLocalName() + ">");
-      }
-
-      return value;
-    }
-
-    @Nullable
-    private String getAttribute(String name) {
-      for (int i = 0; i < stream.getAttributeCount(); i++) {
-        if (name.equals(stream.getAttributeLocalName(i))) {
-          return stream.getAttributeValue(i);
+        public ParseErrorException(String message) {
+            super(message);
         }
-      }
 
-      return null;
     }
 
-    private ParseErrorException parseError(String message) {
-      return new ParseErrorException(message + " in " + file.getAbsolutePath() + " at line " + stream.getLocation().getLineNumber());
+    @Override
+    public void setName(String solutionName) {
+        // not used in cs
     }
-
-  }
-
-  private static class ParseErrorException extends RuntimeException {
-
-    private static final long serialVersionUID = 1L;
-
-    public ParseErrorException(String message) {
-      super(message);
-    }
-
-  }
-
-@Override
-public void setName(String solutionName) {
-    //not used in cs
-}
 
 }

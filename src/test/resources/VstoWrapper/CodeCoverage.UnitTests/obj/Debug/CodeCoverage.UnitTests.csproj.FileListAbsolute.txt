@@ -1,0 +1,1 @@
+E:\Users\stevpet\My Documents\GitHub\vstowrapper\src\test\resources\VstoWrapper\CodeCoverage.UnitTests\obj\Debug\CodeCoverage.UnitTests.csprojResolveAssemblyReference.cache

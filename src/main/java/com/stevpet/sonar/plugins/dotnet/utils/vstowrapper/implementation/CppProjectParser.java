@@ -14,7 +14,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.lang.StringUtils;
-import org.jfree.util.Log;
 import org.sonar.api.config.Settings;
 import org.sonar.api.utils.SonarException;
 

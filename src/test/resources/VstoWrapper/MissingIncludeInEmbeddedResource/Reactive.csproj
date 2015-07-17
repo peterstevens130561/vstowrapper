@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\..\..\Packages\BHI.BuildSystem.2.3.0\build\BHI.BuildSystem.props" Condition="Exists('..\..\..\..\..\Packages\BHI.BuildSystem.2.3.0\build\BHI.BuildSystem.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{5C96C07D-4F68-49A1-AB03-289589C5EC5F}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <OutputPath>bin</OutputPath>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <TypeScriptToolsVersion>1.4</TypeScriptToolsVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <NuGetPackageImportStamp>fb31144c</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="dist\je-reactive.html" />
+    <None Include="dist\je-reactive.js" />
+    <None Include="packages.config" />
+    <None Include="dist\je-reactive.d.ts" />
+    <TypeScriptCompile Include="Dom\binding.ts" />
+    <TypeScriptCompile Include="Dom\bindingsBuilder.ts" />
+    <TypeScriptCompile Include="Dom\createElement.ts" />
+    <TypeScriptCompile Include="Dom\css.ts" />
+    <TypeScriptCompile Include="Dom\expressionParser.ts" />
+    <TypeScriptCompile Include="Dom\node.ts" />
+    <TypeScriptCompile Include="Dom\nodeBuilder.ts" />
+    <TypeScriptCompile Include="Dom\reactiveNode.ts" />
+    <TypeScriptCompile Include="Dom\utils.ts" />
+    <TypeScriptCompile Include="Exports.ts" />
+    <TypeScriptCompile Include="Reducer.ts" />
+    <TypeScriptCompile Include="Mapper.ts" />
+    <TypeScriptCompile Include="Dom\interfaces.ts" />
+    <TypeScriptCompile Include="typings\commonjs\commonjs.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="PathObserver.ts" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Collection.ts" />
+    <TypeScriptCompile Include="Computed.ts" />
+    <TypeScriptCompile Include="Core.ts" />
+    <TypeScriptCompile Include="typings\rxjs\rx-lite.d.ts" />
+    <TypeScriptCompile Include="typings\rxjs\rx.async-lite.d.ts" />
+    <TypeScriptCompile Include="typings\rxjs\rx.backpressure-lite.d.ts" />
+    <TypeScriptCompile Include="typings\rxjs\rx.binding-lite.d.ts" />
+    <TypeScriptCompile Include="typings\rxjs\rx.coincidence-lite.d.ts" />
+    <TypeScriptCompile Include="typings\rxjs\rx.lite.d.ts" />
+    <TypeScriptCompile Include="typings\rxjs\rx.time-lite.d.ts" />
+    <TypeScriptCompile Include="Interfaces.ts" />
+    <TypeScriptCompile Include="Lookup.ts" />
+    <TypeScriptCompile Include="Presentation\core.ts" />
+    <TypeScriptCompile Include="Value.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dist\je-reactive.js.map" />
+    <None Include="dist\package.json" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>Joa.JewelEarth.Web.Reactive</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyName>Joa.JewelEarth.Web.Reactive</AssemblyName>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptOutFile>dist/je-reactive.js</TypeScriptOutFile>
+    <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
+    <TypeScriptModuleKind>none</TypeScriptModuleKind>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptOutFile>dist/je-reactive.js</TypeScriptOutFile>
+    <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>False</TypeScriptSourceMap>
+    <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets')" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <!--
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
+  -->
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\..\..\..\Packages\BHI.BuildSystem.2.3.0\build\BHI.BuildSystem.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\..\Packages\BHI.BuildSystem.2.3.0\build\BHI.BuildSystem.props'))" />
+    <Error Condition="!Exists('..\..\..\..\..\Packages\BHI.BuildSystem.2.3.0\build\BHI.BuildSystem.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\..\Packages\BHI.BuildSystem.2.3.0\build\BHI.BuildSystem.targets'))" />
+  </Target>
+  <Import Project="..\..\..\..\..\Packages\BHI.BuildSystem.2.3.0\build\BHI.BuildSystem.targets" Condition="Exists('..\..\..\..\..\Packages\BHI.BuildSystem.2.3.0\build\BHI.BuildSystem.targets')" />
+  <Target Name="BeforeCompile">
+    <CreateItem Include="dist\*.*">
+      <Output ItemName="DistFiles" TaskParameter="Include" />
+    </CreateItem>
+    <ItemGroup>
+      <EmbeddedResource Remove="@(TypeScriptCompile)" />
+      <EmbeddedResource Remove="@(DistFiles)" />
+      <EmbeddedResource Include="@(TypeScriptCompile)" />
+      <EmbeddedResource Include="@(DistFiles)" />
+    </ItemGroup>
+    <CreateCSharpManifestResourceName ResourceFiles="@(EmbeddedResource)" RootNamespace="$(RootNamespace)" PrependCultureAsDirectory="false">
+      <Output TaskParameter="ResourceFilesWithManifestResourceNames" ItemName="_Temporary" />
+    </CreateCSharpManifestResourceName>
+    <ItemGroup>
+      <EmbeddedResource Remove="@(EmbeddedResource)" Condition="'%(EmbeddedResource.ManifestResourceName)' == ''" />
+      <EmbeddedResource Include="@(_Temporary)">
+        <LogicalName>%(_Temporary.ManifestResourceName)</LogicalName>
+      </EmbeddedResource>
+      <_Temporary Remove="@(_Temporary)" />
+    </ItemGroup>
+    <ItemGroup>
+      <_CoreCompileResourceInputs Include="@(EmbeddedResource)" />
+    </ItemGroup>
+  </Target>
+</Project>
