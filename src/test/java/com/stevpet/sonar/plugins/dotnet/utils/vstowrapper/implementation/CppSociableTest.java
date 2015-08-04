@@ -11,7 +11,7 @@ public class CppSociableTest extends CppSociableBase{
     @Before
     public void before() {
         super.setup();
-        builder.build(context, assemblyLocator);
+        build();
     }
     
     @Test

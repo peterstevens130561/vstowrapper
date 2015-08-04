@@ -39,7 +39,6 @@ public class CppSociableBase {
         File objectsAssembly = new File("joaObjectsd.dll");
         File unitTestAssembly = new File("joaBasicObjects.UnitTest.dll");
         microsoftWindowsEnvironment = new SimpleMicrosoftWindowsEnvironment();
-
         when(context.projectReactor()).thenReturn(projectReactor);
         when(projectReactor.getRoot()).thenReturn(projectDefinition);
         when(projectDefinition.getBaseDir()).thenReturn(pureCppSolutionFile.getParentFile());
@@ -48,8 +47,12 @@ public class CppSociableBase {
             objectsAssembly);
         when(assemblyLocator.locateAssembly(eq("joaBasicObjects.UnitTest"), any(File.class), any(VisualStudioProject.class)))
             .thenReturn(unitTestAssembly);
-
-        builder = new VisualStudioProjectBuilder(settings, microsoftWindowsEnvironment);
+    }
+    
+    public void build() {
+        builder = new VisualStudioProjectBuilder(settings, microsoftWindowsEnvironment,assemblyLocator);
+        builder.execute(null);
+        
     }
 
 }

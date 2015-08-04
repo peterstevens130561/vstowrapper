@@ -34,9 +34,11 @@ import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioSolutionPr
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sonar.api.batch.Initializer;
 import org.sonar.api.batch.bootstrap.ProjectBuilder;
 import org.sonar.api.batch.bootstrap.ProjectDefinition;
 import org.sonar.api.config.Settings;
+import org.sonar.api.resources.Project;
 import org.sonar.api.utils.SonarException;
 
 import javax.annotation.Nullable;
@@ -50,17 +52,18 @@ import java.util.regex.PatternSyntaxException;
 /**
  * ProjectBuilder for dotnet projects
  * 
- * The build method will be invoked by sonar in the ProjectBuild phase, and populates the MicrosoftWindowsEnvironment
+ * The build method will be invoked by sonar in the Initializer phase, and populates the MicrosoftWindowsEnvironment
  * @author stevpet
  *
  */
-public class VisualStudioProjectBuilder extends ProjectBuilder {
+public class VisualStudioProjectBuilder extends Initializer {
 
   private static final String SONAR_MODULES_PROPERTY_KEY = "sonar.modules";
   private static final Logger LOG = LoggerFactory.getLogger(VisualStudioProjectBuilder.class);
 
   private final Settings settings;
 private MicrosoftWindowsEnvironment microsoftWindowsEnvironment;
+private AssemblyLocator assemblyLocator;
 
 
  
@@ -68,22 +71,17 @@ private MicrosoftWindowsEnvironment microsoftWindowsEnvironment;
    * @param settings - standard settings
    * @param microsoftWindowsEnvironment - populated, include SimpleMicrosoftWindowsEnvironment, or another implementation of MicrosoftWindowsEnvironment
    * in the plugin extensions.
+ * @param assemblyLocator 
    */
-  public VisualStudioProjectBuilder(Settings settings,MicrosoftWindowsEnvironment microsoftWindowsEnvironment) {
+  public VisualStudioProjectBuilder(Settings settings,MicrosoftWindowsEnvironment microsoftWindowsEnvironment, AssemblyLocator assemblyLocator) {
     this.settings = settings;
     this.microsoftWindowsEnvironment = microsoftWindowsEnvironment;
+    this.assemblyLocator=assemblyLocator;
   }
 
   @Override
-  public void build(Context context) {
-    build(context, new VisualStudioAssemblyLocator(settings));
-  }
-
-
-  public void build(Context context, AssemblyLocator assemblyLocator) {
-    ProjectDefinition sonarProject = context.projectReactor().getRoot();
-
-    File solutionFile = getSolutionFile(sonarProject.getBaseDir());
+  public void execute(Project bogus) {
+    File solutionFile = getSolutionFile(new File("."));
     if (solutionFile == null) {
       LOG.info("No Visual Studio solution file found.");
       return;
@@ -97,8 +95,6 @@ private MicrosoftWindowsEnvironment microsoftWindowsEnvironment;
     if (settings.hasKey(SONAR_MODULES_PROPERTY_KEY)) {
       LOG.warn("The  \"" + SONAR_MODULES_PROPERTY_KEY + "\" is deprecated");
     }
-
-    sonarProject.resetSourceDirs();
 
     Set<String> skippedProjects = skippedProjectsByNames();
     boolean hasModules = false;
@@ -136,7 +132,6 @@ private MicrosoftWindowsEnvironment microsoftWindowsEnvironment;
                 
             }
             project.setAssembly(assembly);
-           buildModule(sonarProject, solutionProject.name(), projectFile, project, assembly, solutionFile);
           }
         }
       }
@@ -168,35 +163,6 @@ private static void logSkippedProject(VisualStudioSolutionProject solutionProjec
     return settings.getBoolean(VisualStudioPlugin.VISUAL_STUDIO_SKIP_IF_NOT_BUILT);
   }
 
-
-  private void buildModule(ProjectDefinition solutionProject, String projectName, File projectFile, SimpleVisualStudioProject project, @Nullable File assembly, File solutionFile) {
-
-    boolean isTestProject = isTestProject(projectName);
-    LOG.info("Adding the Visual Studio " + (isTestProject ? "test " : "") + "project: " + projectName + "... " + projectFile.getAbsolutePath());
-
-    for (File file : project.getSourceFiles()) {
-      if (!file.isFile()) {
-        LOG.warn("Cannot find the file " + file.getAbsolutePath() + " of project " + projectName);
-      } else if (!isInSourceDir(file, projectFile.getParentFile())) {
-        LOG.warn("Skipping the file " + file.getAbsolutePath() + " of project " + projectName + " located outside of the source directory.");
-      } else {
-        if (isTestProject) {
-          solutionProject.addTestFiles(file.getAbsolutePath());
-        } else {
-          solutionProject.addSourceFiles(file);
-        }
-      }
-    }
-  }
-
-
-  private static boolean isInSourceDir(File file, File folder) {
-    try {
-      return file.getCanonicalPath().replace('\\', '/').startsWith(folder.getCanonicalPath().replace('\\', '/') + "/");
-    } catch (IOException e) {
-      throw Throwables.propagate(e);
-    }
-  }
 
   @Nullable
   private File getSolutionFile(File projectBaseDir) {
@@ -258,5 +224,8 @@ private static void logSkippedProject(VisualStudioSolutionProject solutionProjec
 
     return ImmutableSet.<String>builder().addAll(Splitter.on(',').omitEmptyStrings().split(skippedProjects)).build();
   }
+
+
+
 
 }

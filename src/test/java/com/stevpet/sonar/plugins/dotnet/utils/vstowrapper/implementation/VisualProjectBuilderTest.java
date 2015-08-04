@@ -42,7 +42,7 @@ public class VisualProjectBuilderTest {
         initMocks(this);
         ProjectDefinition projectDefinition = ProjectDefinition.create();
         ProjectReactor projectReactor = new ProjectReactor(projectDefinition);
-        visualProjectBuilder = new VisualStudioProjectBuilder(settings,microsoftWindowsEnvironment);
+
         when(context.projectReactor()).thenReturn(projectReactor);
         
         when(settings.getString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY)).thenReturn("CodeCoverage.sln");
@@ -53,11 +53,16 @@ public class VisualProjectBuilderTest {
 
     }
     
+    private void build() {
+        visualProjectBuilder = new VisualStudioProjectBuilder(settings,microsoftWindowsEnvironment,assemblyLocator);
+        visualProjectBuilder.execute(null);
+    }
+    
     @Test
     public void NoSolutionSpecified_ShouldFindSolution() {
         //when
         when(settings.getString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY)).thenReturn(null);
-        visualProjectBuilder.build(context, assemblyLocator);
+        build();
         
         //expect solution to be found
         File solutionDir=microsoftWindowsEnvironment.getCurrentSolution().getSolutionDir();
@@ -72,7 +77,7 @@ public class VisualProjectBuilderTest {
         //when
         when(settings.getString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY)).thenReturn("CodeCoverage.sln");
         
-        visualProjectBuilder.build(context, assemblyLocator);
+        build();
         
         thenExpectBothCSharpProjectsToBeFound();
     }
@@ -81,7 +86,7 @@ public class VisualProjectBuilderTest {
     public void WrongSolution_ShouldHaveNoSolution() {
         //when
         when(settings.getString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY)).thenReturn("Bogus.sln");
-        visualProjectBuilder.build(context, assemblyLocator);
+        build();
         
         //check artifactNames
         VisualStudioSolution solution= microsoftWindowsEnvironment.getCurrentSolution();
@@ -91,7 +96,7 @@ public class VisualProjectBuilderTest {
     public void NosolutionSpecified_ShouldHAveOneProjectAndOneTestProject() {
         //when
 
-        visualProjectBuilder.build(context, assemblyLocator);
+        build();
         
         thenExpectBothCSharpProjectsToBeFound();
     }
@@ -100,7 +105,7 @@ public class VisualProjectBuilderTest {
         when(settings.getString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY)).thenReturn("CodeCoverage.sln");
         when(settings.getString(VisualStudioPlugin.VISUAL_STUDIO_OLD_SKIPPED_PROJECTS)).thenReturn("CodeCoverage");
 
-        visualProjectBuilder.build(context, assemblyLocator);
+        build();
         //check artifactNames
         List<String> artifacts= microsoftWindowsEnvironment.getArtifactNames();
         assertEquals("1 artifacts expected",1,artifacts.size());
