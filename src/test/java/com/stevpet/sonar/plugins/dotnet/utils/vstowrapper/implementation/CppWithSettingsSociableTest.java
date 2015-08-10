@@ -14,7 +14,7 @@ public class CppWithSettingsSociableTest extends CppSociableBase {
     public void before() {
         setup();
         when(settings.getString(VisualStudioPlugin.BUILD_CONFIGURATION_KEY)).thenReturn("Release");
-        builder.build(context, assemblyLocator);
+        builder.build(context);
     }
     @Test
     public void shouldHaveTwoProjects() {

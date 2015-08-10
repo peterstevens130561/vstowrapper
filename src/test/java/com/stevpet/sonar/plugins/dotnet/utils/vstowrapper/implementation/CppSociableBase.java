@@ -5,6 +5,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.util.Properties;
 
 import org.junit.Before;
 import org.mockito.Mock;
@@ -32,6 +33,7 @@ public class CppSociableBase {
     @Mock
     protected ProjectDefinition projectDefinition;
     protected VisualStudioProjectBuilder builder;
+    private Properties properties = new Properties();
 
     public void setup() {
         org.mockito.MockitoAnnotations.initMocks(this);
@@ -43,13 +45,14 @@ public class CppSociableBase {
         when(context.projectReactor()).thenReturn(projectReactor);
         when(projectReactor.getRoot()).thenReturn(projectDefinition);
         when(projectDefinition.getBaseDir()).thenReturn(pureCppSolutionFile.getParentFile());
+        when(projectDefinition.getProperties()).thenReturn(properties);
 
         when(assemblyLocator.locateAssembly(eq("joaObjects"), any(File.class), any(VisualStudioProject.class))).thenReturn(
             objectsAssembly);
         when(assemblyLocator.locateAssembly(eq("joaBasicObjects.UnitTest"), any(File.class), any(VisualStudioProject.class)))
             .thenReturn(unitTestAssembly);
 
-        builder = new VisualStudioProjectBuilder(settings, microsoftWindowsEnvironment);
+        builder = new VisualStudioProjectBuilder(settings, microsoftWindowsEnvironment,assemblyLocator);
     }
 
 }
