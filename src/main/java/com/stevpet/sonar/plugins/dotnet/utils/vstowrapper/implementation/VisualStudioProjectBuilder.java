@@ -92,7 +92,7 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
     @Override
     public void build(Context context) {
         sonarRootProject = context.projectReactor().getRoot();
-
+        
         solutionFile = getSolutionFile(sonarRootProject.getBaseDir());
         if (solutionFile == null) {
             LOG.info("No Visual Studio solution file found.");
