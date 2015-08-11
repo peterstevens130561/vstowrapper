@@ -71,7 +71,7 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
     private AssemblyLocator assemblyLocator;
     private ProjectDefinition sonarRootProject;
     private boolean hasCS, hasCPP;
-    private List<ProjectDefinition> subProjects = new ArrayList<>();
+    private List<ProjectDefinition> childProjects = new ArrayList<>();
 
     /**
      * @param settings
@@ -125,9 +125,13 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
         }
         Preconditions.checkState(hasModules, "No Visual Studio projects were found.");
         microsoftWindowsEnvironment.setCurrentSolution(currentSolution);
-        if (hasCS && !hasCPP) {
+        if(!hasCPP) {
+            LOG.info("This project is recognized as a C++ project, not adding childprojects");
+            return;
+        }
+        if (hasCS) {
             LOG.info("- project is recognized as a CS project, adding structure");
-            for (ProjectDefinition childProject : subProjects) {
+            for (ProjectDefinition childProject : childProjects) {
                 sonarRootProject.addSubProject(childProject);
             }
         }
@@ -200,7 +204,9 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
     private void createSubProjectDefinition(SimpleVisualStudioProject visualStudioProject) {
         List<ProjectDefinition> subProjects = sonarRootProject.getSubProjects();
         String name = visualStudioProject.getAssemblyName();
-        if (!subProjects.contains(name)) {
+        if (subProjects.contains(name)) {
+            return;
+        }
             Properties properties = (Properties) sonarRootProject.getProperties().clone();
             String assembly = visualStudioProject.getArtifact(null, null).getAbsolutePath();
             properties.setProperty("sonar.cs.fxcop.assembly", assembly);
@@ -219,9 +225,7 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
             newProject.setName(visualStudioProject.getAssemblyName());
             LOG.debug("  - Adding Sub Project => {}", newProject.getName());
 
-            subProjects.add(newProject);
-
-        }
+            childProjects.add(newProject);
     }
 
     private static void logSkippedProject(VisualStudioSolutionProject solutionProject, String reason) {
