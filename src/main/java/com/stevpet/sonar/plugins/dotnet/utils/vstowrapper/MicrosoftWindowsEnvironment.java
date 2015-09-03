@@ -26,6 +26,7 @@ import java.io.File;
 import java.util.List;
 
 import org.sonar.api.batch.InstantiationStrategy;
+import org.sonar.api.resources.Project;
 
 @InstantiationStrategy(InstantiationStrategy.PER_BATCH)
 public interface MicrosoftWindowsEnvironment {
@@ -56,5 +57,13 @@ public interface MicrosoftWindowsEnvironment {
      * @return true if there is one or more unittest sourcefiles
      */
     boolean hasUnitTestSourceFiles();
+
+
+    /**
+     * @return true if the project is a (unit) test project
+     * @param project
+     * @return
+     */
+    boolean isUnitTestProject(Project project);
 
 }

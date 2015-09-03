@@ -47,8 +47,6 @@ public interface VisualStudioProject {
 
     File getDirectory();
 
-    String getName();
-
     boolean isTest();
 
     String outputType();

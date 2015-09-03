@@ -1,6 +1,5 @@
 /*******************************************************************************
- *
- * SonarQube MsCover Plugin
+ * MSCover Plugin
  * Copyright (C) 2015 SonarSource
  * dev@sonar.codehaus.org
  *

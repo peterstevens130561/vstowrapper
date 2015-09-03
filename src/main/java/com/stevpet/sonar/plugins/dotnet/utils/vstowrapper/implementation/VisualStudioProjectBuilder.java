@@ -71,7 +71,7 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
     private AssemblyLocator assemblyLocator;
     private ProjectDefinition sonarRootProject;
     private boolean hasCS, hasCPP;
-    private List<ProjectDefinition> childProjects = new ArrayList<>();
+    private ModuleBuilder moduleBuilder ;
 
     /**
      * @param settings
@@ -87,6 +87,7 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
         this.settings = settings;
         this.microsoftWindowsEnvironment = microsoftWindowsEnvironment;
         this.assemblyLocator = assemblyLocator;
+        this.moduleBuilder = new ModuleBuilder();
     }
 
     public VisualStudioProjectBuilder(Settings settings, MicrosoftWindowsEnvironment microsoftWindowsEnvironment) {
@@ -96,7 +97,7 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
     @Override
     public void build(Context context) {
         sonarRootProject = context.projectReactor().getRoot();
-
+        moduleBuilder.setRoot(sonarRootProject);
         solutionFile = getSolutionFile(sonarRootProject.getBaseDir());
         if (solutionFile == null) {
             LOG.info("No Visual Studio solution file found.");
@@ -125,25 +126,18 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
         }
         Preconditions.checkState(hasModules, "No Visual Studio projects were found.");
         microsoftWindowsEnvironment.setCurrentSolution(currentSolution);
-        if(!hasCPP) {
-            LOG.info("This project is recognized as a C++ project, not adding childprojects");
-            return;
-        }
-        if (hasCS) {
-            LOG.info("- project is recognized as a CS project, adding structure");
-            for (ProjectDefinition childProject : childProjects) {
-                sonarRootProject.addSubProject(childProject);
-            }
-        }
+        moduleBuilder.build();
     }
 
     private boolean buildProject(boolean hasModules, SimpleVisualStudioSolution currentSolution,
         VisualStudioSolutionProject solutionProject) {
         File projectFile = relativePathFile(solutionFile.getParentFile(), solutionProject.path());
+        
         String solutionName = solutionProject.name();
         VisualStudioProjectParser projectParser = getProjectParser(projectFile);
         projectParser.setName(solutionName);
         SimpleVisualStudioProject project = projectParser.parse(projectFile);
+        
         File assembly = assemblyLocator.locateAssembly(solutionName, projectFile, project);
         if (skipNotBuildProjects() && assembly == null) {
             logSkippedProject(solutionProject, "because it is not built and \""
@@ -156,14 +150,17 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
 
         }
         hasModules = true;
+        String projectName=solutionProject.name();
         currentSolution.addVisualStudioProject(project);
-        if (isTestProject(solutionProject.name())) {
+        if (isTestProject(projectName)) {
             currentSolution.addUnitTestVisualStudioProject(project);
+            LOG.debug("Test project: " + solutionProject.name());
             project.setIsTest();
         }
         project.setAssembly(assembly);
-
-        createSubProjectDefinition(project);
+        if (!moduleBuilder.contains(project)) {
+            moduleBuilder.add(project);
+        }
         return hasModules;
     }
 
@@ -201,32 +198,6 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
         return projectParser;
     }
 
-    private void createSubProjectDefinition(SimpleVisualStudioProject visualStudioProject) {
-        List<ProjectDefinition> subProjects = sonarRootProject.getSubProjects();
-        String name = visualStudioProject.getAssemblyName();
-        if (subProjects.contains(name)) {
-            return;
-        }
-            Properties properties = (Properties) sonarRootProject.getProperties().clone();
-            String assembly = visualStudioProject.getArtifact(null, null).getAbsolutePath();
-            properties.setProperty("sonar.cs.fxcop.assembly", assembly);
-
-            ProjectDefinition newProject = ProjectDefinition.create();
-            newProject.setProperties(properties);
-            newProject.setName(name);
-
-            String key = sonarRootProject.getKey() + ":" + name;
-            newProject.setKey(key);
-
-            File projectDirectory = visualStudioProject.getDirectory();
-            newProject.setBaseDir(projectDirectory);
-            newProject.setWorkDir(new File(projectDirectory, ".sonar"));
-            newProject.setVersion(sonarRootProject.getVersion());
-            newProject.setName(visualStudioProject.getAssemblyName());
-            LOG.debug("  - Adding Sub Project => {}", newProject.getName());
-
-            childProjects.add(newProject);
-    }
 
     private static void logSkippedProject(VisualStudioSolutionProject solutionProject, String reason) {
         LOG.info("Skipping the project \"" + solutionProject.name() + "\" " + reason);

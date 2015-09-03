@@ -30,6 +30,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.BatchExtension;
+import org.sonar.api.resources.Project;
 
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.MicrosoftWindowsEnvironment;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
@@ -87,5 +88,17 @@ public class SimpleMicrosoftWindowsEnvironment implements BatchExtension,Microso
     @Override
     public boolean hasUnitTestSourceFiles() {
         return getUnitTestSourceFiles().size()>0;
+    }
+    
+    @Override
+    public boolean isUnitTestProject(Project project) {
+        String name=project.getName();
+        List<VisualStudioProject> projects=getCurrentSolution().getUnitTestProjects();
+        for(VisualStudioProject unitTestProject:projects) {
+            if(unitTestProject.getAssemblyName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

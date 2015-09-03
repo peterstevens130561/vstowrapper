@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,12 +111,6 @@ public File getDirectory() {
 }
 
 @Override
-public String getName() {
-    // TODO Auto-generated method stub
-    return null;
-}
-
-@Override
 public boolean isTest() {
     return isTest;
 }
@@ -134,8 +129,15 @@ private List<File> createFiles(File projectFile,List<String> pathsList) {
     for(String path:pathsList) {
         if(path.endsWith(".cs")) {
             File file = new File(projectDir,path.replace('\\', '/'));
-            filesList.add(file);
+            try {
+                File canonicalFile = file.getCanonicalFile();
+                filesList.add(canonicalFile);
+                
+            } catch (IOException e) {
+                throw new VsToWrapperException("Could not get canonicalFile on" + file.getAbsolutePath());
+            }
         }
+        
     }
     return filesList;
 }
