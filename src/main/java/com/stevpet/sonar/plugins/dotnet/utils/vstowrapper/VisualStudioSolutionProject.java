@@ -28,18 +28,31 @@ package com.stevpet.sonar.plugins.dotnet.utils.vstowrapper;
  */
 public class VisualStudioSolutionProject {
 
-  private final String name;
+  private final String name; 
   private final String path;
 
+  /**
+   * 
+   * @param name - noame of the project in the solution i.e FluidModelingAutomatedTests
+   * @param path - to the project file, relative to the solution i.e. FluidModelingAutomatedTests\FluidModelingAutomatedTests.csproj
+   */
   public VisualStudioSolutionProject(String name, String path) {
     this.name = name;
     this.path = path;
   }
 
+  /**
+   * Name of the project in the solution i.e. FluidModelingAutomatedTests
+   * @return
+   */
   public String name() {
     return name;
   }
 
+  /**
+   * path to the project file, relative to the solution i.e. FluidModelingAutomatedTests\FluidModelingAutomatedTests.csproj
+   * @return
+   */
   public String path() {
     return path;
   }

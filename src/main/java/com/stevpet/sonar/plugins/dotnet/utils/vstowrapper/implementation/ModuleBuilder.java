@@ -48,13 +48,9 @@ public class ModuleBuilder {
         
         String key = getKey(visualStudioProject);
         newProject.setKey(key); 
-        
 
-        
         String assembly = visualStudioProject.getArtifact(null, null).getAbsolutePath();
         newProject.setProperty("sonar.cs.fxcop.assembly", assembly);
-
-        
 
         File projectDirectory = visualStudioProject.getDirectory();
         newProject.setBaseDir(projectDirectory);
