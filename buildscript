@@ -1,0 +1,6 @@
+set -ex
+set -u
+cd ../vstowrapper
+mvn clean install -DskipTests=true
+cd ../sonar-mscover
+mvn -U clean install && install.sh
