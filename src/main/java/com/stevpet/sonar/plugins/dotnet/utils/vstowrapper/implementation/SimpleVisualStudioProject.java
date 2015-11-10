@@ -49,6 +49,7 @@ public class SimpleVisualStudioProject implements VisualStudioProject {
 
 private boolean isTest;
   private File assemblyFile;
+  private String projectName;
 
 /**
  * 
@@ -90,6 +91,15 @@ public String getAssemblyName() {
     return assemblyName;
 }
 
+@Override 
+public void setProjectName(String projectName) {
+	this.projectName = projectName;
+}
+
+@Override
+public String getProjectName() {
+	return projectName;
+}
 @Override
 public File getArtifact(String buildConfiguration, String buildPlatform) {
     return assemblyFile;
@@ -109,6 +119,7 @@ public String getArtifactName() {
 public File getDirectory() {
     return projectFile.getParentFile();
 }
+
 
 @Override
 public boolean isTest() {

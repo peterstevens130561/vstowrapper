@@ -55,4 +55,16 @@ public interface VisualStudioProject {
     
     String getLanguage();
 
+    /**
+     * set the name of the project as defined in the solution
+     * @param projectName
+     */
+	void setProjectName(String projectName);
+
+	/**
+	 * get the name of the project as defined in the solution
+	 * @return 
+	 */
+	String getProjectName();
+
 }

@@ -8,8 +8,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import static org.mockito.MockitoAnnotations.initMocks;
 
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
@@ -18,6 +18,7 @@ import org.sonar.api.batch.bootstrap.ProjectBuilder.Context;
 import org.sonar.api.batch.bootstrap.ProjectDefinition;
 import org.sonar.api.batch.bootstrap.ProjectReactor;
 import org.sonar.api.config.Settings;
+import org.sonar.api.utils.SonarException;
 import org.sonar.test.TestUtils;
 
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.AssemblyLocator;
@@ -81,11 +82,12 @@ public class VisualProjectBuilderTest {
     public void WrongSolution_ShouldHaveNoSolution() {
         //when
         when(settings.getString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY)).thenReturn("Bogus.sln");
-        visualProjectBuilder.build(context);
-        
-        //check artifactNames
-        VisualStudioSolution solution= microsoftWindowsEnvironment.getCurrentSolution();
-        assertNull("no solution expected",solution.getSolutionFile());
+        try {
+        	visualProjectBuilder.build(context);
+        } catch (SonarException e) {
+        	return;
+        }
+        fail("when solution does not exist, then a SonarException is expected");
     }
     @Test
     public void NosolutionSpecified_ShouldHAveOneProjectAndOneTestProject() {

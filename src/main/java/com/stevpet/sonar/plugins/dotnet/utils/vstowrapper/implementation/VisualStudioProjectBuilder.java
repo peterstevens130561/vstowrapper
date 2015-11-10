@@ -62,208 +62,260 @@ import java.util.regex.PatternSyntaxException;
  */
 public class VisualStudioProjectBuilder extends ProjectBuilder {
 
-    private static final String SONAR_MODULES_PROPERTY_KEY = "sonar.modules";
-    private static final Logger LOG = LoggerFactory.getLogger(VisualStudioProjectBuilder.class);
+	private static final String SONAR_MODULES_PROPERTY_KEY = "sonar.modules";
+	private static final Logger LOG = LoggerFactory
+			.getLogger(VisualStudioProjectBuilder.class);
 
-    private final Settings settings;
-    private MicrosoftWindowsEnvironment microsoftWindowsEnvironment;
-    private File solutionFile;
-    private AssemblyLocator assemblyLocator;
-    private ProjectDefinition sonarRootProject;
-    private boolean hasCS, hasCPP;
-    private ModuleBuilder moduleBuilder ;
+	private final Settings settings;
+	private MicrosoftWindowsEnvironment microsoftWindowsEnvironment;
+	private File solutionFile;
+	private AssemblyLocator assemblyLocator;
+	private ProjectDefinition sonarRootProject;
+	private boolean hasCS, hasCPP;
+	private ModuleBuilder moduleBuilder;
+	private SimpleVisualStudioSolution currentSolution;
+	private List<SimpleVisualStudioProject> projects;
 
-    /**
-     * @param settings
-     *            - standard settings
-     * @param microsoftWindowsEnvironment
-     *            - populated, include SimpleMicrosoftWindowsEnvironment, or
-     *            another implementation of MicrosoftWindowsEnvironment in the
-     *            plugin extensions.
-     * @param assemblyLocator
-     */
-    public VisualStudioProjectBuilder(Settings settings, MicrosoftWindowsEnvironment microsoftWindowsEnvironment,
-        AssemblyLocator assemblyLocator) {
-        this.settings = settings;
-        this.microsoftWindowsEnvironment = microsoftWindowsEnvironment;
-        this.assemblyLocator = assemblyLocator;
-        this.moduleBuilder = new ModuleBuilder();
-    }
+	/**
+	 * @param settings
+	 *            - standard settings
+	 * @param microsoftWindowsEnvironment
+	 *            - populated, include SimpleMicrosoftWindowsEnvironment, or
+	 *            another implementation of MicrosoftWindowsEnvironment in the
+	 *            plugin extensions.
+	 * @param assemblyLocator
+	 */
+	public VisualStudioProjectBuilder(Settings settings,
+			MicrosoftWindowsEnvironment microsoftWindowsEnvironment,
+			AssemblyLocator assemblyLocator) {
+		this.settings = settings;
+		this.microsoftWindowsEnvironment = microsoftWindowsEnvironment;
+		this.assemblyLocator = assemblyLocator;
+		this.moduleBuilder = new ModuleBuilder();
+	}
 
-    public VisualStudioProjectBuilder(Settings settings, MicrosoftWindowsEnvironment microsoftWindowsEnvironment) {
-        this(settings, microsoftWindowsEnvironment, new VisualStudioAssemblyLocator(settings));
-    }
+	public VisualStudioProjectBuilder(Settings settings,
+			MicrosoftWindowsEnvironment microsoftWindowsEnvironment) {
+		this(settings, microsoftWindowsEnvironment,
+				new VisualStudioAssemblyLocator(settings));
+	}
 
-    @Override
-    public void build(Context context) {
-        sonarRootProject = context.projectReactor().getRoot();
-        moduleBuilder.setRoot(sonarRootProject);
-        solutionFile = getSolutionFile(sonarRootProject.getBaseDir());
-        if (solutionFile == null) {
-            LOG.info("No Visual Studio solution file found.");
-            return;
-        }
-        if (!solutionFile.exists()) {
-            LOG.error("Visual Studio solution file does not exist ", solutionFile.getAbsolutePath());
-            return;
-        }
-        LOG.info("Using the following Visual Studio solution: " + solutionFile.getAbsolutePath());
-
-        if (settings.hasKey(SONAR_MODULES_PROPERTY_KEY)) {
-            LOG.warn("The  \"" + SONAR_MODULES_PROPERTY_KEY + "\" is deprecated");
-        }
-
-        Set<String> skippedProjects = skippedProjectsByNames();
-        boolean hasModules = false;
-
-        SimpleVisualStudioSolution currentSolution = new VisualStudioSolutionParser().parse(solutionFile);
-
-        for (VisualStudioSolutionProject solutionProject : currentSolution.projects()) {
-            if (shouldBuildProject(skippedProjects, solutionProject)) {
-                hasModules = buildProject(hasModules, currentSolution, solutionProject);
-
-            }
-        }
-        Preconditions.checkState(hasModules, "No Visual Studio projects were found.");
-        microsoftWindowsEnvironment.setCurrentSolution(currentSolution);
-        moduleBuilder.build();
-    }
-
-    private boolean buildProject(boolean hasModules, SimpleVisualStudioSolution currentSolution,
-        VisualStudioSolutionProject solutionProject) {
-        File projectFile = relativePathFile(solutionFile.getParentFile(), solutionProject.path());
-        
-        String solutionName = solutionProject.name();
-        VisualStudioProjectParser projectParser = getProjectParser(projectFile);
-        projectParser.setName(solutionName);
-        SimpleVisualStudioProject project = projectParser.parse(projectFile);
-        
-        File assembly = assemblyLocator.locateAssembly(solutionName, projectFile, project);
-        if (skipNotBuildProjects() && assembly == null) {
-            logSkippedProject(solutionProject, "because it is not built and \""
-                + VisualStudioPlugin.VISUAL_STUDIO_SKIP_IF_NOT_BUILT + "\" is set.");
-            return hasModules;
-        } else if (assembly == null) {
-            String msg = "Project not built " + projectFile.getAbsolutePath();
-            LOG.error(msg);
-            throw new VsToWrapperException(msg);
-
-        }
-        hasModules = true;
-        String projectName=solutionProject.name();
-        currentSolution.addVisualStudioProject(project);
-        if (isTestProject(projectName)) {
-            currentSolution.addUnitTestVisualStudioProject(project);
-            LOG.debug("Test project: " + solutionProject.name());
-            project.setIsTest();
-        }
-        project.setAssembly(assembly);
-        if (!moduleBuilder.contains(project)) {
-            moduleBuilder.add(project);
-        }
-        return hasModules;
-    }
-
-    private boolean shouldBuildProject(Set<String> skippedProjects, VisualStudioSolutionProject solutionProject) {
-        if (skippedProjects.contains(solutionProject.name())) {
-            logSkippedProject(solutionProject, "because it is listed in the property \""
-                + VisualStudioPlugin.VISUAL_STUDIO_OLD_SKIPPED_PROJECTS + "\".");
-            return false;
-        }
-        if (isSkippedProjectByPattern(solutionProject.name())) {
-            logSkippedProject(solutionProject, "because it matches the property \""
-                + VisualStudioPlugin.VISUAL_STUDIO_SKIPPED_PROJECT_PATTERN + "\".");
-            return false;
-        }
-        File projectFile2 = relativePathFile(solutionFile.getParentFile(), solutionProject.path());
-        if (!projectFile2.isFile()) {
-            LOG.warn("Unable to find the Visual Studio project file " + projectFile2.getAbsolutePath());
-            return false;
-        }
-        return true;
-    }
-
-    private VisualStudioProjectParser getProjectParser(File project) {
-        VisualStudioProjectParser projectParser;
-        String name = project.getName();
-        if (name.endsWith(".csproj")) {
-            projectParser = new VisualStudioCsProjectParser();
-            hasCS = true;
-        } else if (name.endsWith(".vcxproj")) {
-            projectParser = new CppProjectParser(settings);
-            hasCPP = true;
-        } else {
-            throw new VsToWrapperException("unknown project type " + project.getAbsolutePath());
-        }
-        return projectParser;
-    }
+	@Override
+	public void build(Context context) {
+		sonarRootProject = context.projectReactor().getRoot();
+		moduleBuilder.setRoot(sonarRootProject);
+		solutionFile = getSolutionFile(sonarRootProject.getBaseDir());
 
 
-    private static void logSkippedProject(VisualStudioSolutionProject solutionProject, String reason) {
-        LOG.info("Skipping the project \"" + solutionProject.name() + "\" " + reason);
-    }
+		currentSolution = new VisualStudioSolutionParser().parse(solutionFile);
+		microsoftWindowsEnvironment.setCurrentSolution(currentSolution);
 
-    private boolean skipNotBuildProjects() {
-        return settings.getBoolean(VisualStudioPlugin.VISUAL_STUDIO_SKIP_IF_NOT_BUILT);
-    }
+		Set<String> skippedProjects = skippedProjectsByNames();
+		projects = new ArrayList<>();
+		boolean hasModules = false;
+		for (VisualStudioSolutionProject solutionProject : currentSolution
+				.projects()) {
+			if (shouldBuildProject(skippedProjects, solutionProject)) {
+				hasModules |= buildProject(solutionProject);
+			}
+		}
+		Preconditions.checkState(hasModules,
+				"No Visual Studio projects were found.");
+		addProjectsToEnvironment();
+		addProjectsToBuilder();
+	}
 
-    @Nullable
-    private File getSolutionFile(File projectBaseDir) {
-        File result;
+	private boolean buildProject(VisualStudioSolutionProject solutionProject) {
+		File projectFile = relativePathFile(solutionFile.getParentFile(),
+				solutionProject.path());
 
-        String solutionPath = settings.getString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY);
-        if (Strings.nullToEmpty(solutionPath).isEmpty()) {
-            solutionPath = settings.getString(VisualStudioPlugin.VISUAL_STUDIO_OLD_SOLUTION_PROPERTY_KEY);
-        }
-        if (!Strings.nullToEmpty(solutionPath).isEmpty()) {
-            result = new File(projectBaseDir, solutionPath);
-        } else {
-            Collection<File> solutionFiles = FileUtils.listFiles(projectBaseDir, new String[] { "sln" }, false);
-            if (solutionFiles.isEmpty()) {
-                result = null;
-            } else if (solutionFiles.size() == 1) {
-                result = solutionFiles.iterator().next();
-            } else {
-                throw new SonarException("Found several .sln files in " + projectBaseDir.getAbsolutePath() + ". Please set \""
-                    + VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY + "\" to explicitly tell which one to use.");
-            }
-        }
+		String projectName = solutionProject.name();
+		VisualStudioProjectParser projectParser = getProjectParser(projectFile);
+		projectParser.setName(projectName);
+		SimpleVisualStudioProject project = projectParser.parse(projectFile);
 
-        return result;
-    }
+		File assembly = assemblyLocator.locateAssembly(projectName,
+				projectFile, project);
+		if (skipNotBuildProjects() && assembly == null) {
+			logSkippedProject(solutionProject, "because it is not built and \""
+					+ VisualStudioPlugin.VISUAL_STUDIO_SKIP_IF_NOT_BUILT
+					+ "\" is set.");
+			return false;
+		} else if (assembly == null) {
+			String msg = "Project not built " + projectFile.getAbsolutePath();
+			LOG.error(msg);
+			throw new VsToWrapperException(msg);
 
-    private static File relativePathFile(File file, String relativePath) {
-        return new File(file, relativePath.replace('\\', '/'));
-    }
+		}
+		project.setAssembly(assembly);
+		project.setProjectName(solutionProject.name());
+		projects.add(project);
+		return true;
+	}
 
-    private boolean isTestProject(String projectName) {
-        return matchesPropertyRegex(VisualStudioPlugin.VISUAL_STUDIO_TEST_PROJECT_PATTERN, projectName);
-    }
+	private void addProjectsToBuilder() {
+		// and this is done for the project builder
+		for (SimpleVisualStudioProject project : projects) {
+			if (!moduleBuilder.contains(project)) {
+				moduleBuilder.add(project);
+			}
+		}
+		moduleBuilder.build();
+	}
 
-    private boolean isSkippedProjectByPattern(String projectName) {
-        return matchesPropertyRegex(VisualStudioPlugin.VISUAL_STUDIO_SKIPPED_PROJECT_PATTERN, projectName);
-    }
+	private void addProjectsToEnvironment() {
+		for (SimpleVisualStudioProject project : projects) {
+			currentSolution.addVisualStudioProject(project);
+			String projectName = project.getProjectName();
+			if (isTestProject(projectName)) {
+				currentSolution.addUnitTestVisualStudioProject(project);
+				project.setIsTest();
+			}
+		}
+	}
 
-    private boolean matchesPropertyRegex(String propertyKey, String value) {
-        String pattern = settings.getString(propertyKey);
-        try {
-            return pattern != null && value.matches(pattern);
-        } catch (PatternSyntaxException e) {
-            LOG.error("The syntax of the regular expression of the \"" + propertyKey + "\" property is invalid: " + pattern);
-            throw Throwables.propagate(e);
-        }
-    }
+	private boolean shouldBuildProject(Set<String> skippedProjects,
+			VisualStudioSolutionProject solutionProject) {
+		if (skippedProjects.contains(solutionProject.name())) {
+			logSkippedProject(
+					solutionProject,
+					"because it is listed in the property \""
+							+ VisualStudioPlugin.VISUAL_STUDIO_OLD_SKIPPED_PROJECTS
+							+ "\".");
+			return false;
+		}
+		if (isSkippedProjectByPattern(solutionProject.name())) {
+			logSkippedProject(
+					solutionProject,
+					"because it matches the property \""
+							+ VisualStudioPlugin.VISUAL_STUDIO_SKIPPED_PROJECT_PATTERN
+							+ "\".");
+			return false;
+		}
+		File projectFile2 = relativePathFile(solutionFile.getParentFile(),
+				solutionProject.path());
+		if (!projectFile2.isFile()) {
+			LOG.warn("Unable to find the Visual Studio project file "
+					+ projectFile2.getAbsolutePath());
+			return false;
+		}
+		return true;
+	}
 
-    private Set<String> skippedProjectsByNames() {
-        String skippedProjects = settings.getString(VisualStudioPlugin.VISUAL_STUDIO_OLD_SKIPPED_PROJECTS);
-        if (skippedProjects == null) {
-            return ImmutableSet.of();
-        }
+	private VisualStudioProjectParser getProjectParser(File project) {
+		VisualStudioProjectParser projectParser;
+		String name = project.getName();
+		if (name.endsWith(".csproj")) {
+			projectParser = new VisualStudioCsProjectParser();
+			hasCS = true;
+		} else if (name.endsWith(".vcxproj")) {
+			projectParser = new CppProjectParser(settings);
+			hasCPP = true;
+		} else {
+			throw new VsToWrapperException("unknown project type "
+					+ project.getAbsolutePath());
+		}
+		return projectParser;
+	}
 
-        LOG.warn("Replace the deprecated property \"" + VisualStudioPlugin.VISUAL_STUDIO_OLD_SKIPPED_PROJECTS + "\" by the new \""
-            + VisualStudioPlugin.VISUAL_STUDIO_SKIPPED_PROJECT_PATTERN + "\".");
+	private static void logSkippedProject(
+			VisualStudioSolutionProject solutionProject, String reason) {
+		LOG.info("Skipping the project \"" + solutionProject.name() + "\" "
+				+ reason);
+	}
 
-        return ImmutableSet.<String> builder().addAll(Splitter.on(',').omitEmptyStrings().split(skippedProjects)).build();
-    }
+	private boolean skipNotBuildProjects() {
+		return settings
+				.getBoolean(VisualStudioPlugin.VISUAL_STUDIO_SKIP_IF_NOT_BUILT);
+	}
+
+	@Nullable
+	private File getSolutionFile(File projectBaseDir) {
+		File result;
+
+		String solutionPath = settings
+				.getString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY);
+		if (Strings.nullToEmpty(solutionPath).isEmpty()) {
+			solutionPath = settings
+					.getString(VisualStudioPlugin.VISUAL_STUDIO_OLD_SOLUTION_PROPERTY_KEY);
+		}
+		if (!Strings.nullToEmpty(solutionPath).isEmpty()) {
+			result = new File(projectBaseDir, solutionPath);
+		} else {
+			Collection<File> solutionFiles = FileUtils.listFiles(
+					projectBaseDir, new String[] { "sln" }, false);
+			if (solutionFiles.isEmpty()) {
+				result = null;
+			} else if (solutionFiles.size() == 1) {
+				result = solutionFiles.iterator().next();
+			} else {
+				throw new SonarException(
+						"Found several .sln files in "
+								+ projectBaseDir.getAbsolutePath()
+								+ ". Please set \""
+								+ VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY
+								+ "\" to explicitly tell which one to use.");
+			}
+		}
+		if (result == null) {
+			String msg="No Visual Studio solution file found.";
+			LOG.error(msg);
+			throw new SonarException(msg);
+		}
+		if (!result.exists()) {
+			String msg="Visual Studio solution file does not exist ";
+					result.getAbsolutePath();
+			throw new SonarException(msg);
+		}
+		LOG.debug("Using the following Visual Studio solution: "
+				+ result.getAbsolutePath());
+		return result;
+	}
+
+	private static File relativePathFile(File file, String relativePath) {
+		return new File(file, relativePath.replace('\\', '/'));
+	}
+
+	private boolean isTestProject(String projectName) {
+		return matchesPropertyRegex(
+				VisualStudioPlugin.VISUAL_STUDIO_TEST_PROJECT_PATTERN,
+				projectName);
+	}
+
+	private boolean isSkippedProjectByPattern(String projectName) {
+		return matchesPropertyRegex(
+				VisualStudioPlugin.VISUAL_STUDIO_SKIPPED_PROJECT_PATTERN,
+				projectName);
+	}
+
+	private boolean matchesPropertyRegex(String propertyKey, String value) {
+		String pattern = settings.getString(propertyKey);
+		try {
+			return pattern != null && value.matches(pattern);
+		} catch (PatternSyntaxException e) {
+			LOG.error("The syntax of the regular expression of the \""
+					+ propertyKey + "\" property is invalid: " + pattern);
+			throw Throwables.propagate(e);
+		}
+	}
+
+	private Set<String> skippedProjectsByNames() {
+		String skippedProjects = settings
+				.getString(VisualStudioPlugin.VISUAL_STUDIO_OLD_SKIPPED_PROJECTS);
+		if (skippedProjects == null) {
+			return ImmutableSet.of();
+		}
+
+		LOG.warn("Replace the deprecated property \""
+				+ VisualStudioPlugin.VISUAL_STUDIO_OLD_SKIPPED_PROJECTS
+				+ "\" by the new \""
+				+ VisualStudioPlugin.VISUAL_STUDIO_SKIPPED_PROJECT_PATTERN
+				+ "\".");
+
+		return ImmutableSet
+				.<String> builder()
+				.addAll(Splitter.on(',').omitEmptyStrings()
+						.split(skippedProjects)).build();
+	}
 
 }
