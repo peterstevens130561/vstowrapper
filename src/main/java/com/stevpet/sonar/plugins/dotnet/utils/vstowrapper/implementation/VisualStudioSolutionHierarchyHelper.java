@@ -178,6 +178,7 @@ public class VisualStudioSolutionHierarchyHelper {
 	}
 
 	public SimpleVisualStudioSolution getSolution() {
+		Preconditions.checkState(currentSolution!=null,"no currentSolution");
 		return currentSolution;
 	}
 }

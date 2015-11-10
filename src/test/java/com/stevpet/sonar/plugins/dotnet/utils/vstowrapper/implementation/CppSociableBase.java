@@ -40,8 +40,7 @@ public class CppSociableBase {
         File pureCppSolutionFile = TestUtils.getResource("VsToWrapper/CppProject/joaBasicObjects.sln");
         File objectsAssembly = new File("joaObjectsd.dll");
         File unitTestAssembly = new File("joaBasicObjects.UnitTest.dll");
-        microsoftWindowsEnvironment = new SimpleMicrosoftWindowsEnvironment();
-
+       
         when(context.projectReactor()).thenReturn(projectReactor);
         when(projectReactor.getRoot()).thenReturn(projectDefinition);
         when(projectDefinition.getBaseDir()).thenReturn(pureCppSolutionFile.getParentFile());
@@ -51,8 +50,10 @@ public class CppSociableBase {
             objectsAssembly);
         when(assemblyLocator.locateAssembly(eq("joaBasicObjects.UnitTest"), any(File.class), any(VisualStudioProject.class)))
             .thenReturn(unitTestAssembly);
-
+        when(settings.getString("sonar.dotnet.visualstudio.solution.file")).thenReturn(pureCppSolutionFile.getName());
         builder = new VisualStudioProjectBuilder(settings, microsoftWindowsEnvironment,assemblyLocator);
+        microsoftWindowsEnvironment = new SimpleMicrosoftWindowsEnvironment(settings,assemblyLocator);
+
     }
 
 }

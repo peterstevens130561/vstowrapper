@@ -100,7 +100,7 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
 		hierarchyHelper.build(solutionFile);
 		List<SimpleVisualStudioProject> projects=hierarchyHelper.getProjects();
 		currentSolution = hierarchyHelper.getSolution();
-		microsoftWindowsEnvironment.setCurrentSolution(currentSolution);
+
 		addProjectsToEnvironment(projects);
 		addProjectsToBuilder(projects);
 	}
@@ -115,6 +115,7 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
 	}
 
 	private void addProjectsToEnvironment(List<SimpleVisualStudioProject> projects) {
+		microsoftWindowsEnvironment.setCurrentSolution(currentSolution);
 		for (SimpleVisualStudioProject project : projects) {
 			currentSolution.addVisualStudioProject(project);
 			String projectName = project.getProjectName();

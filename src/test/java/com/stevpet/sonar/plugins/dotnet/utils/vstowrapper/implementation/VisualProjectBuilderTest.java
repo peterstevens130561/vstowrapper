@@ -30,7 +30,7 @@ import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation.VisualS
 public class VisualProjectBuilderTest {
 
     private @Mock Settings  settings ;
-    private MicrosoftWindowsEnvironment microsoftWindowsEnvironment = new SimpleMicrosoftWindowsEnvironment();
+    private MicrosoftWindowsEnvironment microsoftWindowsEnvironment;
     private VisualStudioProjectBuilder visualProjectBuilder;
     private @Mock Context context ;
     private @Mock AssemblyLocator  assemblyLocator;
@@ -41,6 +41,7 @@ public class VisualProjectBuilderTest {
     @Before
     public void setup() {
         initMocks(this);
+
         ProjectDefinition projectDefinition = ProjectDefinition.create();
         ProjectReactor projectReactor = new ProjectReactor(projectDefinition);
         visualProjectBuilder = new VisualStudioProjectBuilder(settings,microsoftWindowsEnvironment,assemblyLocator);
@@ -51,7 +52,7 @@ public class VisualProjectBuilderTest {
         projectDefinition.setBaseDir(baseDir);
         when(assemblyLocator.locateAssembly(eq("CodeCoverage"), any(File.class),any(VisualStudioProject.class))).thenReturn(new File(baseDir,"CodeCoverage/bin/codecoverage.dll"));
         when(assemblyLocator.locateAssembly(eq("CodeCoverage.UnitTests"), any(File.class),any(VisualStudioProject.class))).thenReturn(new File(baseDir,"CodeCoverage.UnitTests/bin/codecoverage.unittests.dll"));
-
+        microsoftWindowsEnvironment = new SimpleMicrosoftWindowsEnvironment(settings,assemblyLocator);
     }
     
     @Test

@@ -30,8 +30,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.BatchExtension;
+import org.sonar.api.batch.InstantiationStrategy;
+import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 
+import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.AssemblyLocator;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.MicrosoftWindowsEnvironment;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioSolution;
@@ -43,12 +46,41 @@ import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioSolution;
  * @author stevpet
  *
  */
+@InstantiationStrategy(InstantiationStrategy.PER_BATCH)
 public class SimpleMicrosoftWindowsEnvironment implements BatchExtension,MicrosoftWindowsEnvironment {
 
     Logger LOG = LoggerFactory.getLogger(SimpleMicrosoftWindowsEnvironment.class);
     private VisualStudioSolution solution=new NullVisualStudioSolution();
 
+    private VisualStudioSolutionHierarchyHelper hierarchyHelper ;
+ 
+    public SimpleMicrosoftWindowsEnvironment(Settings settings){
+    	this(settings,new VisualStudioAssemblyLocator(settings));	
+    }
     
+    
+	public SimpleMicrosoftWindowsEnvironment(Settings settings,
+			AssemblyLocator assemblyLocator) {
+    	hierarchyHelper = new VisualStudioSolutionHierarchyHelper(settings, assemblyLocator);
+    	String solutionName=settings.getString("sonar.dotnet.visualstudio.solution.file");
+    	File solutionFile=new File(solutionName);
+    	hierarchyHelper.build(solutionFile);
+    	solution=hierarchyHelper.getSolution();
+    	List<SimpleVisualStudioProject> projects=hierarchyHelper.getProjects();
+    	addProjectsToEnvironment(projects);
+	}
+
+
+	private void addProjectsToEnvironment(List<SimpleVisualStudioProject> projects) {
+		for (SimpleVisualStudioProject project : projects) {
+			solution.addVisualStudioProject(project);
+			String projectName = project.getProjectName();
+			if (hierarchyHelper.isTestProject(projectName)) {
+				solution.addUnitTestVisualStudioProject(project);
+				project.setIsTest();
+			}
+		}
+	}
     /* (non-Javadoc)
      * @see com.stevpet.sonar.plugins.dotnet.mscover.vstowrapper.IMicrosoftWindowsEnvironment#getCurrentSolution()
      */
