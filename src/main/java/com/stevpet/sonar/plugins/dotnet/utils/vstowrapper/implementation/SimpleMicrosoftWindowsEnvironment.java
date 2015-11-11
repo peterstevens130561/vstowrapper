@@ -31,9 +31,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.BatchExtension;
 import org.sonar.api.batch.InstantiationStrategy;
+import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 
+import com.google.common.base.Preconditions;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.AssemblyLocator;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.MicrosoftWindowsEnvironment;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
@@ -46,7 +48,7 @@ import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioSolution;
  * @author stevpet
  *
  */
-@InstantiationStrategy(InstantiationStrategy.PER_BATCH)
+@InstantiationStrategy(InstantiationStrategy.PER_PROJECT)
 public class SimpleMicrosoftWindowsEnvironment implements BatchExtension,MicrosoftWindowsEnvironment {
 
     Logger LOG = LoggerFactory.getLogger(SimpleMicrosoftWindowsEnvironment.class);
@@ -54,17 +56,25 @@ public class SimpleMicrosoftWindowsEnvironment implements BatchExtension,Microso
 
     private VisualStudioSolutionHierarchyHelper hierarchyHelper ;
  
-    public SimpleMicrosoftWindowsEnvironment(Settings settings){
-    	this(settings,new VisualStudioAssemblyLocator(settings));	
+    public SimpleMicrosoftWindowsEnvironment(Settings settings,FileSystem fs,Project project){
+    	this(settings,new VisualStudioAssemblyLocator(settings),fs,project);	
     }
     
     
 	public SimpleMicrosoftWindowsEnvironment(Settings settings,
-			AssemblyLocator assemblyLocator) {
+			AssemblyLocator assemblyLocator,FileSystem fs,Project project) {
     	hierarchyHelper = new VisualStudioSolutionHierarchyHelper(settings, assemblyLocator);
-    	String solutionName=settings.getString("sonar.dotnet.visualstudio.solution.file");
-    	File solutionFile=new File(solutionName);
-    	hierarchyHelper.build(solutionFile);
+    	File solutionDir;
+    	// this is just there for unit testing....
+    	//TODO: remove as part of cleanup, should only accept modules.
+    	if(!project.isRoot()) {
+    		String relativePath=project.getPath();
+    		LOG.info(relativePath);
+    		solutionDir=fs.baseDir().getParentFile();
+    	} else {
+    		solutionDir=fs.baseDir();
+    	}
+    	hierarchyHelper.build(solutionDir);
     	solution=hierarchyHelper.getSolution();
     	List<SimpleVisualStudioProject> projects=hierarchyHelper.getProjects();
     	addProjectsToEnvironment(projects);
@@ -92,6 +102,7 @@ public class SimpleMicrosoftWindowsEnvironment implements BatchExtension,Microso
 
     @Override
     public void setCurrentSolution(VisualStudioSolution currentSolution) {
+    	Preconditions.checkArgument(currentSolution!=null,"invalid solution");
         this.solution=currentSolution;
     }
 

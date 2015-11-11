@@ -2,16 +2,22 @@ package com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.PatternSyntaxException;
 
+import javax.annotation.Nullable;
+
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.config.Settings;
+import org.sonar.api.utils.SonarException;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.AssemblyLocator;
@@ -31,8 +37,9 @@ public class VisualStudioSolutionHierarchyHelper {
 	private SimpleVisualStudioSolution currentSolution;
 	private File solutionFile;
 
-	public void build(File solutionFile) {
-		this.solutionFile=solutionFile;
+	public void build(File baseDir) {
+		Preconditions.checkArgument(baseDir!=null,"no baseDir");
+		this.solutionFile=getSolutionFile(baseDir);
 		currentSolution = new VisualStudioSolutionParser().parse(solutionFile);
 
 		Set<String> skippedProjects = skippedProjectsByNames();
@@ -48,6 +55,48 @@ public class VisualStudioSolutionHierarchyHelper {
 				"No Visual Studio projects were found.");
 	}
 	
+	@Nullable
+	private File getSolutionFile(File projectBaseDir) {
+		File result;
+
+		String solutionPath = settings
+				.getString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY);
+		if (Strings.nullToEmpty(solutionPath).isEmpty()) {
+			solutionPath = settings
+					.getString(VisualStudioPlugin.VISUAL_STUDIO_OLD_SOLUTION_PROPERTY_KEY);
+		}
+		if (!Strings.nullToEmpty(solutionPath).isEmpty()) {
+			result = new File(projectBaseDir, solutionPath);
+		} else {
+			Collection<File> solutionFiles = FileUtils.listFiles(
+					projectBaseDir, new String[] { "sln" }, false);
+			if (solutionFiles.isEmpty()) {
+				result = null;
+			} else if (solutionFiles.size() == 1) {
+				result = solutionFiles.iterator().next();
+			} else {
+				throw new SonarException(
+						"Found several .sln files in "
+								+ projectBaseDir.getAbsolutePath()
+								+ ". Please set \""
+								+ VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY
+								+ "\" to explicitly tell which one to use.");
+			}
+		}
+		if (result == null) {
+			String msg="No Visual Studio solution file found.";
+			LOG.error(msg);
+			throw new SonarException(msg);
+		}
+		if (!result.exists()) {
+			String msg="Visual Studio solution file does not exist ";
+					result.getAbsolutePath();
+			throw new SonarException(msg);
+		}
+		LOG.debug("Using the following Visual Studio solution: "
+				+ result.getAbsolutePath());
+		return result;
+	}
 	private boolean buildProject(VisualStudioSolutionProject solutionProject) {
 		File projectFile = relativePathFile(solutionFile.getParentFile(),
 				solutionProject.path());

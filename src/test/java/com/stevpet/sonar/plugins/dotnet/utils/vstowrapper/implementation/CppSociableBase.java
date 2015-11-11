@@ -12,7 +12,9 @@ import org.mockito.Mock;
 import org.sonar.api.batch.bootstrap.ProjectBuilder.Context;
 import org.sonar.api.batch.bootstrap.ProjectDefinition;
 import org.sonar.api.batch.bootstrap.ProjectReactor;
+import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
+import org.sonar.api.resources.Project;
 import org.sonar.test.TestUtils;
 
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.AssemblyLocator;
@@ -32,6 +34,8 @@ public class CppSociableBase {
     protected ProjectReactor projectReactor;
     @Mock
     protected ProjectDefinition projectDefinition;
+    @Mock FileSystem fileSystem;
+    @Mock Project project;
     protected VisualStudioProjectBuilder builder;
     private Properties properties = new Properties();
 
@@ -44,6 +48,7 @@ public class CppSociableBase {
         when(context.projectReactor()).thenReturn(projectReactor);
         when(projectReactor.getRoot()).thenReturn(projectDefinition);
         when(projectDefinition.getBaseDir()).thenReturn(pureCppSolutionFile.getParentFile());
+        when(fileSystem.baseDir()).thenReturn(pureCppSolutionFile.getParentFile()); //TODO: Remove at cleanup
         when(projectDefinition.getProperties()).thenReturn(properties);
 
         when(assemblyLocator.locateAssembly(eq("joaObjects"), any(File.class), any(VisualStudioProject.class))).thenReturn(
@@ -51,8 +56,10 @@ public class CppSociableBase {
         when(assemblyLocator.locateAssembly(eq("joaBasicObjects.UnitTest"), any(File.class), any(VisualStudioProject.class)))
             .thenReturn(unitTestAssembly);
         when(settings.getString("sonar.dotnet.visualstudio.solution.file")).thenReturn(pureCppSolutionFile.getName());
+        when(project.isRoot()).thenReturn(true);
+        microsoftWindowsEnvironment = new SimpleMicrosoftWindowsEnvironment(settings,assemblyLocator,fileSystem,project);
         builder = new VisualStudioProjectBuilder(settings, microsoftWindowsEnvironment,assemblyLocator);
-        microsoftWindowsEnvironment = new SimpleMicrosoftWindowsEnvironment(settings,assemblyLocator);
+
 
     }
 

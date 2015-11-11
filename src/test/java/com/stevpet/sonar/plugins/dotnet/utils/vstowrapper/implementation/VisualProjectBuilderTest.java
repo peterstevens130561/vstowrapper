@@ -17,7 +17,9 @@ import static org.mockito.Mockito.when;
 import org.sonar.api.batch.bootstrap.ProjectBuilder.Context;
 import org.sonar.api.batch.bootstrap.ProjectDefinition;
 import org.sonar.api.batch.bootstrap.ProjectReactor;
+import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
+import org.sonar.api.resources.Project;
 import org.sonar.api.utils.SonarException;
 import org.sonar.test.TestUtils;
 
@@ -34,6 +36,8 @@ public class VisualProjectBuilderTest {
     private VisualStudioProjectBuilder visualProjectBuilder;
     private @Mock Context context ;
     private @Mock AssemblyLocator  assemblyLocator;
+    private @Mock FileSystem fileSystem;
+    private @Mock Project project;
     private File baseDir;
     /**
      * Note that these tests use file resources, but for the dlls we use some mocking, so if you're looking for them, see the mocking below!
@@ -44,15 +48,18 @@ public class VisualProjectBuilderTest {
 
         ProjectDefinition projectDefinition = ProjectDefinition.create();
         ProjectReactor projectReactor = new ProjectReactor(projectDefinition);
-        visualProjectBuilder = new VisualStudioProjectBuilder(settings,microsoftWindowsEnvironment,assemblyLocator);
+
         when(context.projectReactor()).thenReturn(projectReactor);
         
         when(settings.getString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY)).thenReturn("CodeCoverage.sln");
         baseDir = TestUtils.getResource("VstoWrapper");
         projectDefinition.setBaseDir(baseDir);
+        when(fileSystem.baseDir()).thenReturn(baseDir); //TODO remove at cleanup
         when(assemblyLocator.locateAssembly(eq("CodeCoverage"), any(File.class),any(VisualStudioProject.class))).thenReturn(new File(baseDir,"CodeCoverage/bin/codecoverage.dll"));
         when(assemblyLocator.locateAssembly(eq("CodeCoverage.UnitTests"), any(File.class),any(VisualStudioProject.class))).thenReturn(new File(baseDir,"CodeCoverage.UnitTests/bin/codecoverage.unittests.dll"));
-        microsoftWindowsEnvironment = new SimpleMicrosoftWindowsEnvironment(settings,assemblyLocator);
+        when(project.isRoot()).thenReturn(true);
+        microsoftWindowsEnvironment = new SimpleMicrosoftWindowsEnvironment(settings,assemblyLocator,fileSystem,project);
+        visualProjectBuilder = new VisualStudioProjectBuilder(settings,microsoftWindowsEnvironment,assemblyLocator);
     }
     
     @Test

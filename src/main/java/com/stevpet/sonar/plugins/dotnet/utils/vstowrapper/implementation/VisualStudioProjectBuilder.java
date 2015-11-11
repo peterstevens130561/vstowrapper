@@ -96,8 +96,7 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
 	public void build(Context context) {
 		sonarRootProject = context.projectReactor().getRoot();
 		moduleBuilder.setRoot(sonarRootProject);
-		solutionFile = getSolutionFile(sonarRootProject.getBaseDir());
-		hierarchyHelper.build(solutionFile);
+		hierarchyHelper.build(sonarRootProject.getBaseDir());
 		List<SimpleVisualStudioProject> projects=hierarchyHelper.getProjects();
 		currentSolution = hierarchyHelper.getSolution();
 
@@ -127,48 +126,7 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
 	}
 
 
-	@Nullable
-	private File getSolutionFile(File projectBaseDir) {
-		File result;
 
-		String solutionPath = settings
-				.getString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY);
-		if (Strings.nullToEmpty(solutionPath).isEmpty()) {
-			solutionPath = settings
-					.getString(VisualStudioPlugin.VISUAL_STUDIO_OLD_SOLUTION_PROPERTY_KEY);
-		}
-		if (!Strings.nullToEmpty(solutionPath).isEmpty()) {
-			result = new File(projectBaseDir, solutionPath);
-		} else {
-			Collection<File> solutionFiles = FileUtils.listFiles(
-					projectBaseDir, new String[] { "sln" }, false);
-			if (solutionFiles.isEmpty()) {
-				result = null;
-			} else if (solutionFiles.size() == 1) {
-				result = solutionFiles.iterator().next();
-			} else {
-				throw new SonarException(
-						"Found several .sln files in "
-								+ projectBaseDir.getAbsolutePath()
-								+ ". Please set \""
-								+ VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY
-								+ "\" to explicitly tell which one to use.");
-			}
-		}
-		if (result == null) {
-			String msg="No Visual Studio solution file found.";
-			LOG.error(msg);
-			throw new SonarException(msg);
-		}
-		if (!result.exists()) {
-			String msg="Visual Studio solution file does not exist ";
-					result.getAbsolutePath();
-			throw new SonarException(msg);
-		}
-		LOG.debug("Using the following Visual Studio solution: "
-				+ result.getAbsolutePath());
-		return result;
-	}
 
 
 
