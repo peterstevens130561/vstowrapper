@@ -41,14 +41,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-class VisualStudioAssemblyLocator implements AssemblyLocator {
+public class VisualStudioAssemblyLocator implements AssemblyLocator {
 
   private static final Logger LOG = LoggerFactory.getLogger(VisualStudioAssemblyLocator.class);
   private static final Comparator<File> FILE_LAST_MODIFIED_COMPARATOR = new FileLastModifiedComparator();
 
   private final Settings settings;
 
-  VisualStudioAssemblyLocator(Settings settings) {
+  public VisualStudioAssemblyLocator(Settings settings) {
     this.settings = settings;
   }
 

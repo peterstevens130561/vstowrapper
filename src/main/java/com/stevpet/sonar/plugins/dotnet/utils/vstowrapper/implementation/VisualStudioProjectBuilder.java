@@ -62,17 +62,13 @@ import java.util.regex.PatternSyntaxException;
  */
 public class VisualStudioProjectBuilder extends ProjectBuilder {
 
-	private static final String SONAR_MODULES_PROPERTY_KEY = "sonar.modules";
 	private static final Logger LOG = LoggerFactory
 			.getLogger(VisualStudioProjectBuilder.class);
 
-	private final Settings settings;
 	private MicrosoftWindowsEnvironment microsoftWindowsEnvironment;
-	private File solutionFile;
 	private ProjectDefinition sonarRootProject;
 	private ModuleBuilder moduleBuilder;
 	private SimpleVisualStudioSolution currentSolution;
-	private List<SimpleVisualStudioProject> projects;
 	private VisualStudioSolutionHierarchyHelper hierarchyHelper ;
 
 	/**
@@ -84,9 +80,9 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
 	 *            plugin extensions.
 	 * @param assemblyLocator
 	 */
+
 	public VisualStudioProjectBuilder(Settings settings,
 			MicrosoftWindowsEnvironment microsoftWindowsEnvironment,AssemblyLocator assemblyLocator) {
-		this.settings = settings;
 		this.microsoftWindowsEnvironment = microsoftWindowsEnvironment;
 		this.moduleBuilder = new ModuleBuilder();
 		this.hierarchyHelper= new VisualStudioSolutionHierarchyHelper(settings,assemblyLocator) ;

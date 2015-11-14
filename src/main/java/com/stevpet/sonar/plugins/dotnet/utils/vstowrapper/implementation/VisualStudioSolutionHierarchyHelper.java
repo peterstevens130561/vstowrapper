@@ -12,6 +12,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sonar.api.BatchExtension;
 import org.sonar.api.config.Settings;
 import org.sonar.api.utils.SonarException;
 
@@ -23,7 +24,7 @@ import com.google.common.collect.ImmutableSet;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.AssemblyLocator;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioSolutionProject;
 
-public class VisualStudioSolutionHierarchyHelper {
+public class VisualStudioSolutionHierarchyHelper implements BatchExtension {
 
 	private Logger LOG  =LoggerFactory.getLogger(VisualStudioSolutionHierarchyHelper.class);
 	private List<SimpleVisualStudioProject> projects;
