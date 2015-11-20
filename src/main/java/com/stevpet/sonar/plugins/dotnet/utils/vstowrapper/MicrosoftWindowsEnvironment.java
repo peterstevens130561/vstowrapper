@@ -34,6 +34,7 @@ public interface MicrosoftWindowsEnvironment {
     VisualStudioSolution getCurrentSolution();
 
 
+    @Deprecated
     void setCurrentSolution(VisualStudioSolution currentSolution);
     
     /**
@@ -65,5 +66,5 @@ public interface MicrosoftWindowsEnvironment {
      * @return
      */
     boolean isUnitTestProject(Project project);
-
+    
 }

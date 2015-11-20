@@ -22,7 +22,6 @@
  *******************************************************************************/
 package com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation;
 
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,43 +44,38 @@ import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioSolution;
  * Intended to replace the dotnet fun, so is a minimalistic implementation
  * 
  * Include in the extensionlist of the plugin
+ * 
  * @author stevpet
- *
+ * 
  */
 @InstantiationStrategy(InstantiationStrategy.PER_PROJECT)
-public class SimpleMicrosoftWindowsEnvironment implements BatchExtension,MicrosoftWindowsEnvironment {
+public class SimpleMicrosoftWindowsEnvironment implements BatchExtension,
+		MicrosoftWindowsEnvironment {
 
-    Logger LOG = LoggerFactory.getLogger(SimpleMicrosoftWindowsEnvironment.class);
-    private VisualStudioSolution solution=new NullVisualStudioSolution();
+	Logger LOG = LoggerFactory
+			.getLogger(SimpleMicrosoftWindowsEnvironment.class);
+	private VisualStudioSolution solution = new NullVisualStudioSolution();
 
-    private VisualStudioSolutionHierarchyHelper hierarchyHelper ;
- 
-    public SimpleMicrosoftWindowsEnvironment(Settings settings,FileSystem fs,Project project){
-    	this(settings,new VisualStudioAssemblyLocator(settings),fs,project);	
-    }
-    
-    
-	public SimpleMicrosoftWindowsEnvironment(Settings settings,
-			AssemblyLocator assemblyLocator,FileSystem fs,Project project) {
-    	hierarchyHelper = new VisualStudioSolutionHierarchyHelper(settings, assemblyLocator);
-    	File solutionDir;
-    	// this is just there for unit testing....
-    	//TODO: remove as part of cleanup, should only accept modules.
-    	if(!project.isRoot()) {
-    		String relativePath=project.getPath();
-    		LOG.info(relativePath);
-    		solutionDir=fs.baseDir().getParentFile();
-    	} else {
-    		solutionDir=fs.baseDir();
-    	}
-    	hierarchyHelper.build(solutionDir);
-    	solution=hierarchyHelper.getSolution();
-    	List<SimpleVisualStudioProject> projects=hierarchyHelper.getProjects();
-    	addProjectsToEnvironment(projects);
+	private VisualStudioSolutionHierarchyHelper hierarchyHelper;
+	private Project project;
+	private FileSystem fileSystem;
+	private boolean didBuild = false;
+
+	public SimpleMicrosoftWindowsEnvironment(Settings settings, FileSystem fs,
+			Project project) {
+		this(settings, new VisualStudioAssemblyLocator(settings), fs, project);
 	}
 
+	public SimpleMicrosoftWindowsEnvironment(Settings settings,
+			AssemblyLocator assemblyLocator, FileSystem fs, Project project) {
+		hierarchyHelper = new VisualStudioSolutionHierarchyHelper(settings,
+				assemblyLocator);
+		this.project = project;
+		this.fileSystem = fs;
+	}
 
-	private void addProjectsToEnvironment(List<SimpleVisualStudioProject> projects) {
+	private void addProjectsToEnvironment(
+			List<SimpleVisualStudioProject> projects) {
 		for (SimpleVisualStudioProject project : projects) {
 			solution.addVisualStudioProject(project);
 			String projectName = project.getProjectName();
@@ -91,57 +85,78 @@ public class SimpleMicrosoftWindowsEnvironment implements BatchExtension,Microso
 			}
 		}
 	}
-    /* (non-Javadoc)
-     * @see com.stevpet.sonar.plugins.dotnet.mscover.vstowrapper.IMicrosoftWindowsEnvironment#getCurrentSolution()
-     */
-    @Override
-    public VisualStudioSolution getCurrentSolution() {
-        return solution;
-    }
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.stevpet.sonar.plugins.dotnet.mscover.vstowrapper.
+	 * IMicrosoftWindowsEnvironment#getCurrentSolution()
+	 */
+	@Override
+	public VisualStudioSolution getCurrentSolution() {
+		if (!didBuild) {
+			File solutionDir;
+			// this is just there for unit testing....
+			// TODO: remove as part of cleanup, should only accept modules.
+			if (!project.isRoot()) {
+				String relativePath = project.getPath();
+				LOG.info(relativePath);
+				solutionDir = fileSystem.baseDir().getParentFile();
+			} else {
+				solutionDir = fileSystem.baseDir();
+			}
+			hierarchyHelper.build(solutionDir);
+			solution = hierarchyHelper.getSolution();
+			List<SimpleVisualStudioProject> projects = hierarchyHelper
+					.getProjects();
+			addProjectsToEnvironment(projects);
+			didBuild = true;
+		}
+		return solution;
+	}
 
-    @Override
-    public void setCurrentSolution(VisualStudioSolution currentSolution) {
-    	Preconditions.checkArgument(currentSolution!=null,"invalid solution");
-        this.solution=currentSolution;
-    }
+	@Override
+	public void setCurrentSolution(VisualStudioSolution currentSolution) {
+		Preconditions
+				.checkArgument(currentSolution != null, "invalid solution");
+		this.solution = currentSolution;
+	}
 
+	@Override
+	public List<File> getUnitTestSourceFiles() {
+		return getCurrentSolution().getUnitTestSourceFiles();
+	}
 
-    @Override
-    public List<File> getUnitTestSourceFiles() {
-        return getCurrentSolution().getUnitTestSourceFiles();
-    }
+	@Override
+	public List<String> getAssemblies() {
+		List<String> coveredAssemblyNames = new ArrayList<String>();
+		for (VisualStudioProject visualProject : getCurrentSolution()
+				.getProjects()) {
+			coveredAssemblyNames.add(visualProject.getAssemblyName());
+		}
+		return coveredAssemblyNames;
+	}
 
-    @Override
-    public List<String> getAssemblies() {
-        List<String> coveredAssemblyNames = new ArrayList<String>();
-        for (VisualStudioProject visualProject : getCurrentSolution().getProjects()) {
-            coveredAssemblyNames.add(visualProject.getAssemblyName());
-        }
-        return coveredAssemblyNames;
-      }
+	@Override
+	public List<String> getArtifactNames() {
+		return getCurrentSolution().getArtifactNames();
+	}
 
+	@Override
+	public boolean hasUnitTestSourceFiles() {
+		return getUnitTestSourceFiles().size() > 0;
+	}
 
-    @Override
-    public List<String> getArtifactNames() {
-        return getCurrentSolution().getArtifactNames();
-    }
-
-
-    @Override
-    public boolean hasUnitTestSourceFiles() {
-        return getUnitTestSourceFiles().size()>0;
-    }
-    
-    @Override
-    public boolean isUnitTestProject(Project project) {
-        String name=project.getName();
-        List<VisualStudioProject> projects=getCurrentSolution().getUnitTestProjects();
-        for(VisualStudioProject unitTestProject:projects) {
-            if(unitTestProject.getAssemblyName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
+	@Override
+	public boolean isUnitTestProject(Project project) {
+		String name = project.getName();
+		List<VisualStudioProject> projects = getCurrentSolution()
+				.getUnitTestProjects();
+		for (VisualStudioProject unitTestProject : projects) {
+			if (unitTestProject.getAssemblyName().equals(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
