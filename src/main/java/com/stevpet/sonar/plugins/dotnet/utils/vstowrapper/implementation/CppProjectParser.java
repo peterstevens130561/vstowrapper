@@ -40,12 +40,11 @@ public class CppProjectParser implements VisualStudioProjectParser {
 	@Override
 	public SimpleVisualStudioProject parse(File file) {
 	    parseFile(file);
-		File projectFile = file;
-		List<String> files= new ArrayList<String>();
-		String outputType = "library"; 
+	    project=new SimpleVisualStudioProject();
+	    project.setProjectFile(file).setOutputType("library");
 		String assemblyName = createAssemblyName();
-		List<String> outputPaths = new ArrayList<String>();
-		project = new SimpleVisualStudioProject(projectFile, files, outputType, assemblyName, outputPaths);
+		project.setAssemblyName(assemblyName);
+		
 		project.setLanguage("cpp");
 		return project;
 	}

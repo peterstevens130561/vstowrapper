@@ -21,9 +21,9 @@ public class ModuleBuilder {
         this.sonarRootProject = sonarRootProject;
     }
 
-    boolean contains(SimpleVisualStudioProject visualStudioProject) {
+    boolean contains(VisualStudioProject project) {
         List<ProjectDefinition> subProjects = sonarRootProject.getSubProjects();
-        String key = getKey(visualStudioProject);
+        String key = getKey(project);
         for(ProjectDefinition module:subProjects) {
             String moduleKey=module.getKey();
             if(key.equals(moduleKey)) {
@@ -35,37 +35,37 @@ public class ModuleBuilder {
     }
     /**
      * Prepare a module for addition
-     * @param visualStudioProject
+     * @param project
      */
-    void add(SimpleVisualStudioProject visualStudioProject) {
+    void add(VisualStudioProject project) {
 
-        ProjectDefinition newProject = ProjectDefinition.create();
+        ProjectDefinition newModule = ProjectDefinition.create();
         Properties properties = (Properties) sonarRootProject.getProperties().clone();
-        newProject.setProperties(properties);
+        newModule.setProperties(properties);
         
-        String name = visualStudioProject.getAssemblyName();
-        newProject.setName(name);
+        String name = project.getAssemblyName();
+        newModule.setName(name);
         
-        String key = getKey(visualStudioProject);
-        newProject.setKey(key); 
+        String key = getKey(project);
+        newModule.setKey(key); 
 
-        String assembly = visualStudioProject.getArtifact(null, null).getAbsolutePath();
-        newProject.setProperty("sonar.cs.fxcop.assembly", assembly);
+        String assembly = project.getArtifactFile().getAbsolutePath();
+        newModule.setProperty("sonar.cs.fxcop.assembly", assembly);
 
-        File projectDirectory = visualStudioProject.getDirectory();
-        newProject.setBaseDir(projectDirectory);
+        File projectDirectory = project.getDirectory();
+        newModule.setBaseDir(projectDirectory);
         
-        newProject.setWorkDir(new File(projectDirectory, ".sonar"));
-        if(visualStudioProject.isUnitTest()) {
-            newProject.resetTestDirs();
-            newProject.resetSourceDirs();
-            newProject.setTestDirs(projectDirectory);
+        newModule.setWorkDir(new File(projectDirectory, ".sonar"));
+        if(project.isUnitTest()) {
+            newModule.resetTestDirs();
+            newModule.resetSourceDirs();
+            newModule.setTestDirs(projectDirectory);
         }
-        newProject.setVersion(sonarRootProject.getVersion());
-        LOG.debug(" - basedir {}",newProject.getBaseDir().getAbsolutePath());
-        LOG.debug("  - Adding Sub Project => {}", newProject.getName());
+        newModule.setVersion(sonarRootProject.getVersion());
+        LOG.debug(" - basedir {}",newModule.getBaseDir().getAbsolutePath());
+        LOG.debug("  - Adding Sub Project => {}", newModule.getName());
 
-        childProjects.add(newProject);
+        childProjects.add(newModule);
     }
 
     private String getKey(VisualStudioProject project) {

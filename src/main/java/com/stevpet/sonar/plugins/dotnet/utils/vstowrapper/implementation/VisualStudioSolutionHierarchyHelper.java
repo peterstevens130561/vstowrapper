@@ -22,12 +22,13 @@ import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.AssemblyLocator;
+import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioSolutionProject;
 
-public class VisualStudioSolutionHierarchyHelper implements BatchExtension {
+public class VisualStudioSolutionHierarchyHelper implements BatchExtension, HierarchyBuilder {
 
 	private Logger LOG  =LoggerFactory.getLogger(VisualStudioSolutionHierarchyHelper.class);
-	private List<SimpleVisualStudioProject> projects;
+	private List<VisualStudioProject> projects;
 	private Settings settings;
 	private AssemblyLocator assemblyLocator;
 	
@@ -38,6 +39,10 @@ public class VisualStudioSolutionHierarchyHelper implements BatchExtension {
 	private SimpleVisualStudioSolution currentSolution;
 	private File solutionFile;
 
+	/* (non-Javadoc)
+	 * @see com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation.HierarchyHelper#build(java.io.File)
+	 */
+	@Override
 	public void build(File baseDir) {
 		Preconditions.checkArgument(baseDir!=null,"no baseDir");
 		this.solutionFile=getSolutionFile(baseDir);
@@ -107,21 +112,20 @@ public class VisualStudioSolutionHierarchyHelper implements BatchExtension {
 		projectParser.setName(projectName);
 		SimpleVisualStudioProject project = projectParser.parse(projectFile);
 
-		File assembly = assemblyLocator.locateAssembly(projectName,
+		File assemblyFile = assemblyLocator.locateAssembly(projectName,
 				projectFile, project);
-		if (skipNotBuildProjects() && assembly == null) {
+		if (skipNotBuildProjects() && assemblyFile == null) {
 			logSkippedProject(solutionProject, "because it is not built and \""
 					+ VisualStudioPlugin.VISUAL_STUDIO_SKIP_IF_NOT_BUILT
 					+ "\" is set.");
 			return false;
-		} else if (assembly == null) {
+		} else if (assemblyFile == null) {
 			String msg = "Project not built " + projectFile.getAbsolutePath();
 			LOG.error(msg);
 			throw new VsToWrapperException(msg);
 
 		}
-		project.setAssembly(assembly);
-		project.setProjectName(solutionProject.name());
+		project.setAssemblyFile(assemblyFile).setProjectName(solutionProject.name());
 		projects.add(project);
 		return true;
 	}
@@ -191,6 +195,10 @@ public class VisualStudioSolutionHierarchyHelper implements BatchExtension {
 				+ reason);
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation.HierarchyHelper#isTestProject(java.lang.String)
+	 */
+	@Override
 	public boolean isTestProject(String projectName) {
 		return matchesPropertyRegex(
 				VisualStudioPlugin.VISUAL_STUDIO_TEST_PROJECT_PATTERN,
@@ -223,10 +231,18 @@ public class VisualStudioSolutionHierarchyHelper implements BatchExtension {
 		return new File(file, relativePath.replace('\\', '/'));
 	}
 
-	public List<SimpleVisualStudioProject> getProjects() {
+	/* (non-Javadoc)
+	 * @see com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation.HierarchyHelper#getProjects()
+	 */
+	@Override
+	public List<VisualStudioProject> getProjects() {
 		return projects;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation.HierarchyHelper#getSolution()
+	 */
+	@Override
 	public SimpleVisualStudioSolution getSolution() {
 		Preconditions.checkState(currentSolution!=null,"no currentSolution");
 		return currentSolution;

@@ -33,14 +33,6 @@ public interface VisualStudioProject {
      */
     String getAssemblyName();
 
-    /**
-     * Get the file created by this project for the given arguments
-     * @param buildConfiguration i.e. Debug, Release
-     * @param buildPlatform i.e AnyCPU, x64
-     * @return
-     */
-    File getArtifact(String buildConfiguration, String buildPlatform);
-
     boolean isUnitTest();
 
     String getArtifactName();
@@ -66,5 +58,10 @@ public interface VisualStudioProject {
 	 * @return 
 	 */
 	String getProjectName();
+
+	void setIsTest();
+
+	File getArtifactFile();
+
 
 }

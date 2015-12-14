@@ -22,8 +22,11 @@
  *******************************************************************************/
 package com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
 
 import java.io.File;
@@ -32,129 +35,153 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * All information related to Visual Studio projects which can be extracted only from a project file.
- * Should not be mixed with information gathered from solution files.
+ * All information related to Visual Studio projects which can be extracted only
+ * from a project file. Should not be mixed with information gathered from
+ * solution files.
  */
 public class SimpleVisualStudioProject implements VisualStudioProject {
 
-    private final File projectFile ;
-  private final List<String> files;
-  private final String outputType;
-  private final String assemblyName;
-  private final List<String> outputPaths;
-  private String language ;
-  public void setLanguage(String language) {
-	this.language = language;
-}
+	private File projectFile;
+	private List<String> files = new ArrayList<String>();
+	private String outputType;
+	private String assemblyName;
+	private List<String> outputPaths = new ArrayList<String>();
+	private String language;
 
-private boolean isTest;
-  private File assemblyFile;
-  private String projectName;
+	public void setLanguage(String language) {
+		this.language = language;
+	}
 
-/**
- * 
- * @param projectFile - the csproj file
- * @param files - all sourcefiles relative to the project dir
- * @param outputType 
- * @param assemblyName - name of assembly
- * @param outputPaths
- */
-  public SimpleVisualStudioProject(File projectFile,List<String> files,  @Nullable String outputType, @Nullable String assemblyName,
-    List<String> outputPaths) {
-    this.projectFile = projectFile;
-    this.outputType = outputType;
-    this.assemblyName = assemblyName;
-    this.outputPaths = outputPaths;
-    this.files = files;
-  }
+	private boolean isTest;
+	private File assemblyFile;
+	private String projectName;
 
-  public List<File> getSourceFiles() {
-    return createFiles(projectFile,files);
-  }
+	public SimpleVisualStudioProject() {
 
+	}
 
-  @Nullable
-  public String outputType() {
-    return outputType;
-  }
+	public SimpleVisualStudioProject setProjectFile(@Nonnull File projectFile) {
+		this.projectFile = projectFile;
+		return this;
+	}
 
+	public SimpleVisualStudioProject setSourceFiles(
+			@Nonnull List<String> sourceFileNames) {
+		this.files = sourceFileNames;
+		return this;
+	}
 
-  public List<String> outputPaths() {
-    return outputPaths;
-  }
+	public SimpleVisualStudioProject setOutputType(@Nonnull String outputType) {
+		this.outputType = outputType;
+		return this;
+	}
 
-  /**
-   * {@link VisualStudioProject#getAssemblyName}
-   */
-@Override
-public String getAssemblyName() {
-    return assemblyName;
-}
+	public SimpleVisualStudioProject setAssemblyName(
+			@Nonnull String assemblyName) {
+		this.assemblyName = assemblyName;
+		return this;
+	}
 
-@Override 
-public void setProjectName(String projectName) {
-	this.projectName = projectName;
-}
+	public List<File> getSourceFiles() {
+		return createFiles(projectFile, files);
+	}
 
-@Override
-public String getProjectName() {
-	return projectName;
-}
-@Override
-public File getArtifact(String buildConfiguration, String buildPlatform) {
-    return assemblyFile;
-}
+	@Nullable
+	public String outputType() {
+		return outputType;
+	}
 
-@Override
-public boolean isUnitTest() {
-    return isTest;
-}
+	public List<String> outputPaths() {
+		return outputPaths;
+	}
 
-@Override
-public String getArtifactName() {
-    return assemblyFile.getName();
-}
+	/**
+	 * {@link VisualStudioProject#getAssemblyName}
+	 */
+	@Override
+	public String getAssemblyName() {
+		return assemblyName;
+	}
 
-@Override
-public File getDirectory() {
-    return projectFile.getParentFile();
-}
+	@Override
+	/**
+	 * set the name of the project, as it is known in the solution. 
+	 * Which may be different than the name of the csproj file, and which may
+	 * be different than the name of the artifact.
+	 */
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
 
+	@Override
+	public String getProjectName() {
+		return projectName;
+	}
 
-@Override
-public boolean isTest() {
-    return isTest;
-}
+	@Override
+	public File getArtifactFile() {
+		Preconditions.checkNotNull(assemblyFile,"assemblyFile not set");
+		return assemblyFile;
+	}
 
-public void setIsTest() {
-    this.isTest=true; 
-}
+	@Override
+	public boolean isUnitTest() {
+		return isTest;
+	}
 
-public void setAssembly(File assembly) {
-    this.assemblyFile = assembly;
-}
+	@Override
+	public String getArtifactName() {
+		return getArtifactFile().getName();
+	}
 
-private List<File> createFiles(File projectFile,List<String> pathsList) {
-    File projectDir=projectFile.getParentFile();
-    List<File> filesList = new ArrayList<File>();
-    for(String path:pathsList) {
-        if(path.endsWith(".cs")) {
-            File file = new File(projectDir,path.replace('\\', '/'));
-            try {
-                File canonicalFile = file.getCanonicalFile();
-                filesList.add(canonicalFile);
-                
-            } catch (IOException e) {
-                throw new VsToWrapperException("Could not get canonicalFile on" + file.getAbsolutePath());
-            }
-        }
-        
-    }
-    return filesList;
-}
+	@Override
+	public File getDirectory() {
+		return projectFile.getParentFile();
+	}
 
-@Override
-public String getLanguage() {
-	return language;
-}
+	@Override
+	public boolean isTest() {
+		return isTest;
+	}
+
+	@Override
+	public void setIsTest() {
+		this.isTest = true;
+	}
+
+	public SimpleVisualStudioProject setAssemblyFile(File assembly) {
+		this.assemblyFile = assembly;
+		return this;
+	}
+
+	private List<File> createFiles(File projectFile, List<String> pathsList) {
+		File projectDir = projectFile.getParentFile();
+		List<File> filesList = new ArrayList<File>();
+		for (String path : pathsList) {
+			if (path.endsWith(".cs")) {
+				File file = new File(projectDir, path.replace('\\', '/'));
+				try {
+					File canonicalFile = file.getCanonicalFile();
+					filesList.add(canonicalFile);
+
+				} catch (IOException e) {
+					throw new VsToWrapperException(
+							"Could not get canonicalFile on"
+									+ file.getAbsolutePath());
+				}
+			}
+
+		}
+		return filesList;
+	}
+
+	@Override
+	public String getLanguage() {
+		return language;
+	}
+
+	public SimpleVisualStudioProject setOutputPaths(List<String> outputPaths) {
+		this.outputPaths = outputPaths;
+		return this;
+	}
 }

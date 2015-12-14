@@ -28,7 +28,7 @@ public class ModuleBuilderTest {
         moduleBuilder = new ModuleBuilder();
         when(visualStudioProject.getArtifactName()).thenReturn("artifactName");
         when(visualStudioProject.getAssemblyName()).thenReturn("assemblyName");
-        when(visualStudioProject.getArtifact(null, null)).thenReturn(new File("C:/Development/Radiant/Main/bin/artifactName.dll"));
+        when(visualStudioProject.getArtifactFile()).thenReturn(new File("C:/Development/Radiant/Main/bin/artifactName.dll"));
         when(visualStudioProject.getDirectory()).thenReturn(new File("C:/Development/ProjectDir"));
         
 

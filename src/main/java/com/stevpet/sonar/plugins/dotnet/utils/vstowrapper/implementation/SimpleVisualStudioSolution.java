@@ -39,9 +39,14 @@ public class SimpleVisualStudioSolution implements VisualStudioSolution{
   private File solutionFile;
   private List<VisualStudioProject> unitTestVisualStudioProjects = new ArrayList<VisualStudioProject>();
   private List<VisualStudioProject> visualStudioProjects = new ArrayList<VisualStudioProject>();
-  public SimpleVisualStudioSolution(File file, List<VisualStudioSolutionProject> projects) {
+  /**
+   * 
+   * @param solutionfile - the solution file
+   * @param projects - list of projects in the solution
+   */
+  public SimpleVisualStudioSolution(File solutionfile, List<VisualStudioSolutionProject> projects) {
     this.projects = projects;
-    this.solutionFile = file;
+    this.solutionFile = solutionfile;
   }
 
   public List<VisualStudioSolutionProject> projects() {

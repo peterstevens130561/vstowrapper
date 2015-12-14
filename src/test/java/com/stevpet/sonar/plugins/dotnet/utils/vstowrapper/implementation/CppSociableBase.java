@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.util.Properties;
 
-import org.junit.Before;
 import org.mockito.Mock;
 import org.sonar.api.batch.bootstrap.ProjectBuilder.Context;
 import org.sonar.api.batch.bootstrap.ProjectDefinition;

@@ -26,6 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.BatchExtension;
@@ -56,7 +57,7 @@ public class SimpleMicrosoftWindowsEnvironment implements BatchExtension,
 			.getLogger(SimpleMicrosoftWindowsEnvironment.class);
 	private VisualStudioSolution solution = new NullVisualStudioSolution();
 
-	private VisualStudioSolutionHierarchyHelper hierarchyHelper;
+	private HierarchyBuilder hierarchyHelper;
 	private Project project;
 	private FileSystem fileSystem;
 	private boolean didBuild = false;
@@ -74,17 +75,12 @@ public class SimpleMicrosoftWindowsEnvironment implements BatchExtension,
 		this.fileSystem = fs;
 	}
 
-	private void addProjectsToEnvironment(
-			List<SimpleVisualStudioProject> projects) {
-		for (SimpleVisualStudioProject project : projects) {
-			solution.addVisualStudioProject(project);
-			String projectName = project.getProjectName();
-			if (hierarchyHelper.isTestProject(projectName)) {
-				solution.addUnitTestVisualStudioProject(project);
-				project.setIsTest();
-			}
-		}
+	//TODO: remove after refactoring
+	void setHierarchyHelper(HierarchyBuilder hierarchyHelper) {
+		this.hierarchyHelper = hierarchyHelper;
+		
 	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -96,19 +92,17 @@ public class SimpleMicrosoftWindowsEnvironment implements BatchExtension,
 	public VisualStudioSolution getCurrentSolution() {
 		if (!didBuild) {
 			File solutionDir;
-			// this is just there for unit testing....
-			// TODO: remove as part of cleanup, should only accept modules.
 			if (!project.isRoot()) {
-				String relativePath = project.getPath();
-				LOG.info(relativePath);
-				solutionDir = fileSystem.baseDir().getParentFile();
+				int  relativePathLength = project.getPath().length();
+				String absolutePath=fileSystem.baseDir().getAbsolutePath();
+				String parentPath=StringUtils.left(absolutePath,absolutePath.length()-relativePathLength);
+				solutionDir = new File(parentPath);
 			} else {
 				solutionDir = fileSystem.baseDir();
 			}
 			hierarchyHelper.build(solutionDir);
 			solution = hierarchyHelper.getSolution();
-			List<SimpleVisualStudioProject> projects = hierarchyHelper
-					.getProjects();
+			List<VisualStudioProject> projects = hierarchyHelper.getProjects();
 			addProjectsToEnvironment(projects);
 			didBuild = true;
 		}
@@ -158,5 +152,17 @@ public class SimpleMicrosoftWindowsEnvironment implements BatchExtension,
 			}
 		}
 		return false;
+	}
+	
+	private void addProjectsToEnvironment(
+			List<VisualStudioProject> projects) {
+		for (VisualStudioProject project : projects) {
+			solution.addVisualStudioProject(project);
+			String projectName = project.getProjectName();
+			if (hierarchyHelper.isTestProject(projectName)) {
+				solution.addUnitTestVisualStudioProject(project);
+				project.setIsTest();
+			}
+		}
 	}
 }

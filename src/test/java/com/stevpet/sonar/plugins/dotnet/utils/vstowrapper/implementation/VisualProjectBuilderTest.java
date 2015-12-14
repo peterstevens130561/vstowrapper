@@ -26,7 +26,6 @@ import org.sonar.test.TestUtils;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.AssemblyLocator;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.MicrosoftWindowsEnvironment;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
-import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioSolution;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation.VisualStudioProjectBuilder;
 
 public class VisualProjectBuilderTest {

@@ -22,34 +22,18 @@
  *******************************************************************************/
 package com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
-import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableSet;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.AssemblyLocator;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.MicrosoftWindowsEnvironment;
-import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioSolutionProject;
+import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
+import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioSolution;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.bootstrap.ProjectBuilder;
 import org.sonar.api.batch.bootstrap.ProjectDefinition;
-import org.sonar.api.component.SourceFile;
 import org.sonar.api.config.Settings;
-import org.sonar.api.utils.SonarException;
 
-import javax.annotation.Nullable;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-import java.util.regex.PatternSyntaxException;
 
 /**
  * ProjectBuilder for dotnet projects
@@ -68,8 +52,8 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
 	private MicrosoftWindowsEnvironment microsoftWindowsEnvironment;
 	private ProjectDefinition sonarRootProject;
 	private ModuleBuilder moduleBuilder;
-	private SimpleVisualStudioSolution currentSolution;
-	private VisualStudioSolutionHierarchyHelper hierarchyHelper ;
+	private VisualStudioSolution currentSolution;
+	private HierarchyBuilder hierarchyHelper ;
 
 	/**
 	 * @param settings
@@ -93,15 +77,15 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
 		sonarRootProject = context.projectReactor().getRoot();
 		moduleBuilder.setRoot(sonarRootProject);
 		hierarchyHelper.build(sonarRootProject.getBaseDir());
-		List<SimpleVisualStudioProject> projects=hierarchyHelper.getProjects();
+		List<VisualStudioProject> projects=hierarchyHelper.getProjects();
 		currentSolution = hierarchyHelper.getSolution();
 
 		addProjectsToEnvironment(projects);
 		addProjectsToBuilder(projects);
 	}
 
-	private void addProjectsToBuilder(List<SimpleVisualStudioProject> projects) {
-		for (SimpleVisualStudioProject project : projects) {
+	private void addProjectsToBuilder(List<VisualStudioProject> projects) {
+		for (VisualStudioProject project : projects) {
 			if (!moduleBuilder.contains(project)) {
 				moduleBuilder.add(project);
 			}
@@ -109,9 +93,9 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
 		moduleBuilder.build();
 	}
 
-	private void addProjectsToEnvironment(List<SimpleVisualStudioProject> projects) {
+	private void addProjectsToEnvironment(List<VisualStudioProject> projects) {
 		microsoftWindowsEnvironment.setCurrentSolution(currentSolution);
-		for (SimpleVisualStudioProject project : projects) {
+		for (VisualStudioProject project : projects) {
 			currentSolution.addVisualStudioProject(project);
 			String projectName = project.getProjectName();
 			if (hierarchyHelper.isTestProject(projectName)) {

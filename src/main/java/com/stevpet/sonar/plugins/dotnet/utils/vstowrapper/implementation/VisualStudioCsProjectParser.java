@@ -65,16 +65,16 @@ public class VisualStudioCsProjectParser implements VisualStudioProjectParser {
         private File file;
         private XMLStreamReader stream;
         private final ImmutableList.Builder<String> filesBuilder = ImmutableList.builder();
-        private String projectTypeGuids;
-        private String outputType;
-        private String assemblyName;
+
         private String currentCondition;
         private final ImmutableList.Builder<String> propertyGroupConditionsBuilder = ImmutableList.builder();
         private final ImmutableList.Builder<String> outputPathsBuilder = ImmutableList.builder();
 
         public SimpleVisualStudioProject parse(File projectFile) {
             this.file = projectFile;
-
+            SimpleVisualStudioProject project = new SimpleVisualStudioProject();
+            project.setProjectFile(projectFile);
+            
             InputStreamReader reader = null;
             XMLInputFactory xmlFactory = XMLInputFactory.newInstance();
 
@@ -89,15 +89,13 @@ public class VisualStudioCsProjectParser implements VisualStudioProjectParser {
                     int next = stream.next();
                     if (next == XMLStreamConstants.START_ELEMENT) {
                         String tagName = stream.getLocalName();
-
                         if (inItemGroup && inItemGroupNestingLevel == 0 && PROJECT_ITEM_TYPES.contains(tagName)) {
                             handleProjectItemTag();
-                        } else if ("ProjectTypeGuids".equals(tagName)) {
-                            handleProjectTypeGuids();
                         } else if ("OutputType".equals(tagName)) {
-                            handleOutputTypeTag();
+                        	project.setOutputType(stream.getElementText());
+
                         } else if ("AssemblyName".equals(tagName)) {
-                            handleAssemblyNameTag();
+                        	project.setAssemblyName(stream.getElementText());
                         } else if ("PropertyGroup".equals(tagName)) {
                             handlePropertyGroupTag();
                         } else if ("OutputPath".equals(tagName)) {
@@ -128,9 +126,9 @@ public class VisualStudioCsProjectParser implements VisualStudioProjectParser {
                 closeXmlStream();
                 Closeables.closeQuietly(reader);
             }
-            SimpleVisualStudioProject project = new SimpleVisualStudioProject(projectFile, filesBuilder.build(), outputType,
-                assemblyName, outputPathsBuilder.build());
-            project.setLanguage("cs");
+            project.setSourceFiles(filesBuilder.build())
+            	.setOutputPaths(outputPathsBuilder.build())
+            	.setLanguage("cs");
             return project;
         }
 
@@ -151,17 +149,6 @@ public class VisualStudioCsProjectParser implements VisualStudioProjectParser {
             }
         }
 
-        private void handleProjectTypeGuids() throws XMLStreamException {
-            projectTypeGuids = stream.getElementText();
-        }
-
-        private void handleOutputTypeTag() throws XMLStreamException {
-            outputType = stream.getElementText();
-        }
-
-        private void handleAssemblyNameTag() throws XMLStreamException {
-            assemblyName = stream.getElementText();
-        }
 
         private void handlePropertyGroupTag() throws XMLStreamException {
             currentCondition = Strings.nullToEmpty(getAttribute("Condition"));

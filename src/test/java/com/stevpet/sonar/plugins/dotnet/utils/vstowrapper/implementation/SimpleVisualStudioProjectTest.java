@@ -13,19 +13,16 @@ import org.junit.Test;
 public class SimpleVisualStudioProjectTest {
 
     private File projectFile;
-    private List<String> files;
+    private List<String> files=new ArrayList<>();
     private String assemblyName;
     private String outputType;
-    private List<String> outputPaths;
     private SimpleVisualStudioProject visualStudioProject;
     @Before
     public void before() {
         projectFile = new File("john/projectFile");
         assemblyName="project.dll";
         outputType="assembly";
-        outputPaths= new ArrayList<String>();
-        files=new ArrayList<String>();
-        visualStudioProject = new SimpleVisualStudioProject(projectFile,files,outputType,assemblyName,outputPaths);
+        visualStudioProject = new SimpleVisualStudioProject().setProjectFile(projectFile).setAssemblyName(assemblyName).setOutputType(outputType);
     }
     
     @Test
@@ -38,6 +35,7 @@ public class SimpleVisualStudioProjectTest {
     @Test
     public  void getSourceFiles_OneFiles_ListWithOne() {
         files.add("file1.cs");
+        visualStudioProject.setSourceFiles(files);
         List<File> sourceFiles = visualStudioProject.getSourceFiles();
         assertNotNull("expect valid list",sourceFiles);
         assertEquals("list to be have one item",1,sourceFiles.size());
@@ -48,6 +46,7 @@ public class SimpleVisualStudioProjectTest {
     public  void getSourceFiles_TwoFiles_ListWithTwo() {
         files.add("file1.cs");
         files.add("file2.cs");
+        visualStudioProject.setSourceFiles(files);
         List<File> sourceFiles = visualStudioProject.getSourceFiles();
         assertNotNull("expect valid list",sourceFiles);
         assertEquals("list to be have two items",2,sourceFiles.size());

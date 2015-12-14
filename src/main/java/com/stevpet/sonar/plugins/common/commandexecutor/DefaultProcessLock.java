@@ -28,14 +28,9 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
-import java.util.List;
-import java.util.Stack;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.BatchExtension;
-import org.sonar.api.Extension;
-import org.sonar.api.batch.InstantiationStrategy;
 import org.sonar.api.utils.SonarException;
 
 /**

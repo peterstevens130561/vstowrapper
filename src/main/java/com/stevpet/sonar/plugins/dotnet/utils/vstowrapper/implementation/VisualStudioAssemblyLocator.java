@@ -81,7 +81,7 @@ public File locateAssembly(String projectName, File projectFile, VisualStudioPro
 
     if (candidates.size() == 1) {
       String title = candidates.size() == 1 ? "Using the the following assembly for project " : "Using the most recently generated assembly for project ";
-      LOG.info(title + projectName + ": " + candidates.get(0).getAbsolutePath());
+      LOG.debug(title + projectName + ": " + candidates.get(0).getAbsolutePath());
     }
 
     return candidates.get(0);
