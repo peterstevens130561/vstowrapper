@@ -33,8 +33,11 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class VisualStudioSolutionParser {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+class VisualStudioSolutionParser {
+	private Logger log = LoggerFactory.getLogger(VisualStudioSolutionParser.class);
   private static final String PROJECT_LINE_LOOKAHEAD = "Project(";
   private static final Pattern PROJECT_LINE_PATTERN = Pattern.compile("Project\\(\"[^\"]++\"\\)\\s*+=\\s*+\"([^\"]++)\",\\s*+\"([^\"]++)\",\\s*+\"[^\"]++\"");
 
@@ -61,7 +64,10 @@ class VisualStudioSolutionParser {
 
   private boolean isSupportedProject(VisualStudioSolutionProject visualStudioSolutionProject) {
           String path=visualStudioSolutionProject.path();
-        return path.endsWith("csproj") || path.endsWith("vcxproj");
+          if(path.startsWith("..\\")) {
+        	  log.warn("solution references project outside solution hierarchy (anti-pattern), will not be included in analysis:{}",path);
+          }
+        return (path.endsWith("csproj") || path.endsWith("vcxproj")) && !path.startsWith("..\\");
 }
 
 private VisualStudioSolutionProject parseProjectLine(File file, int lineNumber, String line) {
@@ -82,5 +88,9 @@ private VisualStudioSolutionProject parseProjectLine(File file, int lineNumber, 
     }
 
   }
+
+public void setLogger(Logger log) {
+	this.log=log;
+}
 
 }

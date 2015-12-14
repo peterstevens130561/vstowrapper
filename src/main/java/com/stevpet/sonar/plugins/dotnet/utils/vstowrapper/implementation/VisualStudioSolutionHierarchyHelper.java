@@ -95,7 +95,7 @@ public class VisualStudioSolutionHierarchyHelper implements BatchExtension, Hier
 			throw new SonarException(msg);
 		}
 		if (!result.exists()) {
-			String msg="Visual Studio solution file does not exist ";
+			String msg="Visual Studio solution file does not exist " + 
 					result.getAbsolutePath();
 			throw new SonarException(msg);
 		}
