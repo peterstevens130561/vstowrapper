@@ -39,7 +39,7 @@ public class SimpleMicrosoftWindowsEnvironmentTest {
 	@Mock private Settings settings;
 	@Mock private FileSystem fileSystem;
 	@Mock private Project project;
-	private SimpleMicrosoftWindowsEnvironment microsoftWindowsEnvironment;
+	private DefaultMicrosoftWindowsEnvironmentBase microsoftWindowsEnvironment;
 	private VisualStudioSolution solution;
 	@Mock private AssemblyLocator assemblyLocator;
 	@Mock private HierarchyBuilder hierarchyHelper;

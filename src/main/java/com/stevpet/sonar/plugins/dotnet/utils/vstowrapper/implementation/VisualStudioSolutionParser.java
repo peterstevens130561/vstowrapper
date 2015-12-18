@@ -66,8 +66,9 @@ class VisualStudioSolutionParser {
           String path=visualStudioSolutionProject.path();
           if(path.startsWith("..\\")) {
         	  log.warn("solution references project outside solution hierarchy (anti-pattern), will not be included in analysis:{}",path);
+        	  return false;
           }
-        return (path.endsWith("csproj") || path.endsWith("vcxproj")) && !path.startsWith("..\\");
+        return (path.endsWith("csproj") || path.endsWith("vcxproj"));
 }
 
 private VisualStudioSolutionProject parseProjectLine(File file, int lineNumber, String line) {
