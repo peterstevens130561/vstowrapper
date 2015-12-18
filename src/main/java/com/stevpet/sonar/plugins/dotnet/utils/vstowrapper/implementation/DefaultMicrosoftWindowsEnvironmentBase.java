@@ -13,7 +13,7 @@ import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.MicrosoftWindowsEnviro
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioSolution;
 
-public abstract class DefaultMicrosoftWindowsEnvironmentBase implements MicrosoftWindowsEnvironment{
+public class DefaultMicrosoftWindowsEnvironmentBase implements MicrosoftWindowsEnvironment{
 
 	private HierarchyBuilder hierarchyBuilder;
 	private Project project;
@@ -27,10 +27,6 @@ public abstract class DefaultMicrosoftWindowsEnvironmentBase implements Microsof
 		this.project=project;
 	}
 	
-	protected void setHierarchyHelper(HierarchyBuilder hierarchyHelper) {
-		this.hierarchyBuilder = hierarchyHelper;
-		
-	}
 
 	@Override
 	public VisualStudioSolution getCurrentSolution() {

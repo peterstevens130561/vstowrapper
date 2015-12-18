@@ -57,7 +57,8 @@ public class VisualProjectBuilderTest {
         when(assemblyLocator.locateAssembly(eq("CodeCoverage"), any(File.class),any(VisualStudioProject.class))).thenReturn(new File(baseDir,"CodeCoverage/bin/codecoverage.dll"));
         when(assemblyLocator.locateAssembly(eq("CodeCoverage.UnitTests"), any(File.class),any(VisualStudioProject.class))).thenReturn(new File(baseDir,"CodeCoverage.UnitTests/bin/codecoverage.unittests.dll"));
         when(project.isRoot()).thenReturn(true);
-        microsoftWindowsEnvironment = new SimpleMicrosoftWindowsEnvironment(settings,assemblyLocator,fileSystem,project);
+        VisualStudioSolutionHierarchyHelper hierarchyHelper = new VisualStudioSolutionHierarchyHelper(settings, assemblyLocator);
+        microsoftWindowsEnvironment = new DefaultMicrosoftWindowsEnvironmentBase(hierarchyHelper,fileSystem,project);
         visualProjectBuilder = new VisualStudioProjectBuilder(settings,microsoftWindowsEnvironment,assemblyLocator);
     }
     

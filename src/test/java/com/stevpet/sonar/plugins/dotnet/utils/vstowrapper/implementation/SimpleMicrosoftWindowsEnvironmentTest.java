@@ -176,7 +176,6 @@ public class SimpleMicrosoftWindowsEnvironmentTest {
 	}
 
 	private void instantiate() {
-		microsoftWindowsEnvironment = new SimpleMicrosoftWindowsEnvironment(settings, assemblyLocator,fileSystem,project);
-		microsoftWindowsEnvironment.setHierarchyHelper(hierarchyHelper);
+		microsoftWindowsEnvironment = new DefaultMicrosoftWindowsEnvironmentBase(hierarchyHelper,fileSystem,project);
 	}
 }
