@@ -30,9 +30,6 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 
-import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.AssemblyLocator;
-import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioSolution;
-
 /**
  * Intended to replace the dotnet fun, so is a minimalistic implementation
  * 
@@ -42,24 +39,15 @@ import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioSolution;
  * 
  */
 @InstantiationStrategy(InstantiationStrategy.PER_PROJECT)
-public class SimpleMicrosoftWindowsEnvironment extends DefaultMicrosoftWindowsEnvironmentBase implements BatchExtension
+public class DefaultMicrosoftWindowsEnvironment extends DefaultMicrosoftWindowsEnvironmentBase implements BatchExtension
 		 {
 
 	Logger LOG = LoggerFactory
-			.getLogger(SimpleMicrosoftWindowsEnvironment.class);
-	VisualStudioSolution solution = new NullVisualStudioSolution();
+			.getLogger(DefaultMicrosoftWindowsEnvironment.class);
 
-	@Deprecated
-	public SimpleMicrosoftWindowsEnvironment(Settings settings, FileSystem fs,
-			Project project) {
-		this(settings, new VisualStudioAssemblyLocator(settings), fs, project);
-	}
-
-	@Deprecated
-	public SimpleMicrosoftWindowsEnvironment(Settings settings,
-			AssemblyLocator assemblyLocator, FileSystem fs, Project project) {
+	public DefaultMicrosoftWindowsEnvironment(Settings settings, FileSystem fs, Project project) {
 		super(new VisualStudioSolutionHierarchyHelper(settings,
-				assemblyLocator),fs,project);
+				new VisualStudioAssemblyLocator(settings)),fs,project);
 	}
 	
 }
