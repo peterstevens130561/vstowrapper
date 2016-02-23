@@ -94,7 +94,7 @@ public class SimpleMicrosoftWindowsEnvironmentTest {
 
 		assertEquals(solution,currentSolution);
 		
-		List<VisualStudioProject> unitTestProjects=microsoftWindowsEnvironment.getCurrentSolution().getUnitTestProjects();
+		List<VisualStudioProject> unitTestProjects=microsoftWindowsEnvironment.getCurrentSolution().getTestProjects();
 		assertEquals(1,unitTestProjects.size());
 	}
 	
@@ -113,7 +113,7 @@ public class SimpleMicrosoftWindowsEnvironmentTest {
 
 		assertEquals(solution,currentSolution);
 		
-		List<VisualStudioProject> unitTestProjects=microsoftWindowsEnvironment.getCurrentSolution().getUnitTestProjects();
+		List<VisualStudioProject> unitTestProjects=microsoftWindowsEnvironment.getCurrentSolution().getTestProjects();
 		assertEquals(0,unitTestProjects.size());
 	}
 	

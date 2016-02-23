@@ -3,6 +3,7 @@ package com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioSolution;
@@ -22,7 +23,7 @@ public class NullVisualStudioSolution implements VisualStudioSolution {
 	}
 
 	@Override
-	public List<VisualStudioProject> getUnitTestProjects() {
+	public List<VisualStudioProject> getTestProjects() {
 		return new ArrayList<VisualStudioProject>();
 	}
 
@@ -37,13 +38,13 @@ public class NullVisualStudioSolution implements VisualStudioSolution {
 	}
 
 	@Override
-	public void addUnitTestVisualStudioProject(VisualStudioProject project) {
+	public void addTestVisualStudioProject(VisualStudioProject project) {
 
 
 	}
 
 	@Override
-	public List<File> getUnitTestSourceFiles() {
+	public List<File> getTestSourceFiles() {
 		return new ArrayList<File>();
 	}
 
@@ -56,5 +57,17 @@ public class NullVisualStudioSolution implements VisualStudioSolution {
 	public File getSolutionFile() {
 		return null;
 	}
+
+    @Override
+    public List<VisualStudioProject> getTestProjects(Pattern pattern) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean hasTestProjects(Pattern pattern) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
 }

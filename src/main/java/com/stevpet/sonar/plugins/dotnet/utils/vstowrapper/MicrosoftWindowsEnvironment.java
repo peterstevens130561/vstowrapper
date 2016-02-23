@@ -24,6 +24,7 @@ package com.stevpet.sonar.plugins.dotnet.utils.vstowrapper;
 
 import java.io.File;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.sonar.api.batch.InstantiationStrategy;
 import org.sonar.api.resources.Project;
@@ -45,13 +46,11 @@ public interface MicrosoftWindowsEnvironment {
     
     List<String> getAssemblies();
 
-
     /**
      * get the list of assemblies
      * @return
      */
     List<String> getArtifactNames();
-
 
     /**
      * 
@@ -59,12 +58,21 @@ public interface MicrosoftWindowsEnvironment {
      */
     boolean hasUnitTestSourceFiles();
 
-
     /**
      * @return true if the project is a (unit) test project
      * @param project
      * @return
      */
     boolean isUnitTestProject(Project project);
+
+    /**
+     * return true if the solution has one or more test projects matching the pattern.
+     * @param pattern
+     * @return
+     */
+    boolean hasTestProjects(Pattern pattern);
+
+
+    boolean isUnitTestProject(Project project, Pattern pattern);
     
 }

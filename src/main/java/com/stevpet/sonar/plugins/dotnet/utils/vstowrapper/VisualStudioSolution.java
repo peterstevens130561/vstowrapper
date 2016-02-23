@@ -24,6 +24,7 @@ package com.stevpet.sonar.plugins.dotnet.utils.vstowrapper;
 
 import java.io.File;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public interface VisualStudioSolution {
 
@@ -37,20 +38,21 @@ public interface VisualStudioSolution {
 
     /**
      * 
-     * @return list of unittest projects. List can be empty, but not null
+     * @return list of test projects. List can be empty, but not null
      */
-    List<VisualStudioProject> getUnitTestProjects();
+    List<VisualStudioProject> getTestProjects();
 
     /**
      * @return list of projects. List can be empty, but not null
      */
     List<VisualStudioSolutionProject> projects();
+    
 
     void addVisualStudioProject(VisualStudioProject project);
 
-    void addUnitTestVisualStudioProject(VisualStudioProject project);
+    void addTestVisualStudioProject(VisualStudioProject project);
 
-    List<File> getUnitTestSourceFiles();
+    List<File> getTestSourceFiles();
 
     List<String> getArtifactNames();
 
@@ -59,4 +61,15 @@ public interface VisualStudioSolution {
      */
     File getSolutionFile();
 
+    /**
+     * return the testprojects of which the assemblyname matches the pattern
+     * @param pattern
+     * @return
+     */
+    List<VisualStudioProject> getTestProjects(Pattern pattern);
+
+    /**
+     * true if the solution has testProjects (one or more) matching the pattern
+     */
+    boolean hasTestProjects(Pattern pattern);
 }

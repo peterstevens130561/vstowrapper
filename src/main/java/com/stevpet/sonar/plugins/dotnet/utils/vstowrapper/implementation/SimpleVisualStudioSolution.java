@@ -25,6 +25,7 @@ package com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioSolution;
@@ -68,10 +69,33 @@ public List<VisualStudioProject> getProjects() {
 }
 
 @Override
-public List<VisualStudioProject> getUnitTestProjects() {
+public List<VisualStudioProject> getTestProjects() {
     return unitTestVisualStudioProjects;
 }
 
+@Override
+public List<VisualStudioProject> getTestProjects(Pattern pattern) {
+    List<VisualStudioProject> result = new ArrayList<>();
+    List<VisualStudioProject> projects = getTestProjects() ;
+    for(VisualStudioProject project : projects) {
+        if( pattern.matcher(project.getAssemblyName()).matches()) {
+            result.add(project);
+        }
+    }
+    return result;
+}
+
+@Override
+public boolean hasTestProjects(Pattern pattern) {
+    List<VisualStudioProject> result = new ArrayList<>();
+    List<VisualStudioProject> projects = getTestProjects() ;
+    for(VisualStudioProject project : projects) {
+        if( pattern.matcher(project.getAssemblyName()).matches()) {
+            return true;
+        }
+    }
+    return false;
+}
 
 @Override
 public void addVisualStudioProject(VisualStudioProject project) {
@@ -79,15 +103,15 @@ public void addVisualStudioProject(VisualStudioProject project) {
 }
 
 @Override
-public void addUnitTestVisualStudioProject(VisualStudioProject project) {
+public void addTestVisualStudioProject(VisualStudioProject project) {
     unitTestVisualStudioProjects.add(project);    // TODO Auto-generated method stub
     
 }
 
 @Override
-public List<File> getUnitTestSourceFiles() {
+public List<File> getTestSourceFiles() {
     List<File> unitTestFiles = new ArrayList<File>();
-    for(VisualStudioProject project:getUnitTestProjects()) {
+    for(VisualStudioProject project:getTestProjects()) {
         unitTestFiles.addAll(project.getSourceFiles());
     }
     return unitTestFiles;
@@ -102,4 +126,5 @@ public List<String> getArtifactNames() {
     }
     return modules;
 }
+
 }

@@ -99,7 +99,7 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
 			currentSolution.addVisualStudioProject(project);
 			String projectName = project.getProjectName();
 			if (hierarchyHelper.isTestProject(projectName)) {
-				currentSolution.addUnitTestVisualStudioProject(project);
+				currentSolution.addTestVisualStudioProject(project);
 				project.setIsTest();
 			}
 		}

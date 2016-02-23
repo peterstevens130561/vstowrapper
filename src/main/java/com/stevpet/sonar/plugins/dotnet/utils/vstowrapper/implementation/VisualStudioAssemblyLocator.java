@@ -132,7 +132,7 @@ public File locateAssembly(String projectName, File projectFile, VisualStudioPro
   }
 
 private boolean isRelative(String path) {
-    return !path.matches("^\\/|([A-Z]:\\/).*");
+    return !path.matches("^\\/|([A-Za-z]:\\/).*");
 }
 
   private static class FileLastModifiedComparator implements Comparator<File>, Serializable {
