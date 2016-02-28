@@ -285,12 +285,43 @@ public abstract class XmlParserSubject implements ParserSubject {
             if (observer.isMatch(path)) {
                 observer.observeAttribute(elementName, path, attributeValue,
                         attributeName);
-                invokeAnnotatedMethods(elementName, attributeValue,
+                invokeAttributeAnnotatedMethods(elementName, attributeValue,
                         attributeName, observer);
             }
         }
     }
 
+    private void invokeAttributeAnnotatedMethods(String elementName,
+            String attributeValue, String attributeName, ParserObserverMethods observer) {
+        Method[] methods = observer.getParserObserver().getClass().getMethods();
+        for (Method method : methods) {
+            invokeAttributeAnnotatedMethod(elementName, attributeValue, attributeName,
+                    observer, method);
+        }
+    }
+
+    private void invokeAttributeAnnotatedMethod2(String elementName,
+            String attributeValue, String attributeName,
+            ParserObserverMethods observer, Method method) {
+        AttributeMatcher annos = method.getAnnotation(AttributeMatcher.class);
+
+        if (annos == null) {
+            return;
+        }
+        if (elementName.equals(annos.elementName())
+                && attributeName.equals(annos.attributeName())) {
+            invokeMethod(observer, method, attributeValue);
+        }
+    }
+    
+    private void invokeAttributeAnnotatedMethod(String elementName,
+            String attributeValue, String attributeName,
+            ParserObserverMethods observer, Method method) {
+        AnnotatedMethodObserver methodObserver = AttributeMatcherMethodObserver.create(method);
+        if(methodObserver.shouldObserve(elementName, attributeName)) {
+            invokeMethod(observer, method, attributeValue);
+        }
+    }
     private void invokeAnnotatedElementMethods(String elementPath,
             String elementName, String elementValue, ParserObserverMethods observer) {
         Method[] methods = observer.getParserObserver().getClass().getMethods();
@@ -367,28 +398,7 @@ public abstract class XmlParserSubject implements ParserSubject {
         return " line/column = " + line + "/" + column;
     }
 
-    private void invokeAnnotatedMethods(String elementName,
-            String attributeValue, String attributeName, ParserObserverMethods observer) {
-        Method[] methods = observer.getParserObserver().getClass().getMethods();
-        for (Method method : methods) {
-            invokeAnnotatedMethod(elementName, attributeValue, attributeName,
-                    observer, method);
-        }
-    }
 
-    private void invokeAnnotatedMethod(String elementName,
-            String attributeValue, String attributeName,
-            ParserObserverMethods observer, Method method) {
-        AttributeMatcher annos = method.getAnnotation(AttributeMatcher.class);
-
-        if (annos == null) {
-            return;
-        }
-        if (elementName.equals(annos.elementName())
-                && attributeName.equals(annos.attributeName())) {
-            invokeMethod(observer, method, attributeValue);
-        }
-    }
 
     private String getTrimmedElementStringValue(SMInputCursor childCursor)
             throws XMLStreamException {
