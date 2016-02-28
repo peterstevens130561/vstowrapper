@@ -49,7 +49,6 @@ import com.stevpet.sonar.plugins.common.api.parser.ParserSubject;
 import com.stevpet.sonar.plugins.common.api.parser.annotations.AttributeMatcher;
 import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementMatcher;
 import com.stevpet.sonar.plugins.common.api.parser.annotations.PathMatcher;
-
 import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver.Event;
 
 /**
@@ -63,7 +62,7 @@ public abstract class XmlParserSubject implements ParserSubject {
     private static final String COULD_NOT_CREATE_CURSOR = "Could not create cursor ";
     private static final Logger LOG = LoggerFactory
             .getLogger(XmlParserSubject.class);
-    private List<ParserObserver> observers = new ArrayList<ParserObserver>();
+    private List<ParserObserverMethods> observers = new ArrayList<ParserObserverMethods>();
 
     private List<String> parentElements = new ArrayList<String>();
     private int line;
@@ -77,7 +76,7 @@ public abstract class XmlParserSubject implements ParserSubject {
         }
     }
 
-    public List<ParserObserver> getObservers() {
+    public List<ParserObserverMethods> getObservers() {
         return observers;
     }
 
@@ -160,7 +159,7 @@ public abstract class XmlParserSubject implements ParserSubject {
     }
 
     private void checkOnErrors(File file) {
-        for (ParserObserver observer : observers) {
+        for (ParserObserverMethods observer : observers) {
             if (observer.hasError()) {
                 throw new ParserSubjectErrorException(file);
             }
@@ -169,19 +168,23 @@ public abstract class XmlParserSubject implements ParserSubject {
 
     private void parse(SMInputCursor rootCursor) throws XMLStreamException {
         injectVariablesInObservers();
-        elementObserver.setObservers(observers);
+        List<ParserObserver> parserObservers = new ArrayList<>();
+        for(ParserObserverMethods observer : observers) {
+            parserObservers.add(observer.getParserObserver());
+        }
+        elementObserver.setObservers(parserObservers);
         SMInputCursor childCursor = rootCursor.childElementCursor();
         parseChild("", childCursor);
     }
 
     private void injectVariablesInObservers() {
-        for (ParserObserver observer : observers) {
+        for (ParserObserverMethods observer : observers) {
             observer.setParserData(parserData);
         }
     }
 
     public void registerObserver(ParserObserver observer) {
-        observers.add(observer);
+        observers.add(new ParserObserverMethods(observer));
     }
 
     private boolean parseChild(String path, SMInputCursor childCursor)
@@ -243,7 +246,7 @@ public abstract class XmlParserSubject implements ParserSubject {
     }
 
     private void invokeElementObservers(String path, String name, String text) {
-        for (ParserObserver observer : observers) {
+        for (ParserObserverMethods observer : observers) {
             if (observer.isMatch(path)) {
                 observer.observeElement(name, text);
                 invokeAnnotatedElementMethods(path, name, text, observer);
@@ -278,7 +281,7 @@ public abstract class XmlParserSubject implements ParserSubject {
 
     private void invokeAttributeObservers(String elementName, String path,
             String attributeValue, String attributeName) {
-        for (ParserObserver observer : observers) {
+        for (ParserObserverMethods observer : observers) {
             if (observer.isMatch(path)) {
                 observer.observeAttribute(elementName, path, attributeValue,
                         attributeName);
@@ -289,35 +292,30 @@ public abstract class XmlParserSubject implements ParserSubject {
     }
 
     private void invokeAnnotatedElementMethods(String elementPath,
-            String elementName, String elementValue, ParserObserver observer) {
-        Method[] methods = observer.getClass().getMethods();
+            String elementName, String elementValue, ParserObserverMethods observer) {
+        Method[] methods = observer.getParserObserver().getClass().getMethods();
         for (Method method : methods) {
-            invokeAnnotatedElementMethod(elementName, elementValue, observer,
+            invokeElementMatcherMethod(elementName, elementValue, observer,
                     method);
             invokePathMatcherMethod(elementPath, elementValue, observer, method);
         }
     }
 
     private void invokePathMatcherMethod(String path, String elementValue,
-            ParserObserver observer, Method method) {
-        PathMatcher annos = method.getAnnotation(PathMatcher.class);
-        if (annos == null) {
-            return;
-        }
-        if (path.equals(annos.path())) {
+            ParserObserverMethods observer, Method method) {
+        AnnotatedMethodObserver pathMatcherMethodObserver = PathMatcherMethodObserver.create(method);
+
+        if (pathMatcherMethodObserver.shouldObserve(path, elementValue)) {
             invokeMethod(observer, method, elementValue);
         }
 
     }
 
-    private void invokeAnnotatedElementMethod(String elementName,
-            String elementValue, ParserObserver observer, Method method) {
-        ElementMatcher annos = method.getAnnotation(ElementMatcher.class);
+    private void invokeElementMatcherMethod(String elementName,
+            String elementValue, ParserObserverMethods observer, Method method) {
+        AnnotatedMethodObserver matcher = ElementMatcherObserver.create(method);
 
-        if (annos == null) {
-            return;
-        }
-        if (elementName.equals(annos.elementName())) {
+        if (matcher.shouldObserve(elementName, elementValue)) {
             invokeMethod(observer, method, elementValue);
         }
     }
@@ -325,8 +323,9 @@ public abstract class XmlParserSubject implements ParserSubject {
 
 
 
-    private void invokeMethod(ParserObserver observer, Method method,
-            String... elementValue ) {
+    private void invokeMethod(ParserObserverMethods parserObserverMethods, Method method,
+            String ... elementValue ) {
+        ParserObserver observer=parserObserverMethods.getParserObserver();
         try {
             Object[] varargs = elementValue;
             method.invoke(observer, varargs);
@@ -369,8 +368,8 @@ public abstract class XmlParserSubject implements ParserSubject {
     }
 
     private void invokeAnnotatedMethods(String elementName,
-            String attributeValue, String attributeName, ParserObserver observer) {
-        Method[] methods = observer.getClass().getMethods();
+            String attributeValue, String attributeName, ParserObserverMethods observer) {
+        Method[] methods = observer.getParserObserver().getClass().getMethods();
         for (Method method : methods) {
             invokeAnnotatedMethod(elementName, attributeValue, attributeName,
                     observer, method);
@@ -379,7 +378,7 @@ public abstract class XmlParserSubject implements ParserSubject {
 
     private void invokeAnnotatedMethod(String elementName,
             String attributeValue, String attributeName,
-            ParserObserver observer, Method method) {
+            ParserObserverMethods observer, Method method) {
         AttributeMatcher annos = method.getAnnotation(AttributeMatcher.class);
 
         if (annos == null) {
