@@ -300,19 +300,6 @@ public abstract class XmlParserSubject implements ParserSubject {
         }
     }
 
-    private void invokeAttributeAnnotatedMethod2(String elementName,
-            String attributeValue, String attributeName,
-            ParserObserverMethods observer, Method method) {
-        AttributeMatcher annos = method.getAnnotation(AttributeMatcher.class);
-
-        if (annos == null) {
-            return;
-        }
-        if (elementName.equals(annos.elementName())
-                && attributeName.equals(annos.attributeName())) {
-            invokeMethod(observer, method, attributeValue);
-        }
-    }
     
     private void invokeAttributeAnnotatedMethod(String elementName,
             String attributeValue, String attributeName,
