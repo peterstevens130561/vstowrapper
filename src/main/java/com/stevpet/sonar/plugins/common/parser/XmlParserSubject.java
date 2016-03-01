@@ -309,8 +309,8 @@ public abstract class XmlParserSubject implements ParserSubject {
 
     private void invokeAnnotatedElementMethods(String elementPath,
             String elementName, String elementValue, ParserObserverMethods observer) {
-        if(observer.shouldObserve(elementPath,elementName)) {
-            Method method=observer.getMethod();
+        Method method=observer.getMatchingElementMethod(elementPath,elementName);
+        if(method!=null) {
             invokeMethod(observer, method, elementValue);
         }
     }

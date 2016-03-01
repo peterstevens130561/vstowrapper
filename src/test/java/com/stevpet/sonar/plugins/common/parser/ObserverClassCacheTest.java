@@ -14,75 +14,75 @@ import org.junit.Test;
 import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
 import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver.Event;
 
-public class MasterObserverTest {
+public class ObserverClassCacheTest {
 
-    private MasterObserver masterObserver;
+    private ObserverMethodCache observerClassCache;
 
     @Before
     public void before() {
-        masterObserver= new MasterObserver();
+        observerClassCache= new ObserverMethodCache();
         List<ParserObserver> observers=new ArrayList<>();
         observers.add(new BasicObserver());
-        masterObserver.addAll(observers);
+        observerClassCache.addAll(observers);
 
     }
     @Test
     public void hasPublic() {
-        Method method=masterObserver.matchingElement("somepath", "public");
+        Method method=observerClassCache.getMatchingElementMethod("somepath", "public");
         assertNotNull("expect method",method);
         assertEquals("public_method",method.getName());
     }
     
     @Test
     public void hasPrivate() {
-        Method method=masterObserver.matchingElement("somepath", "private");
+        Method method=observerClassCache.getMatchingElementMethod("somepath", "private");
         assertNotNull("expect method",method);
         assertEquals("private_method",method.getName());
     }
     
     @Test
     public void noMatch() {
-        Method method=masterObserver.matchingElement("somepath", "somelement");
+        Method method=observerClassCache.getMatchingElementMethod("somepath", "somelement");
         assertNull("expect no method",method);
     }
     
     @Test
     public void pathMatch() {
-        Method method=masterObserver.matchingElement("a/b/c","c");
+        Method method=observerClassCache.getMatchingElementMethod("a/b/c","c");
         assertNotNull("expect method",method);
         assertEquals("path_method",method.getName());
     }
     
     @Test
     public void attributeMatchA() {
-        Method method = masterObserver.matchingAttribute("element","a");
+        Method method = observerClassCache.matchingAttribute("element","a");
         assertNotNull("expect method",method);
         assertEquals("attributeMatcher_a",method.getName());
     }
     
     @Test
     public void attributeMatchB() {
-        Method method = masterObserver.matchingAttribute("element","b");
+        Method method = observerClassCache.matchingAttribute("element","b");
         assertNotNull("expect method",method);
         assertEquals("attributeMatcher_b",method.getName());
     }
     
     @Test
     public void noAttributeMatch() {
-        Method method = masterObserver.matchingAttribute("element","c");
+        Method method = observerClassCache.matchingAttribute("element","c");
         assertNull("expect no method",method);      
     }
     
     @Test
     public void elementMatchEntry() {
-        Method method = masterObserver.matchingElementObserver("a/b/c", Event.ENTRY);
+        Method method = observerClassCache.matchingElementObserver("a/b/c", Event.ENTRY);
         assertNotNull("expect method",method);
         assertEquals("elementObserverEntry",method.getName());
     }
     
     @Test
     public void elementMatchExit() {
-        Method method = masterObserver.matchingElementObserver("a/b/c", Event.EXIT);
+        Method method = observerClassCache.matchingElementObserver("a/b/c", Event.EXIT);
         assertNotNull("expect method",method);
         assertEquals("elementObserverExit",method.getName());
     }

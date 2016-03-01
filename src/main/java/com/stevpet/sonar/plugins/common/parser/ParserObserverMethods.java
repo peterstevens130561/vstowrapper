@@ -14,12 +14,11 @@ import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
  */
 public class ParserObserverMethods{
     private final ParserObserver observer;
-    private MasterObserver masterObserver = new MasterObserver();
-    private Method selectedObserver;
+    private ObserverMethodCache observerMethodCache = new ObserverMethodCache();
 
     public ParserObserverMethods(ParserObserver observer) {
         this.observer=observer;
-        masterObserver.addObserver(observer);
+        observerMethodCache.addObserver(observer);
     }
     public boolean hasError() {
         return observer.hasError();
@@ -41,14 +40,8 @@ public class ParserObserverMethods{
         return observer;
     }
     
-    public boolean shouldObserve(String path, String name) {
-        selectedObserver=masterObserver.matchingElement(path, name);
-        return selectedObserver!=null;
-    }
-    
-    public Method getMethod() {
-        Preconditions.checkState(selectedObserver!=null,"no observer");
-        return selectedObserver;
+    public Method getMatchingElementMethod(String elementPath, String elementName) {
+        return  observerMethodCache.getMatchingElementMethod(elementPath, elementName);
     }
 
 }

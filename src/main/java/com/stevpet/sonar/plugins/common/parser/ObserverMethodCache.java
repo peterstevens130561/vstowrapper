@@ -12,7 +12,7 @@ import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver;
 import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver.Event;
 import com.stevpet.sonar.plugins.common.api.parser.annotations.PathMatcher;
 
-public class MasterObserver {
+public class ObserverMethodCache {
     Map<String,Method> elementMatchers = new HashMap<>();
     Map<String,Method> pathMatchers = new HashMap<>();
     Map<String,Method> attributeMatchers = new HashMap<>();
@@ -20,23 +20,39 @@ public class MasterObserver {
     
     public void addObserver(ParserObserver observer) {
         for( Method method:observer.getClass().getDeclaredMethods()) {
-            PathMatcher pathMatcher= method.getAnnotation(PathMatcher.class);
-            if(pathMatcher !=null) {
-                pathMatchers.put(pathMatcher.path(),method);
-            }
-            ElementMatcher elementMatcher = method.getAnnotation(ElementMatcher.class);
-            if(elementMatcher!=null) {
-                elementMatchers.put(elementMatcher.elementName(),method);
-            }
-            AttributeMatcher attributeMatcher = method.getAnnotation(AttributeMatcher.class);
-            if(attributeMatcher!=null) {
-                attributeMatchers.put(attributeMatcher.elementName() + "!" + attributeMatcher.attributeName(),method );
-            }
-            ElementObserver elementObserver = method.getAnnotation(ElementObserver.class);
-            if(elementObserver!=null){
-                String key=getElementObserverKey(elementObserver.path(),elementObserver.event());
-                elementObservers.put(key,method);
-            }
+            cachePathMatcher(method);
+            cacheElementMatcher(method);
+            cacheAttributeMatcher(method);
+            cacheElementObserver(method);
+        }
+    }
+
+    public void cacheElementObserver(Method method) {
+        ElementObserver elementObserver = method.getAnnotation(ElementObserver.class);
+        if(elementObserver!=null){
+            String key=getElementObserverKey(elementObserver.path(),elementObserver.event());
+            elementObservers.put(key,method);
+        }
+    }
+
+    public void cacheAttributeMatcher(Method method) {
+        AttributeMatcher attributeMatcher = method.getAnnotation(AttributeMatcher.class);
+        if(attributeMatcher!=null) {
+            attributeMatchers.put(attributeMatcher.elementName() + "!" + attributeMatcher.attributeName(),method );
+        }
+    }
+
+    public void cacheElementMatcher(Method method) {
+        ElementMatcher elementMatcher = method.getAnnotation(ElementMatcher.class);
+        if(elementMatcher!=null) {
+            elementMatchers.put(elementMatcher.elementName(),method);
+        }
+    }
+
+    public void cachePathMatcher(Method method) {
+        PathMatcher pathMatcher= method.getAnnotation(PathMatcher.class);
+        if(pathMatcher !=null) {
+            pathMatchers.put(pathMatcher.path(),method);
         }
     }
     
@@ -50,7 +66,7 @@ public class MasterObserver {
      * @param name
      * @return
      */
-    public Method matchingElement(String path, String name) {
+    public Method getMatchingElementMethod(String path, String name) {
         Method method = pathMatchers.get(path);
         if(method!=null) {
             return method;
