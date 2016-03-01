@@ -245,7 +245,10 @@ public abstract class XmlParserSubject implements ParserSubject {
         for (ParserObserverMethods observer : observers) {
             if (observer.isMatch(path)) {
                 observer.observeElement(name, text);
-                invokeAnnotatedElementMethods(path, name, text, observer);
+                Method method=observer.getMatchingElementMethod(path,name);
+                if(method!=null) {
+                    invokeMethod(observer, method, text);
+                }
             }
         }
     }
@@ -306,14 +309,6 @@ public abstract class XmlParserSubject implements ParserSubject {
         }
     }
     
-
-    private void invokeAnnotatedElementMethods(String elementPath,
-            String elementName, String elementValue, ParserObserverMethods observer) {
-        Method method=observer.getMatchingElementMethod(elementPath,elementName);
-        if(method!=null) {
-            invokeMethod(observer, method, elementValue);
-        }
-    }
 
 
     private void invokeMethod(ParserObserverMethods parserObserverMethods, Method method,
