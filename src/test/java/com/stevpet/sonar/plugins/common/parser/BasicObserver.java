@@ -3,6 +3,8 @@ package com.stevpet.sonar.plugins.common.parser;
 import com.stevpet.sonar.plugins.common.api.parser.BaseParserObserver;
 import com.stevpet.sonar.plugins.common.api.parser.annotations.AttributeMatcher;
 import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementMatcher;
+import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver;
+import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver.Event;
 import com.stevpet.sonar.plugins.common.api.parser.annotations.PathMatcher;
 
 public class BasicObserver extends BaseParserObserver {
@@ -29,6 +31,16 @@ public class BasicObserver extends BaseParserObserver {
     
     @AttributeMatcher(attributeName = "b", elementName = "element")
     public void attributeMatcher_b() {
+        
+    }
+    
+    @ElementObserver(path = "a/b/c", event = Event.ENTRY )
+    public void elementObserverEntry() {
+        
+    }
+    
+    @ElementObserver(path = "a/b/c", event = Event.EXIT )
+    public void elementObserverExit() {
         
     }
 }

@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
+import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver.Event;
 
 public class MasterObserverTest {
 
@@ -64,5 +65,25 @@ public class MasterObserverTest {
         Method method = masterObserver.matchingAttribute("element","b");
         assertNotNull("expect method",method);
         assertEquals("attributeMatcher_b",method.getName());
+    }
+    
+    @Test
+    public void noAttributeMatch() {
+        Method method = masterObserver.matchingAttribute("element","c");
+        assertNull("expect no method",method);      
+    }
+    
+    @Test
+    public void elementMatchEntry() {
+        Method method = masterObserver.matchingElementObserver("a/b/c", Event.ENTRY);
+        assertNotNull("expect method",method);
+        assertEquals("elementObserverEntry",method.getName());
+    }
+    
+    @Test
+    public void elementMatchExit() {
+        Method method = masterObserver.matchingElementObserver("a/b/c", Event.EXIT);
+        assertNotNull("expect method",method);
+        assertEquals("elementObserverExit",method.getName());
     }
 }
