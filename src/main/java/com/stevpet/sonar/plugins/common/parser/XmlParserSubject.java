@@ -46,9 +46,6 @@ import org.sonar.api.utils.SonarException;
 
 import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
 import com.stevpet.sonar.plugins.common.api.parser.ParserSubject;
-import com.stevpet.sonar.plugins.common.api.parser.annotations.AttributeMatcher;
-import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementMatcher;
-import com.stevpet.sonar.plugins.common.api.parser.annotations.PathMatcher;
 import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver.Event;
 
 /**
@@ -63,7 +60,7 @@ public abstract class XmlParserSubject implements ParserSubject {
     private static final Logger LOG = LoggerFactory
             .getLogger(XmlParserSubject.class);
     private List<ParserObserverMethods> observers = new ArrayList<ParserObserverMethods>();
-
+    private MasterObserver masterObserver=new MasterObserver();
     private List<String> parentElements = new ArrayList<String>();
     private int line;
     private int column;
@@ -173,6 +170,7 @@ public abstract class XmlParserSubject implements ParserSubject {
             parserObservers.add(observer.getParserObserver());
         }
         elementObserver.setObservers(parserObservers);
+        masterObserver.addAll(parserObservers);
         SMInputCursor childCursor = rootCursor.childElementCursor();
         parseChild("", childCursor);
     }
