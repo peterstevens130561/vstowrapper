@@ -45,10 +45,10 @@ public class ParserObserverMethods{
         return observer;
     }
     
-    public boolean shouldObserve(String key, String value) {
+    public boolean shouldObserve(String path, String elementName) {
         selectedObserver=null;
         for(ParserObserverMethod observerMethod : methods) {
-            if(observerMethod.shouldObserve(key, value)) {
+            if(observerMethod.shouldObserve(path,elementName)) {
                 selectedObserver = observerMethod.getObserver();
                         return true;
             }
