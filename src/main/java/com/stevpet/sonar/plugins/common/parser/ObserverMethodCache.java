@@ -16,7 +16,7 @@ public class ObserverMethodCache {
     Map<String,Method> elementMatchers = new HashMap<>();
     Map<String,Method> pathMatchers = new HashMap<>();
     Map<String,Method> attributeMatchers = new HashMap<>();
-    Map<String,Method> elementObservers = new HashMap<>();
+    Map<String,Method> elemenEventMatchers = new HashMap<>();
     
     public void addObserver(ParserObserver observer) {
         for( Method method:observer.getClass().getDeclaredMethods()) {
@@ -31,7 +31,7 @@ public class ObserverMethodCache {
         ElementObserver elementObserver = method.getAnnotation(ElementObserver.class);
         if(elementObserver!=null){
             String key=getElementObserverKey(elementObserver.path(),elementObserver.event());
-            elementObservers.put(key,method);
+            elemenEventMatchers.put(key,method);
         }
     }
 
@@ -75,25 +75,22 @@ public class ObserverMethodCache {
         return method;
     }
 
-    public void addAll(List<ParserObserver> parserObservers) {
-        for(ParserObserver parserObserver:parserObservers){
-            addObserver(parserObserver);
-        }
-    }
 
-    public Method matchingAttribute(String elementName, String attributeName) {
+    public Method getMatchingAttributeMethod(String elementName, String attributeName) {
         String key=getAttributeKey(elementName,attributeName);
         Method method = attributeMatchers.get(key);
         return method;
     }
     
-    public Method matchingElementObserver(String path,Event event) {
+    public Method getMatchingElementObserverMethod(String path,Event event) {
         String key=getElementObserverKey(path,event);
-        Method method = elementObservers.get(key);
+        Method method = elemenEventMatchers.get(key);
         return method;
         
     }
     private String getAttributeKey(String elementName, String attributeName) {
         return elementName + "!" + attributeName ;
     }
+
+
 }

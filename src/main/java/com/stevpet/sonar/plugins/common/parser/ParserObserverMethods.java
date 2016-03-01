@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.google.common.base.Preconditions;
 import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
+import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver.Event;
 
 /**
  * The methods for one class
@@ -42,6 +43,12 @@ public class ParserObserverMethods{
     
     public Method getMatchingElementMethod(String elementPath, String elementName) {
         return  observerMethodCache.getMatchingElementMethod(elementPath, elementName);
+    }
+    public Method getMatchingElementObserverMethod(String path, Event event) {
+        return observerMethodCache.getMatchingElementObserverMethod(path,event);
+    }
+    public Method getMatchingAttributeMethod(String elementName, String attributeName) {
+        return observerMethodCache.getMatchingAttributeMethod(elementName, attributeName);
     }
 
 }

@@ -164,11 +164,7 @@ public abstract class XmlParserSubject implements ParserSubject {
 
     private void parse(SMInputCursor rootCursor) throws XMLStreamException {
         injectVariablesInObservers();
-        List<ParserObserver> parserObservers = new ArrayList<>();
-        for(ParserObserverMethods observer : observers) {
-            parserObservers.add(observer.getParserObserver());
-        }
-        elementObserver.setObservers(parserObservers);
+        elementObserver.setObservers(observers);
         SMInputCursor childCursor = rootCursor.childElementCursor();
         parseChild("", childCursor);
     }
@@ -284,31 +280,13 @@ public abstract class XmlParserSubject implements ParserSubject {
             if (observer.isMatch(path)) {
                 observer.observeAttribute(elementName, path, attributeValue,
                         attributeName);
-                invokeAttributeAnnotatedMethods(elementName, attributeValue,
-                        attributeName, observer);
+                Method method=observer.getMatchingAttributeMethod(elementName,attributeName);
+                if (method!=null) {
+                    invokeMethod(observer, method, attributeValue);
+                }
             }
         }
     }
-
-    private void invokeAttributeAnnotatedMethods(String elementName,
-            String attributeValue, String attributeName, ParserObserverMethods observer) {
-        Method[] methods = observer.getParserObserver().getClass().getMethods();
-        for (Method method : methods) {
-            invokeAttributeAnnotatedMethod(elementName, attributeValue, attributeName,
-                    observer, method);
-        }
-    }
-
-    
-    private void invokeAttributeAnnotatedMethod(String elementName,
-            String attributeValue, String attributeName,
-            ParserObserverMethods observer, Method method) {
-        AnnotatedMethodObserver methodObserver = AttributeMatcherMethodObserver.create(method);
-        if(methodObserver.shouldObserve(elementName, attributeName)) {
-            invokeMethod(observer, method, attributeValue);
-        }
-    }
-    
 
 
     private void invokeMethod(ParserObserverMethods parserObserverMethods, Method method,

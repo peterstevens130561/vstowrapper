@@ -13,9 +13,9 @@ import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver;
 
 class ElementObserverInvoker {
     private Logger LOG = LoggerFactory.getLogger(ElementObserverInvoker.class);
-    private List<ParserObserver> observers;
+    private List<ParserObserverMethods> observers;
 
-    void setObservers(List<ParserObserver> observers) {
+    void setObservers(List<ParserObserverMethods> observers) {
         this.observers = observers;
     }
     
@@ -28,15 +28,11 @@ class ElementObserverInvoker {
      * @throws IllegalAccessException 
      */
     public void invokeObservers(String path,ElementObserver.Event event)  {
-        for (ParserObserver observer : observers) {
+        for (ParserObserverMethods observer : observers) {
             if (observer.isMatch(path)) {
-                for(Method method: observer.getClass().getMethods()) {
-                    ElementObserver annos = method.getAnnotation(ElementObserver.class);
-
-                    if (annos == null || annos.event() != event || !path.equals(annos.path())) {
-                        continue;
-                    }
-                    invokeMethod(observer,method);
+                Method method=observer.getMatchingElementObserverMethod(path,event);
+                if(method!=null) {
+                    invokeMethod(observer.getParserObserver(),method);
                 }
             }
         }

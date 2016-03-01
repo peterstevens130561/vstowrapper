@@ -22,8 +22,7 @@ public class ObserverClassCacheTest {
     public void before() {
         observerClassCache= new ObserverMethodCache();
         List<ParserObserver> observers=new ArrayList<>();
-        observers.add(new BasicObserver());
-        observerClassCache.addAll(observers);
+        observerClassCache.addObserver(new BasicObserver());
 
     }
     @Test
@@ -55,34 +54,34 @@ public class ObserverClassCacheTest {
     
     @Test
     public void attributeMatchA() {
-        Method method = observerClassCache.matchingAttribute("element","a");
+        Method method = observerClassCache.getMatchingAttributeMethod("element","a");
         assertNotNull("expect method",method);
         assertEquals("attributeMatcher_a",method.getName());
     }
     
     @Test
     public void attributeMatchB() {
-        Method method = observerClassCache.matchingAttribute("element","b");
+        Method method = observerClassCache.getMatchingAttributeMethod("element","b");
         assertNotNull("expect method",method);
         assertEquals("attributeMatcher_b",method.getName());
     }
     
     @Test
     public void noAttributeMatch() {
-        Method method = observerClassCache.matchingAttribute("element","c");
+        Method method = observerClassCache.getMatchingAttributeMethod("element","c");
         assertNull("expect no method",method);      
     }
     
     @Test
     public void elementMatchEntry() {
-        Method method = observerClassCache.matchingElementObserver("a/b/c", Event.ENTRY);
+        Method method = observerClassCache.getMatchingElementObserverMethod("a/b/c", Event.ENTRY);
         assertNotNull("expect method",method);
         assertEquals("elementObserverEntry",method.getName());
     }
     
     @Test
     public void elementMatchExit() {
-        Method method = observerClassCache.matchingElementObserver("a/b/c", Event.EXIT);
+        Method method = observerClassCache.getMatchingElementObserverMethod("a/b/c", Event.EXIT);
         assertNotNull("expect method",method);
         assertEquals("elementObserverExit",method.getName());
     }
