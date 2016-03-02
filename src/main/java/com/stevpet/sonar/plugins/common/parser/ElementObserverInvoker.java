@@ -13,12 +13,8 @@ import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver;
 
 class ElementObserverInvoker {
     private Logger LOG = LoggerFactory.getLogger(ElementObserverInvoker.class);
-    private List<ParserObserverMethods> observers;
+    private ObserverPathCache observerPathCache;
 
-    void setObservers(List<ParserObserverMethods> observers) {
-        this.observers = observers;
-    }
-    
     /**
      * Will invoke the observer methods that match path & event
      * @param path to match
@@ -28,7 +24,7 @@ class ElementObserverInvoker {
      * @throws IllegalAccessException 
      */
     public void invokeObservers(String path,ElementObserver.Event event)  {
-        for (ParserObserverMethods observer : observers) {
+        for (ParserObserverMethods observer : observerPathCache.getObserversMatchingPath(path)) {
             if (observer.isMatch(path)) {
                 Method method=observer.getMatchingElementObserverMethod(path,event);
                 if(method!=null) {
@@ -65,6 +61,11 @@ class ElementObserverInvoker {
         return  observer.getClass().getName()
         + ":"
         + method.getName();
+    }
+
+    public void setObserverPathCache(ObserverPathCache observerPathCache) {
+       this.observerPathCache = observerPathCache;
+        
     }
  
 }

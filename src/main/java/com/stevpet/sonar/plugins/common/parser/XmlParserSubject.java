@@ -166,7 +166,7 @@ public abstract class XmlParserSubject implements ParserSubject {
 
     private void parse(SMInputCursor rootCursor) throws XMLStreamException {
         injectVariablesInObservers();
-        elementObserver.setObservers(observers);
+        elementObserver.setObserverPathCache(observerPathCache);
         SMInputCursor childCursor = rootCursor.childElementCursor();
         parseChild("", childCursor);
     }
