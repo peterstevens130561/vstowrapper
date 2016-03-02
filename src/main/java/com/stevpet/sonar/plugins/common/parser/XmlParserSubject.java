@@ -65,6 +65,7 @@ public abstract class XmlParserSubject implements ParserSubject {
     private int column;
     private ParserData parserData = new ParserData();
     private ElementObserverInvoker elementObserver = new ElementObserverInvoker();
+    private ObserverPathCache observerPathCache = new ObserverPathCache();
     public XmlParserSubject() {
         String[] names = getHierarchy();
         for (String name : names) {
@@ -176,7 +177,9 @@ public abstract class XmlParserSubject implements ParserSubject {
     }
 
     public void registerObserver(ParserObserver observer) {
-        observers.add(new ParserObserverMethods(observer));
+        ParserObserverMethods parserObserverMethods=new ParserObserverMethods(observer);
+        observers.add(parserObserverMethods);
+        observerPathCache.add(parserObserverMethods);
     }
 
     private boolean parseChild(String path, SMInputCursor childCursor)
@@ -238,7 +241,7 @@ public abstract class XmlParserSubject implements ParserSubject {
     }
 
     private void invokeElementObservers(String path, String name, String text) {
-        for (ParserObserverMethods observer : observers) {
+        for (ParserObserverMethods observer : getMatchingObservers(path)) {
             if (observer.isMatch(path)) {
                 observer.observeElement(name, text);
                 Method method=observer.getMatchingElementMethod(path,name);
@@ -248,6 +251,7 @@ public abstract class XmlParserSubject implements ParserSubject {
             }
         }
     }
+
 
     private void processAttributes(String path, String name,
             SMInputCursor elementCursor) throws XMLStreamException {
@@ -276,7 +280,7 @@ public abstract class XmlParserSubject implements ParserSubject {
 
     private void invokeAttributeObservers(String elementName, String path,
             String attributeValue, String attributeName) {
-        for (ParserObserverMethods observer : observers) {
+        for (ParserObserverMethods observer : getMatchingObservers(path)) {
             if (observer.isMatch(path)) {
                 observer.observeAttribute(elementName, path, attributeValue,
                         attributeName);
@@ -286,6 +290,10 @@ public abstract class XmlParserSubject implements ParserSubject {
                 }
             }
         }
+    }
+
+    private List<ParserObserverMethods> getMatchingObservers(String path) {
+        return observerPathCache.getObserversMatchingPath(path);
     }
 
 
