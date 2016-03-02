@@ -51,7 +51,7 @@ import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver.E
 /**
  * Each parser should implement this class
  * 
- *
+ * 
  */
 public abstract class XmlParserSubject implements ParserSubject {
 
@@ -66,6 +66,7 @@ public abstract class XmlParserSubject implements ParserSubject {
     private ParserData parserData = new ParserData();
     private ElementObserverInvoker elementObserver = new ElementObserverInvoker();
     private ObserverPathCache observerPathCache = new ObserverPathCache();
+
     public XmlParserSubject() {
         String[] names = getHierarchy();
         for (String name : names) {
@@ -121,7 +122,7 @@ public abstract class XmlParserSubject implements ParserSubject {
     }
 
     public void parseFile(File file) {
-        SMInputCursor cursor=null;
+        SMInputCursor cursor = null;
         try {
             cursor = getCursor(file);
             parse(cursor);
@@ -142,16 +143,16 @@ public abstract class XmlParserSubject implements ParserSubject {
 
     public void closeStream(SMInputCursor cursor) {
         try {
-                if(cursor==null) {
-                    return;
-                }
-                XMLStreamReader2 reader = cursor.getStreamReader();
-                if(reader==null) {
-                    return;
-                }
-                reader.closeCompletely();
+            if (cursor == null) {
+                return;
+            }
+            XMLStreamReader2 reader = cursor.getStreamReader();
+            if (reader == null) {
+                return;
+            }
+            reader.closeCompletely();
         } catch (XMLStreamException e) {
-            throw new SonarException("exception during closing stream",e);
+            throw new SonarException("exception during closing stream", e);
         }
     }
 
@@ -177,7 +178,7 @@ public abstract class XmlParserSubject implements ParserSubject {
     }
 
     public void registerObserver(ParserObserver observer) {
-        ParserObserverMethods parserObserverMethods=new ParserObserverMethods(observer);
+        ParserObserverMethods parserObserverMethods = new ParserObserverMethods(observer);
         observers.add(parserObserverMethods);
         observerPathCache.add(parserObserverMethods);
     }
@@ -197,23 +198,24 @@ public abstract class XmlParserSubject implements ParserSubject {
     }
 
     /**
-     * executed on exit of an element, can override to change behavior.
-     * Default behavior is to execute the exit methods
+     * executed on exit of an element, can override to change behavior. Default
+     * behavior is to execute the exit methods
+     * 
      * @param path
      */
     protected void onExit(String path) {
-        elementObserver.invokeObservers(path,Event.EXIT);
+        elementObserver.invokeObservers(path, Event.EXIT);
     }
 
     /**
-     * executed on entry of an element, can override to change behavior.
-     * Default behavior is to execute the entry methods
+     * executed on entry of an element, can override to change behavior. Default
+     * behavior is to execute the entry methods
+     * 
      * @param path
      */
     protected void onEntry(String path) {
-        elementObserver.invokeObservers(path,Event.ENTRY);
+        elementObserver.invokeObservers(path, Event.ENTRY);
     }
-    
 
     private void processStartElement(String path, SMInputCursor childCursor)
             throws XMLStreamException {
@@ -242,16 +244,13 @@ public abstract class XmlParserSubject implements ParserSubject {
 
     private void invokeElementObservers(String path, String name, String text) {
         for (ParserObserverMethods observer : getMatchingObservers(path)) {
-            if (observer.isMatch(path)) {
-                observer.observeElement(name, text);
-                Method method=observer.getMatchingElementMethod(path,name);
-                if(method!=null) {
-                    invokeMethod(observer, method, text);
-                }
+            observer.observeElement(name, text);
+            Method method = observer.getMatchingElementMethod(path, name);
+            if (method != null) {
+                invokeMethod(observer, method, text);
             }
         }
     }
-
 
     private void processAttributes(String path, String name,
             SMInputCursor elementCursor) throws XMLStreamException {
@@ -281,13 +280,11 @@ public abstract class XmlParserSubject implements ParserSubject {
     private void invokeAttributeObservers(String elementName, String path,
             String attributeValue, String attributeName) {
         for (ParserObserverMethods observer : getMatchingObservers(path)) {
-            if (observer.isMatch(path)) {
-                observer.observeAttribute(elementName, path, attributeValue,
-                        attributeName);
-                Method method=observer.getMatchingAttributeMethod(elementName,attributeName);
-                if (method!=null) {
-                    invokeMethod(observer, method, attributeValue);
-                }
+            observer.observeAttribute(elementName, path, attributeValue,
+                    attributeName);
+            Method method = observer.getMatchingAttributeMethod(elementName, attributeName);
+            if (method != null) {
+                invokeMethod(observer, method, attributeValue);
             }
         }
     }
@@ -296,10 +293,9 @@ public abstract class XmlParserSubject implements ParserSubject {
         return observerPathCache.getObserversMatchingPath(path);
     }
 
-
     private void invokeMethod(ParserObserverMethods parserObserverMethods, Method method,
-            String ... elementValue ) {
-        ParserObserver observer=parserObserverMethods.getParserObserver();
+            String... elementValue) {
+        ParserObserver observer = parserObserverMethods.getParserObserver();
         try {
             Object[] varargs = elementValue;
             method.invoke(observer, varargs);
@@ -340,8 +336,6 @@ public abstract class XmlParserSubject implements ParserSubject {
     private String lineMsg() {
         return " line/column = " + line + "/" + column;
     }
-
-
 
     private String getTrimmedElementStringValue(SMInputCursor childCursor)
             throws XMLStreamException {
