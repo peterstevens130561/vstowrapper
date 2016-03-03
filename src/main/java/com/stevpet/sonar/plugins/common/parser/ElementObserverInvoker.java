@@ -2,7 +2,6 @@ package com.stevpet.sonar.plugins.common.parser;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,13 +27,13 @@ class ElementObserverInvoker {
             if (observer.isMatch(path)) {
                 Method method=observer.getMatchingElementObserverMethod(path,event);
                 if(method!=null) {
-                    invokeMethod(observer.getParserObserver(),method);
+                    invokeEventMethod(observer.getParserObserver(),method);
                 }
             }
         }
     }
     
-    private void invokeMethod(ParserObserver observer, Method method ) {
+    private void invokeEventMethod(ParserObserver observer, Method method ) {
         try {
             method.invoke(observer);
         } catch (InvocationTargetException e) {
