@@ -16,14 +16,11 @@ import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver.E
 
 public class ObserverClassCacheTest {
 
-    private ObserverMethodCache observerClassCache;
+    private ParserObserverMethods observerClassCache;
 
     @Before
     public void before() {
-        observerClassCache= new ObserverMethodCache();
-        List<ParserObserver> observers=new ArrayList<>();
-        observerClassCache.addObserver(new BasicObserver());
-
+        observerClassCache= new ParserObserverMethods(new BasicObserver());
     }
     @Test
     public void hasPublic() {

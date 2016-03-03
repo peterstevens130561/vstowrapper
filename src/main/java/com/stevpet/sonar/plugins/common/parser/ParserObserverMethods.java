@@ -20,7 +20,7 @@ import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver.E
  *
  */
 public class ParserObserverMethods{
-    private final ParserObserver observer;
+    private ParserObserver observer;
     Map<String,Method> elementMatchers = new HashMap<>();
     Map<String,Method> pathMatchers = new HashMap<>();
     Map<String,Method> attributeMatchers = new HashMap<>();
@@ -28,6 +28,7 @@ public class ParserObserverMethods{
 
     public ParserObserverMethods(ParserObserver observer) {
         this.observer=observer;
+        loadCaches();
     }
     public boolean hasError() {
         return observer.hasError();
@@ -49,7 +50,7 @@ public class ParserObserverMethods{
         return observer;
     }
     
-    public void addObserver(ParserObserver observer) {
+    public void loadCaches() {
         for( Method method:observer.getClass().getDeclaredMethods()) {
             cachePathMatcher(method);
             cacheElementMatcher(method);
