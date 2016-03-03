@@ -59,7 +59,7 @@ public abstract class XmlParserSubject implements ParserSubject {
     private static final String COULD_NOT_CREATE_CURSOR = "Could not create cursor ";
     private static final Logger LOG = LoggerFactory
             .getLogger(XmlParserSubject.class);
-    private List<ParserObserverMethods> observers = new ArrayList<ParserObserverMethods>();
+
     private List<String> parentElements = new ArrayList<String>();
     private int line;
     private int column;
@@ -74,9 +74,6 @@ public abstract class XmlParserSubject implements ParserSubject {
         }
     }
 
-    public List<ParserObserverMethods> getObservers() {
-        return observers;
-    }
 
     public abstract String[] getHierarchy();
 
@@ -137,8 +134,7 @@ public abstract class XmlParserSubject implements ParserSubject {
         } finally {
             closeStream(cursor);
         }
-        checkOnErrors(file);
-
+        observerPathCache.checkOnErrors(file);
     }
 
     public void closeStream(SMInputCursor cursor) {
@@ -156,31 +152,17 @@ public abstract class XmlParserSubject implements ParserSubject {
         }
     }
 
-    private void checkOnErrors(File file) {
-        for (ParserObserverMethods observer : observers) {
-            if (observer.hasError()) {
-                throw new ParserSubjectErrorException(file);
-            }
-        }
-    }
 
     private void parse(SMInputCursor rootCursor) throws XMLStreamException {
-        injectVariablesInObservers();
+        observerPathCache.setParserData(parserData);
         elementObserver.setObserverPathCache(observerPathCache);
         SMInputCursor childCursor = rootCursor.childElementCursor();
         parseChild("", childCursor);
     }
 
-    private void injectVariablesInObservers() {
-        for (ParserObserverMethods observer : observers) {
-            observer.setParserData(parserData);
-        }
-    }
 
     public void registerObserver(ParserObserver observer) {
-        ParserObserverMethods parserObserverMethods = new ParserObserverMethods(observer);
-        observers.add(parserObserverMethods);
-        observerPathCache.add(parserObserverMethods);
+        observerPathCache.add(observer);
     }
 
     private boolean parseChild(String path, SMInputCursor childCursor)
