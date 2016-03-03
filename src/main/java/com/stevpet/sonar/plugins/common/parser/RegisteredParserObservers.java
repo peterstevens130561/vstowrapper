@@ -6,23 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
 
-public class ObserverPathCache {
-    private static Logger LOG = LoggerFactory.getLogger(ObserverPathCache.class);
+public class RegisteredParserObservers {
     private Map<String,List<ParserObserverMethods>> cache = new HashMap<>();
     private List<ParserObserverMethods> parserObservers =new ArrayList<>();
     
-    /**
-     * set all observers, destructive
-     * @param parserObservers
-     */
-    public void setParserObservers(List<ParserObserverMethods> parserObservers) {
-        this.parserObservers=parserObservers;
-    }
     
     /**
      * Returns the list of parserobservers that match the path, saves the list for the next call
@@ -44,6 +33,10 @@ public class ObserverPathCache {
         return matchingObservers;
     }
 
+    /**
+     * Add a parser observer
+     * @param observer
+     */
     public void add(ParserObserver observer) {
         ParserObserverMethods parserObserverMethods = new ParserObserverMethods(observer);
         parserObservers.add(parserObserverMethods);

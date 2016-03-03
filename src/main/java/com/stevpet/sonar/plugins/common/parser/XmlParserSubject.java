@@ -64,8 +64,9 @@ public abstract class XmlParserSubject implements ParserSubject {
     private int line;
     private int column;
     private ParserData parserData = new ParserData();
-    private ElementObserverInvoker elementObserver = new ElementObserverInvoker();
-    private ObserverPathCache observerPathCache = new ObserverPathCache();
+    private RegisteredParserObservers observerPathCache = new RegisteredParserObservers();
+    private ElementEventObserverInvoker elementEventObserverInvoker = new ElementEventObserverInvoker(observerPathCache);
+    private ElementObservers elementObserverInvoker = new ElementObservers(observerPathCache);
 
     public XmlParserSubject() {
         String[] names = getHierarchy();
@@ -137,6 +138,12 @@ public abstract class XmlParserSubject implements ParserSubject {
         observerPathCache.checkOnErrors(file);
     }
 
+    private void parse(SMInputCursor rootCursor) throws XMLStreamException {
+        observerPathCache.setParserData(parserData);
+        SMInputCursor childCursor = rootCursor.childElementCursor();
+        parseChild("", childCursor);
+    }
+
     public void closeStream(SMInputCursor cursor) {
         try {
             if (cursor == null) {
@@ -151,15 +158,6 @@ public abstract class XmlParserSubject implements ParserSubject {
             throw new SonarException("exception during closing stream", e);
         }
     }
-
-
-    private void parse(SMInputCursor rootCursor) throws XMLStreamException {
-        observerPathCache.setParserData(parserData);
-        elementObserver.setObserverPathCache(observerPathCache);
-        SMInputCursor childCursor = rootCursor.childElementCursor();
-        parseChild("", childCursor);
-    }
-
 
     public void registerObserver(ParserObserver observer) {
         observerPathCache.add(observer);
@@ -179,14 +177,19 @@ public abstract class XmlParserSubject implements ParserSubject {
         return parsedChild;
     }
 
-    /**
-     * executed on exit of an element, can override to change behavior. Default
-     * behavior is to execute the exit methods
-     * 
-     * @param path
-     */
-    protected void onExit(String path) {
-        elementObserver.invokeObservers(path, Event.EXIT);
+
+    private void processStartElement(String path, SMInputCursor childCursor)
+            throws XMLStreamException {
+        String name = childCursor.getLocalName();
+        if ("schema".equals(name)) {
+            return;
+        }
+        String elementPath = createElementPath(path, name);
+
+        onEntry(elementPath);
+        processAttributes(elementPath, name, childCursor);
+        processElement(elementPath, name, childCursor);
+        onExit(elementPath);
     }
 
     /**
@@ -196,22 +199,20 @@ public abstract class XmlParserSubject implements ParserSubject {
      * @param path
      */
     protected void onEntry(String path) {
-        elementObserver.invokeObservers(path, Event.ENTRY);
+        elementEventObserverInvoker.invokeObservers(path, Event.ENTRY);
+    }
+    
+    /**
+     * executed on exit of an element, can override to change behavior. Default
+     * behavior is to execute the exit methods
+     * 
+     * @param path
+     */
+    protected void onExit(String path) {
+        elementEventObserverInvoker.invokeObservers(path, Event.EXIT);
     }
 
-    private void processStartElement(String path, SMInputCursor childCursor)
-            throws XMLStreamException {
-        String name = childCursor.getLocalName();
-        if ("schema".equals(name)) {
-            return;
-        }
-        String elementPath = createElementPath(path, name);
-        onEntry(elementPath);
-        processAttributes(elementPath, name, childCursor);
-        processElement(elementPath, name, childCursor);
-        onExit(elementPath);
-    }
-
+    
     private void processElement(String elementPath, String name,
             SMInputCursor childCursor) throws XMLStreamException {
 
@@ -220,17 +221,7 @@ public abstract class XmlParserSubject implements ParserSubject {
         } else {
             updateLocation(childCursor);
             String text = getTrimmedElementStringValue(childCursor);
-            invokeElementObservers(elementPath, name, text);
-        }
-    }
-
-    private void invokeElementObservers(String path, String name, String text) {
-        for (ParserObserverMethods observer : getMatchingObservers(path)) {
-            observer.observeElement(name, text);
-            Method method = observer.getMatchingElementMethod(path, name);
-            if (method != null) {
-                invokeMethod(observer, method, text);
-            }
+            elementObserverInvoker.invokeElementObservers(elementPath, name, text);
         }
     }
 
@@ -241,7 +232,7 @@ public abstract class XmlParserSubject implements ParserSubject {
             String attributeValue = elementCursor.getAttrValue(index);
             String attributeName = elementCursor.getAttrLocalName(index);
             updateLocation(elementCursor);
-            invokeAttributeObservers(name, path, attributeValue, attributeName);
+            elementObserverInvoker.invokeAttributeObservers(name, path, attributeValue, attributeName);
         }
     }
 
@@ -256,67 +247,7 @@ public abstract class XmlParserSubject implements ParserSubject {
         }
         line = location.getLineNumber();
         column = location.getColumnNumber();
-
-    }
-
-    private void invokeAttributeObservers(String elementName, String path,
-            String attributeValue, String attributeName) {
-        for (ParserObserverMethods observer : getMatchingObservers(path)) {
-            observer.observeAttribute(elementName, path, attributeValue,
-                    attributeName);
-            Method method = observer.getMatchingAttributeMethod(elementName, attributeName);
-            if (method != null) {
-                invokeMethod(observer, method, attributeValue);
-            }
-        }
-    }
-
-    private List<ParserObserverMethods> getMatchingObservers(String path) {
-        return observerPathCache.getObserversMatchingPath(path);
-    }
-
-    private void invokeMethod(ParserObserverMethods parserObserverMethods, Method method,
-            String... elementValue) {
-        ParserObserver observer = parserObserverMethods.getParserObserver();
-        try {
-            Object[] varargs = elementValue;
-            method.invoke(observer, varargs);
-        } catch (InvocationTargetException e) {
-            if (e.getTargetException() != null) {
-                String msg = "Exception thrown when invoking method"
-                        + observer.getClass().getName() + ":"
-                        + method.getName() + lineMsg();
-                LOG.error(msg, e.getTargetException());
-                throw new SonarException(msg, e);
-            }
-            String msg = "Invocation Target Exception thrown when invoking method "
-                    + observer.getClass().getName()
-                    + ":"
-                    + method.getName()
-                    + lineMsg();
-            LOG.error(msg, e);
-            throw new SonarException(msg, e);
-        } catch (IllegalAccessException e) {
-            String msg = "Illegal Access Exception thrown when invoking method "
-                    + observer.getClass().getName()
-                    + ":"
-                    + method.getName()
-                    + lineMsg();
-            LOG.error(msg, e);
-            throw new SonarException(msg, e);
-        } catch (IllegalArgumentException e) {
-            String msg = "Illegal Argument Exception thrown when invoking method "
-                    + observer.getClass().getName()
-                    + ":"
-                    + method.getName()
-                    + lineMsg();
-            LOG.error(msg, e);
-            throw new SonarException(msg, e);
-        }
-    }
-
-    private String lineMsg() {
-        return " line/column = " + line + "/" + column;
+        elementObserverInvoker.setPlace(line, column);
     }
 
     private String getTrimmedElementStringValue(SMInputCursor childCursor)

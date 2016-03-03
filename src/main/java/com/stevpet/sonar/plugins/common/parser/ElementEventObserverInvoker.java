@@ -10,9 +10,13 @@ import org.sonar.api.utils.SonarException;
 import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
 import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver;
 
-class ElementObserverInvoker {
-    private Logger LOG = LoggerFactory.getLogger(ElementObserverInvoker.class);
-    private ObserverPathCache observerPathCache;
+class ElementEventObserverInvoker {
+    private Logger LOG = LoggerFactory.getLogger(ElementEventObserverInvoker.class);
+    private RegisteredParserObservers observerPathCache;
+
+    public ElementEventObserverInvoker(RegisteredParserObservers observerPathCache) {
+       this.observerPathCache=observerPathCache;
+    }
 
     /**
      * Will invoke the observer methods that match path & event
@@ -25,7 +29,7 @@ class ElementObserverInvoker {
     public void invokeObservers(String path,ElementObserver.Event event)  {
         for (ParserObserverMethods observer : observerPathCache.getObserversMatchingPath(path)) {
             if (observer.isMatch(path)) {
-                Method method=observer.getMatchingElementObserverMethod(path,event);
+                Method method=observer.getMatchingElementEventObserverMethod(path,event);
                 if(method!=null) {
                     invokeEventMethod(observer.getParserObserver(),method);
                 }
@@ -60,11 +64,6 @@ class ElementObserverInvoker {
         return  observer.getClass().getName()
         + ":"
         + method.getName();
-    }
-
-    public void setObserverPathCache(ObserverPathCache observerPathCache) {
-       this.observerPathCache = observerPathCache;
-        
     }
  
 }

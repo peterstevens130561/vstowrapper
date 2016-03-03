@@ -62,7 +62,7 @@ public class ParserObserverMethods{
     public void cacheElementObserver(Method method) {
         ElementObserver elementObserver = method.getAnnotation(ElementObserver.class);
         if(elementObserver!=null){
-            String key=getElementObserverKey(elementObserver.path(),elementObserver.event());
+            String key=getElementEventObserverKey(elementObserver.path(),elementObserver.event());
             elemenEventMatchers.put(key,method);
         }
     }
@@ -88,9 +88,7 @@ public class ParserObserverMethods{
         }
     }
     
-    private String getElementObserverKey(String path, Event event) {
-        return path + "!" + event.toString();
-    }
+
 
     /**
      * return the method that matches either the path or the name. If none matches, null is returned
@@ -114,8 +112,8 @@ public class ParserObserverMethods{
         return method;
     }
     
-    public Method getMatchingElementObserverMethod(String path,Event event) {
-        String key=getElementObserverKey(path,event);
+    public Method getMatchingElementEventObserverMethod(String path,Event event) {
+        String key=getElementEventObserverKey(path,event);
         Method method = elemenEventMatchers.get(key);
         return method;
         
@@ -124,5 +122,8 @@ public class ParserObserverMethods{
         return elementName + "!" + attributeName ;
     }
 
+    private String getElementEventObserverKey(String path, Event event) {
+        return path + "!" + event.toString();
+    }
 
 }

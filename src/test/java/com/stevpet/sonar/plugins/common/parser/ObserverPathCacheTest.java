@@ -1,31 +1,28 @@
 package com.stevpet.sonar.plugins.common.parser;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 public class ObserverPathCacheTest {
-    private final ObserverPathCache cache = new ObserverPathCache();
+    private final RegisteredParserObservers cache = new RegisteredParserObservers();
     
-    @Mock private ParserObserverMethods observerA ;
-    @Mock private ParserObserverMethods observerB ;
-
-    private List<ParserObserverMethods> observers;
+    @Mock private ParserObserver observerA ;
+    @Mock private ParserObserver observerB ;
     
     @Before
     public void before() {
         org.mockito.MockitoAnnotations.initMocks(this);
-        observers = new ArrayList<ParserObserverMethods>();
-        observers.add(observerA);
-        observers.add(observerB);
-        cache.setParserObservers(observers);
+        cache.add(observerA);
+        cache.add(observerB);
     }
     
     @Test

@@ -71,14 +71,14 @@ public class ObserverClassCacheTest {
     
     @Test
     public void elementMatchEntry() {
-        Method method = observerClassCache.getMatchingElementObserverMethod("a/b/c", Event.ENTRY);
+        Method method = observerClassCache.getMatchingElementEventObserverMethod("a/b/c", Event.ENTRY);
         assertNotNull("expect method",method);
         assertEquals("elementObserverEntry",method.getName());
     }
     
     @Test
     public void elementMatchExit() {
-        Method method = observerClassCache.getMatchingElementObserverMethod("a/b/c", Event.EXIT);
+        Method method = observerClassCache.getMatchingElementEventObserverMethod("a/b/c", Event.EXIT);
         assertNotNull("expect method",method);
         assertEquals("elementObserverExit",method.getName());
     }
