@@ -74,5 +74,8 @@ public interface MicrosoftWindowsEnvironment {
 
 
     boolean isUnitTestProject(Project project, Pattern pattern);
+
+
+    List<VisualStudioProject> getTestProjects(Pattern pattern);
     
 }

@@ -116,6 +116,10 @@ public class DefaultMicrosoftWindowsEnvironmentBase implements
         return getCurrentSolution().hasTestProjects(pattern);
     }
 
+    @Override 
+    public List<VisualStudioProject> getTestProjects(Pattern pattern) {
+        return getCurrentSolution().getTestProjects(pattern);
+    }
     private void addProjectsToEnvironment(List<VisualStudioProject> projects) {
         for (VisualStudioProject project : projects) {
             solution.addVisualStudioProject(project);
