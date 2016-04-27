@@ -1,5 +1,5 @@
 eclipse.preferences.version=1
-extraProperties=sonar.jdbc.password\=sonar\r\nsonar.jdbc.username\=sonar\r\nsonar.jdbc.url\=jdbc\:mysql\://localhost\:3306/sonar?useUnicode\=true&characterEncoding\=utf8\r\nsonar.buildVersion\=5.0\r\nsonar.host.url\=http\://localhost\:9000
+extraProperties=sonar.jdbc.password\=sonar\r\nsonar.jdbc.username\=sonar\r\nsonar.jdbc.url\=jdbc\:mysql\://localhost\:3306/sonar?useUnicode\=true&characterEncoding\=utf8\r\nsonar.buildVersion\=5.1.2\r\nsonar.host.url\=http\://localhost\:9000
 projectKey=com.stevpet.sonar\:plugins-dotnet-utils
 serverUrl=http\://localhost\:9000
 version=2

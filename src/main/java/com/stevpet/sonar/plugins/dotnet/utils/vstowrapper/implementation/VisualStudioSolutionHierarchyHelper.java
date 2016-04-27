@@ -125,6 +125,9 @@ public class VisualStudioSolutionHierarchyHelper implements BatchExtension, Hier
 			throw new VsToWrapperException(msg);
 
 		}
+		if(isTestProject(projectName)) {
+		    project.setIsTest();
+		}
 		project.setAssemblyFile(assemblyFile).setProjectName(solutionProject.name());
 		projects.add(project);
 		return true;

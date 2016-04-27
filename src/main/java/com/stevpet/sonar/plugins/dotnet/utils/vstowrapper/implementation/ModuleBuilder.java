@@ -57,9 +57,9 @@ public class ModuleBuilder {
         
         newModule.setWorkDir(new File(projectDirectory, ".sonar"));
         if(project.isUnitTest()) {
-            newModule.resetTestDirs();
-            newModule.resetSourceDirs();
-            newModule.setTestDirs(projectDirectory);
+            newModule.resetTests();
+            newModule.resetSources();
+            newModule.addTests(projectDirectory);
         }
         newModule.setVersion(sonarRootProject.getVersion());
         LOG.debug(" - basedir {}",newModule.getBaseDir().getAbsolutePath());

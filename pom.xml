@@ -8,7 +8,7 @@
   <packaging>jar</packaging>
     <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <sonar.buildVersion>5.0</sonar.buildVersion>
+    <sonar.buildVersion>5.1.2</sonar.buildVersion>
     <jdk.min.version>1.7</jdk.min.version>
     <powermock.version>1.4.10</powermock.version>
   </properties>
@@ -16,13 +16,13 @@
     <dependency>
       <groupId>org.codehaus.sonar</groupId>
       <artifactId>sonar-plugin-api</artifactId>
-      <version>4.2</version>
+      <version>5.1.2</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
         <groupId>org.codehaus.sonar</groupId>
     <artifactId>sonar-core</artifactId>
-    <version>4.1-SNAPSHOT</version>
+    <version>5.1.2</version>
     </dependency>
             <dependency>
       <groupId>org.powermock</groupId>

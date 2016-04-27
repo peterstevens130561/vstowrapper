@@ -40,6 +40,10 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
 
 public class VisualStudioAssemblyLocator implements AssemblyLocator {
 
@@ -73,7 +77,7 @@ public File locateAssembly(String projectName, File projectFile, VisualStudioPro
     List<File> candidates = candidates(assemblyFileName, projectFile, project);
 
     if (candidates.isEmpty()) {
-      LOG.warn("Unable to locate the assembly of project " + projectName);
+      LOG.error("Unable to locate the assembly of project " + projectName);
       return null;
     }
 
@@ -147,6 +151,52 @@ private boolean isRelative(String path) {
 
       return o1.lastModified() > o2.lastModified() ? -1 : 1;
     }
+
+    @Override
+    public Comparator<File> reversed() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Comparator<File> thenComparing(Comparator<? super File> other) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public <U> Comparator<File> thenComparing(Function<? super File, ? extends U> keyExtractor, Comparator<? super U> keyComparator) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public <U extends Comparable<? super U>> Comparator<File> thenComparing(Function<? super File, ? extends U> keyExtractor) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Comparator<File> thenComparingInt(ToIntFunction<? super File> keyExtractor) {
+        return null;
+    }
+
+    @Override
+    public Comparator<File> thenComparingLong(ToLongFunction<? super File> keyExtractor) {
+        return null;
+    }
+
+    @Override
+    public Comparator<File> thenComparingDouble(ToDoubleFunction<? super File> keyExtractor) {
+        return null;
+    }
+
+
+
+
+
+
+
 
   }
 
