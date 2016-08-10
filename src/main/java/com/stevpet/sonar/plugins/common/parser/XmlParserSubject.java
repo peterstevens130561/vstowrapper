@@ -25,8 +25,6 @@ package com.stevpet.sonar.plugins.common.parser;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,14 +40,14 @@ import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.utils.SonarException;
+
 
 import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
 import com.stevpet.sonar.plugins.common.api.parser.ParserSubject;
 import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver.Event;
 
 /**
- * Each parser should implement this class
+ * Each parser should implement this class, and the getHierarchy method
  * 
  * 
  */
@@ -76,6 +74,10 @@ public abstract class XmlParserSubject implements ParserSubject {
     }
 
 
+    /**
+     * an array of all elements that have children.
+     * @return
+     */
     public abstract String[] getHierarchy();
 
     @SuppressWarnings("ucd")
@@ -86,11 +88,11 @@ public abstract class XmlParserSubject implements ParserSubject {
             parse(cursor);
         } catch (FactoryConfigurationError e) {
             LOG.error(FACTORY_CONFIGURATION_ERROR, e);
-            throw new SonarException(e);
+            throw new IllegalStateException(e);
         } catch (XMLStreamException e) {
             String msg = "XMLStreamException in string";
             LOG.error(msg, e);
-            throw new SonarException(msg, e);
+            throw new IllegalStateException(msg, e);
         }
     }
 
@@ -114,7 +116,7 @@ public abstract class XmlParserSubject implements ParserSubject {
         } catch (XMLStreamException e) {
             String msg = COULD_NOT_CREATE_CURSOR + e.getMessage();
             LOG.error(msg);
-            throw new SonarException(msg, e);
+            throw new IllegalStateException(msg, e);
         }
         return result;
     }
@@ -126,12 +128,12 @@ public abstract class XmlParserSubject implements ParserSubject {
             parse(cursor);
         } catch (FactoryConfigurationError e) {
             LOG.error(FACTORY_CONFIGURATION_ERROR, e);
-            throw new SonarException(e);
+            throw new IllegalStateException(e);
         } catch (XMLStreamException e) {
             String msg = "XMLStreamException in " + file.getAbsolutePath()
                     + " column/line " + column + "/" + line;
             LOG.error(msg, e);
-            throw new SonarException(msg, e);
+            throw new IllegalStateException(msg, e);
         } finally {
             closeStream(cursor);
         }
@@ -155,7 +157,7 @@ public abstract class XmlParserSubject implements ParserSubject {
             }
             reader.closeCompletely();
         } catch (XMLStreamException e) {
-            throw new SonarException("exception during closing stream", e);
+            throw new IllegalStateException("exception during closing stream", e);
         }
     }
 
@@ -287,7 +289,7 @@ public abstract class XmlParserSubject implements ParserSubject {
         } catch (XMLStreamException e) {
             String msg = COULD_NOT_CREATE_CURSOR + e.getMessage();
             LOG.error(msg);
-            throw new SonarException(msg, e);
+            throw new IllegalStateException(msg, e);
         }
         return result;
     }

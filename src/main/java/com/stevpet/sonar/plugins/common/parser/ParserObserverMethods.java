@@ -1,12 +1,9 @@
 package com.stevpet.sonar.plugins.common.parser;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import com.google.common.base.Preconditions;
 import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
 import com.stevpet.sonar.plugins.common.api.parser.annotations.AttributeMatcher;
 import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementMatcher;
@@ -50,7 +47,7 @@ public class ParserObserverMethods{
         return observer;
     }
     
-    public void loadCaches() {
+    private void loadCaches() {
         for( Method method:observer.getClass().getDeclaredMethods()) {
             cachePathMatcher(method);
             cacheElementMatcher(method);
@@ -59,7 +56,7 @@ public class ParserObserverMethods{
         }
     }
 
-    public void cacheElementObserver(Method method) {
+    private void cacheElementObserver(Method method) {
         ElementObserver elementObserver = method.getAnnotation(ElementObserver.class);
         if(elementObserver!=null){
             String key=getElementEventObserverKey(elementObserver.path(),elementObserver.event());
@@ -67,21 +64,21 @@ public class ParserObserverMethods{
         }
     }
 
-    public void cacheAttributeMatcher(Method method) {
+    private void cacheAttributeMatcher(Method method) {
         AttributeMatcher attributeMatcher = method.getAnnotation(AttributeMatcher.class);
         if(attributeMatcher!=null) {
             attributeMatchers.put(attributeMatcher.elementName() + "!" + attributeMatcher.attributeName(),method );
         }
     }
 
-    public void cacheElementMatcher(Method method) {
+    private void cacheElementMatcher(Method method) {
         ElementMatcher elementMatcher = method.getAnnotation(ElementMatcher.class);
         if(elementMatcher!=null) {
             elementMatchers.put(elementMatcher.elementName(),method);
         }
     }
 
-    public void cachePathMatcher(Method method) {
+    private void cachePathMatcher(Method method) {
         PathMatcher pathMatcher= method.getAnnotation(PathMatcher.class);
         if(pathMatcher !=null) {
             pathMatchers.put(pathMatcher.path(),method);

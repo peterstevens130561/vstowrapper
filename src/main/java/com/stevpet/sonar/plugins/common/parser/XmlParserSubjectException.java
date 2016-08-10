@@ -2,11 +2,15 @@ package com.stevpet.sonar.plugins.common.parser;
 
 import javax.xml.stream.XMLStreamException;
 
-import org.sonar.api.utils.SonarException;
 
-public class XmlParserSubjectException extends SonarException {
+public class XmlParserSubjectException extends IllegalStateException {
 
-	public XmlParserSubjectException(String string, XMLStreamException e) {
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    public XmlParserSubjectException(String string, XMLStreamException e) {
 		super(string,e);
 	}
 

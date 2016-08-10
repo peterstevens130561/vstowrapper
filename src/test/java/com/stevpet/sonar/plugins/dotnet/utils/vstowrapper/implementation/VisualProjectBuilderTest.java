@@ -20,7 +20,7 @@ import org.sonar.api.batch.bootstrap.ProjectReactor;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
-import org.sonar.api.utils.SonarException;
+
 import org.sonar.test.TestUtils;
 
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.AssemblyLocator;
@@ -92,10 +92,10 @@ public class VisualProjectBuilderTest {
         when(settings.getString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY)).thenReturn("Bogus.sln");
         try {
         	visualProjectBuilder.build(context);
-        } catch (SonarException e) {
+        } catch (IllegalStateException e) {
         	return;
         }
-        fail("when solution does not exist, then a SonarException is expected");
+        fail("when solution does not exist, then a IllegalStateException is expected");
     }
     @Test
     public void NosolutionSpecified_ShouldHAveOneProjectAndOneTestProject() {

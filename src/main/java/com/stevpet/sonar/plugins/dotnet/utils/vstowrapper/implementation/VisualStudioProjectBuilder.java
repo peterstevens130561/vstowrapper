@@ -75,6 +75,11 @@ public class VisualStudioProjectBuilder extends ProjectBuilder {
 	@Override
 	public void build(Context context) {
 		sonarRootProject = context.projectReactor().getRoot();
+		boolean hasBeenBuilt=sonarRootProject.getSubProjects().size()>0;
+		if(hasBeenBuilt) {
+		    LOG.info("Project hierarchy has already been built");
+		    return;
+		}
 		moduleBuilder.setRoot(sonarRootProject);
 		hierarchyHelper.build(sonarRootProject.getBaseDir());
 		List<VisualStudioProject> projects=hierarchyHelper.getProjects();

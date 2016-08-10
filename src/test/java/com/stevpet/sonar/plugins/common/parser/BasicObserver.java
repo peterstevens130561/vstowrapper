@@ -1,5 +1,7 @@
 package com.stevpet.sonar.plugins.common.parser;
 
+import org.junit.Test;
+
 import com.stevpet.sonar.plugins.common.api.parser.BaseParserObserver;
 import com.stevpet.sonar.plugins.common.api.parser.annotations.AttributeMatcher;
 import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementMatcher;
@@ -10,27 +12,27 @@ import com.stevpet.sonar.plugins.common.api.parser.annotations.PathMatcher;
 public class BasicObserver extends BaseParserObserver {
 
     @ElementMatcher(elementName="public") 
-    public void public_method() {
+    public void public_method(String value) {
         
     }
     
     @ElementMatcher(elementName="private")
-    public void private_method() {
+    public void private_method(String value) {
         
     }
     
     @PathMatcher(path="a/b/c")
-    public void path_method() {
+    public void path_method(String value) {
         
     }
     
     @AttributeMatcher(attributeName = "a", elementName = "element")
-    public void attributeMatcher_a() {
+    public void attributeMatcher_a(String value) {
         
     }
     
     @AttributeMatcher(attributeName = "b", elementName = "element")
-    public void attributeMatcher_b() {
+    public void attributeMatcher_b(String value) {
         
     }
     

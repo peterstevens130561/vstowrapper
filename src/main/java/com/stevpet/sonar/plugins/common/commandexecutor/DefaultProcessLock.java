@@ -31,7 +31,7 @@ import java.nio.channels.FileLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.BatchExtension;
-import org.sonar.api.utils.SonarException;
+
 
 /**
  * Very simple apprach to an interprocesslock
@@ -60,7 +60,7 @@ public class DefaultProcessLock implements BatchExtension, ProcessLock {
 
             channel = new RandomAccessFile(lockFile, "rw").getChannel();
         } catch (FileNotFoundException e) {
-            throw new SonarException("Could not find lockFile " + lockFile.getAbsolutePath(), e);
+            throw new IllegalStateException("Could not find lockFile " + lockFile.getAbsolutePath(), e);
         }
         try {
             LOG.debug("Acquiring processlock on " + lockFile.getAbsolutePath());
@@ -68,7 +68,7 @@ public class DefaultProcessLock implements BatchExtension, ProcessLock {
             LOG.debug("Acquired processlock on " + lockFile.getAbsolutePath());
         } catch (IOException e) {
 
-            throw new SonarException("Could not lock " + lockFile.getAbsolutePath(), e);
+            throw new IllegalStateException("Could not lock " + lockFile.getAbsolutePath(), e);
         }
     }
 
@@ -76,12 +76,12 @@ public class DefaultProcessLock implements BatchExtension, ProcessLock {
         try {
             lock.release();
         } catch (IOException e) {
-            throw new SonarException("Could not release " + lockFile.getAbsolutePath(), e);
+            throw new IllegalStateException("Could not release " + lockFile.getAbsolutePath(), e);
         }
         try {
             channel.close();
         } catch (IOException e) {
-            throw new SonarException("Could not release " + lockFile.getAbsolutePath(), e);
+            throw new IllegalStateException("Could not release " + lockFile.getAbsolutePath(), e);
         }
         LOG.debug("Released processlock on " + lockFile.getAbsolutePath());
     }

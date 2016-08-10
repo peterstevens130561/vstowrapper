@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.BatchExtension;
 import org.sonar.api.config.Settings;
-import org.sonar.api.utils.SonarException;
+
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
@@ -81,7 +81,7 @@ public class VisualStudioSolutionHierarchyHelper implements BatchExtension, Hier
 			} else if (solutionFiles.size() == 1) {
 				result = solutionFiles.iterator().next();
 			} else {
-				throw new SonarException(
+				throw new IllegalStateException(
 						"Found several .sln files in "
 								+ projectBaseDir.getAbsolutePath()
 								+ ". Please set \""
@@ -92,12 +92,12 @@ public class VisualStudioSolutionHierarchyHelper implements BatchExtension, Hier
 		if (result == null) {
 			String msg="No Visual Studio solution file found.";
 			LOG.error(msg);
-			throw new SonarException(msg);
+			throw new IllegalStateException(msg);
 		}
 		if (!result.exists()) {
 			String msg="Visual Studio solution file does not exist " + 
 					result.getAbsolutePath();
-			throw new SonarException(msg);
+			throw new IllegalStateException(msg);
 		}
 		LOG.debug("Using the following Visual Studio solution: "
 				+ result.getAbsolutePath());

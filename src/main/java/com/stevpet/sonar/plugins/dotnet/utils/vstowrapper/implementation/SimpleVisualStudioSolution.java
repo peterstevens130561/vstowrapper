@@ -87,7 +87,7 @@ public List<VisualStudioProject> getTestProjects(Pattern pattern) {
 
 @Override
 public boolean hasTestProjects(Pattern pattern) {
-    List<VisualStudioProject> result = new ArrayList<>();
+
     List<VisualStudioProject> projects = getTestProjects() ;
     for(VisualStudioProject project : projects) {
         if( pattern.matcher(project.getAssemblyName()).matches()) {

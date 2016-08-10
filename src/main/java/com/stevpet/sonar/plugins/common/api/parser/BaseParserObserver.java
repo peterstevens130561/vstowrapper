@@ -82,5 +82,4 @@ public abstract class BaseParserObserver implements ParserObserver {
             String attributeValue, String attributeName) {
         // to be overridden when needed
     }
-
 }

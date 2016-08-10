@@ -1,8 +1,8 @@
 package com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation;
 
-import org.sonar.api.utils.SonarException;
 
-public class VsToWrapperException extends SonarException {
+
+public class VsToWrapperException extends IllegalStateException {
     /**
      * 
      */

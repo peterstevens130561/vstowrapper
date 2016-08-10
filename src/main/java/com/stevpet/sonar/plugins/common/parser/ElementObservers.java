@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.utils.SonarException;
+
 
 import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
 
@@ -56,7 +56,7 @@ public class ElementObservers {
                         + observer.getClass().getName() + ":"
                         + method.getName() + lineMsg();
                 LOG.error(msg, e.getTargetException());
-                throw new SonarException(msg, e);
+                throw new IllegalStateException(msg, e);
             }
             String msg = "Invocation Target Exception thrown when invoking method "
                     + observer.getClass().getName()
@@ -64,7 +64,7 @@ public class ElementObservers {
                     + method.getName()
                     + lineMsg();
             LOG.error(msg, e);
-            throw new SonarException(msg, e);
+            throw new IllegalStateException(msg, e);
         } catch (IllegalAccessException e) {
             String msg = "Illegal Access Exception thrown when invoking method "
                     + observer.getClass().getName()
@@ -72,7 +72,7 @@ public class ElementObservers {
                     + method.getName()
                     + lineMsg();
             LOG.error(msg, e);
-            throw new SonarException(msg, e);
+            throw new IllegalStateException(msg, e);
         } catch (IllegalArgumentException e) {
             String msg = "Illegal Argument Exception thrown when invoking method "
                     + observer.getClass().getName()
@@ -80,7 +80,7 @@ public class ElementObservers {
                     + method.getName()
                     + lineMsg();
             LOG.error(msg, e);
-            throw new SonarException(msg, e);
+            throw new IllegalStateException(msg, e);
         }
     }
     

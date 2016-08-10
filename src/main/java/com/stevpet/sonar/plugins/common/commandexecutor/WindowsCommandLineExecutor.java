@@ -24,7 +24,7 @@ package com.stevpet.sonar.plugins.common.commandexecutor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.utils.SonarException;
+
 import org.sonar.api.utils.command.CommandExecutor;
 import org.sonar.api.utils.command.StreamConsumer;
 
@@ -64,7 +64,7 @@ public class WindowsCommandLineExecutor implements CommandLineExecutor {
                     + exitCode;
             LOG.error(stdOut.toString());
             LOG.error(stdErr.toString());
-            throw new SonarException(msg);
+            throw new IllegalStateException(msg);
         } 
         return exitCode;
     }

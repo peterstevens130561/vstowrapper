@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.utils.SonarException;
 
 import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
 import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver;
@@ -43,20 +42,20 @@ class ElementEventObserverInvoker {
         } catch (InvocationTargetException e) {
             if (e.getTargetException() != null) {
                 String msg = "Exception thrown when invoking method" + createMsg(observer,method);
-                throw new SonarException(msg, e);
+                throw new IllegalStateException(msg, e);
             }
             String msg = "Invocation Target Exception thrown when invoking method " + createMsg(observer,method);
 
             LOG.error(msg, e);
-            throw new SonarException(msg, e);
+            throw new IllegalStateException(msg, e);
         } catch (IllegalAccessException e) {
             String msg = "Illegal Access Exception thrown when invoking method " +  createMsg(observer,method);
             LOG.error(msg, e);
-            throw new SonarException(msg, e);
+            throw new IllegalStateException(msg, e);
         } catch (IllegalArgumentException e) {
             String msg = "Illegal Argument Exception thrown when invoking method, does the method have one or more arguments? " + createMsg(observer,method);
             LOG.error(msg, e);
-            throw new SonarException(msg, e);
+            throw new IllegalStateException(msg, e);
         }
     }
     

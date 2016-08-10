@@ -13,7 +13,6 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.lang.StringUtils;
 import org.sonar.api.config.Settings;
-import org.sonar.api.utils.SonarException;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
@@ -115,7 +114,7 @@ public class CppProjectParser implements VisualStudioProjectParser {
             } catch (IOException e) {
               throw Throwables.propagate(e);
             } catch (XMLStreamException e) {
-              throw new SonarException("Error while parsing the Visual Studio project file: " + projectFile.getAbsolutePath(), e);
+              throw new IllegalStateException("Error while parsing the Visual Studio project file: " + projectFile.getAbsolutePath(), e);
             } finally {
               closeXmlStream();
               Closeables.closeQuietly(reader);

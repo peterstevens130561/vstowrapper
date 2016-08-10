@@ -30,7 +30,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
 
 import org.apache.commons.lang.StringUtils;
-import org.sonar.api.utils.SonarException;
+
 
 import javax.annotation.Nullable;
 import javax.xml.stream.XMLInputFactory;
@@ -121,7 +121,7 @@ public class VisualStudioCsProjectParser implements VisualStudioProjectParser {
             } catch (IOException e) {
                 throw Throwables.propagate(e);
             } catch (XMLStreamException e) {
-                throw new SonarException("Error while parsing the Visual Studio project file: " + projectFile.getAbsolutePath(), e);
+                throw new IllegalStateException("Error while parsing the Visual Studio project file: " + projectFile.getAbsolutePath(), e);
             } finally {
                 closeXmlStream();
                 Closeables.closeQuietly(reader);
