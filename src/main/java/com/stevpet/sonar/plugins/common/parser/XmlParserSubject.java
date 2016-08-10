@@ -41,7 +41,6 @@ import org.codehaus.staxmate.in.SMInputCursor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
 import com.stevpet.sonar.plugins.common.api.parser.ParserSubject;
 import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver.Event;
@@ -66,6 +65,12 @@ public abstract class XmlParserSubject implements ParserSubject {
     private ElementEventObserverInvoker elementEventObserverInvoker = new ElementEventObserverInvoker(observerPathCache);
     private ElementObservers elementObserverInvoker = new ElementObservers(observerPathCache);
 
+    //TODO: should encapsulate thissomewhere
+    private ValueObservers elementObservers = new DefaultValueObservers();
+    private ValueObservers pathObservers =  new DefaultValueObservers();
+    private ValueObservers attributeObservers =  new DefaultValueObservers();
+    private DefaultObserverRegistrationFacade registrar = new DefaultObserverRegistrationFacade(elementObservers, pathObservers, attributeObservers);
+    
     public XmlParserSubject() {
         String[] names = getHierarchy();
         for (String name : names) {
@@ -161,8 +166,10 @@ public abstract class XmlParserSubject implements ParserSubject {
         }
     }
 
+    
     public void registerObserver(ParserObserver observer) {
         observerPathCache.add(observer);
+        observer.registerObservers(registrar);
     }
 
     private boolean parseChild(String path, SMInputCursor childCursor)

@@ -2,8 +2,8 @@ package com.stevpet.sonar.plugins.common.parser;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.function.Consumer;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.stevpet.sonar.plugins.common.api.parser.BaseParserObserver;
@@ -13,12 +13,22 @@ import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver;
 import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver.Event;
 import com.stevpet.sonar.plugins.common.api.parser.annotations.PathMatcher;
 
-public class AttributeLessBasicObserverTest extends BaseParserObserver implements ObserverRegistration {
+public class AttributeLessBasicObserverTest extends BaseParserObserver  {
 
     private int observedPath;
+    private ValueObservers elementObservers;
+    private ValueObservers pathObservers;
+    private ValueObservers attributeObservers;
 
+    @Before
+    public void before() {
+        pathObservers = new DefaultValueObservers();
+        elementObservers = new DefaultValueObservers();
+        attributeObservers = new DefaultValueObservers();
+    }
+    
     @Override
-    public void registerObservers(ObserverRegistry methodRegistry) {
+    public void registerObservers(ObserverRegistrar methodRegistry) {
         methodRegistry.onElement(this::public_method,"public")
         .onElement(this::private_method,"private")
         .onPath(this::path_method,"a/b/c")
@@ -28,31 +38,37 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver implement
     
     @Test
     public void invokeTest() {
-        ObserverRegistry methodRegistry = new DefaultObserverRegistry();
+        ObserverRegistrar methodRegistry = NewDefaultObserverRegistrationFacade();
         registerObservers(methodRegistry);
         observedPath=0;
-        methodRegistry.invokePathObserver("a/b/c","value");
+        pathObservers.observe("a/b/c","value");
         assertEquals(1,observedPath);
     }
     
     @Test
     public void invokeRegisterTwice() {
-        ObserverRegistry methodRegistry = new DefaultObserverRegistry();
+        ObserverRegistrar methodRegistry = NewDefaultObserverRegistrationFacade();
         registerObservers(methodRegistry);
         registerObservers(methodRegistry);
         observedPath=0;
-        methodRegistry.invokePathObserver("a/b/c","value");
+        pathObservers.observe("a/b/c","value");
         assertEquals(2,observedPath);
     }
     
     @Test
     public void invokeObserverTwice() {
-        ObserverRegistry methodRegistry = new DefaultObserverRegistry();
+        ObserverRegistrar methodRegistry = NewDefaultObserverRegistrationFacade();
         registerObservers(methodRegistry);
         observedPath=0;
-        methodRegistry.invokePathObserver("a/b/c","value");
+        pathObservers.observe("a/b/c","value");
         assertEquals(2,observedPath);
     }
+    
+    
+    private ObserverRegistrar NewDefaultObserverRegistrationFacade() {
+        return new DefaultObserverRegistrationFacade(elementObservers, pathObservers, attributeObservers);
+    }
+
     @ElementMatcher(elementName="public") 
     public void public_method(String a) {
         

@@ -23,11 +23,12 @@
 package com.stevpet.sonar.plugins.common.api.parser;
 
 import com.stevpet.sonar.plugins.common.parser.ElementObservers;
+import com.stevpet.sonar.plugins.common.parser.ObserverRegistration;
 import com.stevpet.sonar.plugins.common.parser.ParserData;
 
 
 
-public interface ParserObserver {
+public interface ParserObserver extends ObserverRegistration  {
     /**
      * Determine whether the current element with text is to be observed
      * @param path to current element
