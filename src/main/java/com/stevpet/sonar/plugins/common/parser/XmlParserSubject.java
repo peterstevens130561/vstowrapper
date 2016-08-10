@@ -243,6 +243,7 @@ public abstract class XmlParserSubject implements ParserSubject {
             String attributeName = elementCursor.getAttrLocalName(index);
             updateLocation(elementCursor);
             elementObserverInvoker.invokeAttributeObservers(name, path, attributeValue, attributeName);
+            attributeObservers.observe(name + "/" + attributeName, attributeValue);
         }
     }
 
