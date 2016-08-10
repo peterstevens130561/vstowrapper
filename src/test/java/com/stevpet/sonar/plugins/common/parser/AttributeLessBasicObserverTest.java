@@ -44,6 +44,15 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver implement
         methodRegistry.invokePathObserver("a/b/c","value");
         assertEquals(2,observedPath);
     }
+    
+    @Test
+    public void invokeObserverTwice() {
+        ObserverRegistry methodRegistry = new DefaultObserverRegistry();
+        registerObservers(methodRegistry);
+        observedPath=0;
+        methodRegistry.invokePathObserver("a/b/c","value");
+        assertEquals(2,observedPath);
+    }
     @ElementMatcher(elementName="public") 
     public void public_method(String a) {
         

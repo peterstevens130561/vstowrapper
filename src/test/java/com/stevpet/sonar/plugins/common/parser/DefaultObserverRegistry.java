@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 
 public class DefaultObserverRegistry implements ObserverRegistry {
 
-    Dictionary<String,List<ValueObserver>> pathObservers = new Hashtable<String,List<ValueObserver>>(1024);
+    Dictionary<String,ValueObservers> pathObservers = new Hashtable<String,ValueObservers>(1024);
     @Override
     public ObserverRegistry onElement(Consumer<String> elementObserver, String string) {
         return this;
@@ -16,39 +16,39 @@ public class DefaultObserverRegistry implements ObserverRegistry {
 
     @Override
     public ObserverRegistry onPath(ValueObserver pathObserver, String path) {
-        List<ValueObserver> observers = pathObservers.get(path);
+        ValueObservers observers = pathObservers.get(path);
         if(observers==null) {
-            observers = new ArrayList<ValueObserver>();
+            observers = new DefaultValueObsers();
             pathObservers.put(path, observers);
         }
-        observers.add(pathObserver);
+        observers.put(pathObserver);
         return this;
     }
 
     @Override
     public ObserverRegistry onAttribute(Consumer<String> pathObserver, String string) {
-        // TODO Auto-generated method stub
+
         return this;
     }
 
     @Override
     public ObserverRegistry onEntry(Consumer<Void> pathObserver, String string) {
-        // TODO Auto-generated method stub
+
         return this;
     }
 
     @Override
     public ObserverRegistry onExit(Consumer<Void> pathObserver, String string) {
-        // TODO Auto-generated method stub
         return this;
     }
 
     @Override
-    public void invokePathObserver(String path,String value) {
-       List<ValueObserver> observers = pathObservers.get(path);
+    public ObserverRegistry invokePathObserver(String path,String value) {
+       ValueObservers observers = pathObservers.get(path);
        if(observers!=null) {
-           observers.forEach(observer -> observer.observe(value));
+           observers.observe(value);
        }
+       return this;
     }
 
 }

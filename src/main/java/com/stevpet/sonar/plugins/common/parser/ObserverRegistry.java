@@ -12,5 +12,5 @@ public interface ObserverRegistry {
     ObserverRegistry onEntry(Consumer<Void> pathObserver, String string);
     ObserverRegistry onExit(Consumer<Void> pathObserver, String string);
 
-    void invokePathObserver(String path, String value);
+    ObserverRegistry invokePathObserver(String path, String value);
 }
