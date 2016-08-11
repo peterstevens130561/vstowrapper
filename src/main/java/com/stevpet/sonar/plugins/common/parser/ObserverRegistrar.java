@@ -42,7 +42,8 @@ public interface ObserverRegistrar {
      * @param path - to the element
      * @return
      */
-    ObserverRegistrar onEntry(Consumer<Void> entryObserver, String string);
-    ObserverRegistrar onExit(Consumer<Void> pathObserver, String string);
+    ObserverRegistrar onEntry(EventObserver entryObserver, String path);
+    
+    ObserverRegistrar onExit(EventObserver exitObserver, String path);
 
 }

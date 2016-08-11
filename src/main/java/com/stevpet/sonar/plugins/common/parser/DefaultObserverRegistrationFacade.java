@@ -8,10 +8,14 @@ public class DefaultObserverRegistrationFacade implements ObserverRegistrar {
     private final ValueObservers pathObservers;
     private final ValueObservers attributeObservers;
     private ValueObservers elementObservers;
-    public DefaultObserverRegistrationFacade(ValueObservers elementObservers, ValueObservers pathObservers, ValueObservers attributeObservers) {
+    private EventObservers entryObservers;
+    private EventObservers exitObservers;
+    public DefaultObserverRegistrationFacade(ValueObservers elementObservers, ValueObservers pathObservers, ValueObservers attributeObservers, EventObservers entryObservers, EventObservers exitObservers) {
         this.elementObservers = elementObservers;
         this.pathObservers = pathObservers;
         this.attributeObservers=attributeObservers;
+        this.entryObservers=entryObservers;
+        this.exitObservers=exitObservers;
     }
 
     @Override
@@ -34,12 +38,14 @@ public class DefaultObserverRegistrationFacade implements ObserverRegistrar {
     }
 
     @Override
-    public ObserverRegistrar onEntry(Consumer<Void> pathObserver, String string) {
+    public ObserverRegistrar onEntry(EventObserver eventObserver, String path) {
+        entryObservers.register(path,eventObserver);
         return this;
     }
 
     @Override
-    public ObserverRegistrar onExit(Consumer<Void> pathObserver, String string) {
+    public ObserverRegistrar onExit(EventObserver eventObserver, String path) {
+        entryObservers.register(path,eventObserver);
         return this;
     }
 

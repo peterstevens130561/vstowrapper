@@ -69,7 +69,10 @@ public abstract class XmlParserSubject implements ParserSubject {
     private ValueObservers elementObservers = new DefaultValueObservers();
     private ValueObservers pathObservers =  new DefaultValueObservers();
     private ValueObservers attributeObservers =  new DefaultValueObservers();
-    private DefaultObserverRegistrationFacade registrar = new DefaultObserverRegistrationFacade(elementObservers, pathObservers, attributeObservers);
+    private EventObservers entryObservers = new DefaultEventObservers();
+    private EventObservers exitObservers = new DefaultEventObservers();
+    private DefaultObserverRegistrationFacade registrar = new DefaultObserverRegistrationFacade(
+            elementObservers, pathObservers, attributeObservers,entryObservers,exitObservers);
     
     public XmlParserSubject() {
         String[] names = getHierarchy();
@@ -208,6 +211,7 @@ public abstract class XmlParserSubject implements ParserSubject {
      * @param path
      */
     protected void onEntry(String path) {
+        entryObservers.observe(path);
         elementEventObserverInvoker.invokeObservers(path, Event.ENTRY);
     }
     
@@ -218,6 +222,7 @@ public abstract class XmlParserSubject implements ParserSubject {
      * @param path
      */
     protected void onExit(String path) {
+        exitObservers.observe(path);
         elementEventObserverInvoker.invokeObservers(path, Event.EXIT);
     }
 

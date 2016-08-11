@@ -19,12 +19,18 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
     private ValueObservers elementObservers;
     private ValueObservers pathObservers;
     private ValueObservers attributeObservers;
+    private EventObservers entryObservers;
+    private EventObservers exitObservers;
+    private int entryObserved;
+    private int exitObserved;
 
     @Before
     public void before() {
         pathObservers = new DefaultValueObservers();
         elementObservers = new DefaultValueObservers();
         attributeObservers = new DefaultValueObservers();
+        entryObservers = new DefaultEventObservers();
+        exitObservers = new DefaultEventObservers();
     }
     
     @Override
@@ -32,8 +38,9 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
         methodRegistry.onElement(this::public_method,"public")
         .onElement(this::private_method,"private")
         .onPath(this::path_method,"a/b/c")
-        .onAttribute(this::attributeMatcher_a,"element/a");
-        
+        .onAttribute(this::attributeMatcher_a,"element/a")
+        .onEntry(this::elementObserverEntry, "a/b/c")
+        .onExit(this::elementObserverExit,"a/b/c");
     }
     
     @Test
@@ -66,7 +73,7 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
     
     
     private ObserverRegistrar NewDefaultObserverRegistrationFacade() {
-        return new DefaultObserverRegistrationFacade(elementObservers, pathObservers, attributeObservers);
+        return new DefaultObserverRegistrationFacade(elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
     }
 
     @ElementMatcher(elementName="public") 
@@ -94,13 +101,11 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
         
     }
     
-    @ElementObserver(path = "a/b/c", event = Event.ENTRY )
     public void elementObserverEntry() {
-        
+        entryObserved++;
     }
     
-    @ElementObserver(path = "a/b/c", event = Event.EXIT )
     public void elementObserverExit() {
-        
+        exitObserved++;
     }
 }
