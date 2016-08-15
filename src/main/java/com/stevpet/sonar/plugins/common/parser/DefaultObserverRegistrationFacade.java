@@ -45,7 +45,7 @@ public class DefaultObserverRegistrationFacade implements ObserverRegistrar {
 
     @Override
     public ObserverRegistrar onExit(EventObserver eventObserver, String path) {
-        entryObservers.register(path,eventObserver);
+        exitObservers.register(path,eventObserver);
         return this;
     }
 

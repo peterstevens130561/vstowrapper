@@ -39,13 +39,7 @@ public abstract class BaseParserObserver implements ParserObserver {
         hasError=true;
     }
     
-    /**
-     * for now we'll just implement the empty method
-     */
-    @Override
-    public void registerObservers(ObserverRegistrar registrar) {
-        
-    }
+
     /**
      * parser state data to be manipulated by the observer, to be inserted by the parser.
      * @param parserData - valid parserData object

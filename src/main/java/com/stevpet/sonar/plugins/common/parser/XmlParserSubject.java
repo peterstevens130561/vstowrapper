@@ -236,6 +236,7 @@ public abstract class XmlParserSubject implements ParserSubject {
             updateLocation(childCursor);
             String text = getTrimmedElementStringValue(childCursor);
             elementObserverInvoker.invokeElementObservers(elementPath, name, text);
+            elementObservers.observe(name, text);
             pathObservers.observe(elementPath, text);
         }
     }

@@ -45,4 +45,10 @@ public class BasicObserver extends BaseParserObserver {
     public void elementObserverExit() {
         
     }
+
+    @Override
+    public void registerObservers(ObserverRegistrar registrar) {
+        // TODO Auto-generated method stub
+        
+    }
 }

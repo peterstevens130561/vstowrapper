@@ -68,6 +68,7 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
         registerObservers(methodRegistry);
         observedPath=0;
         pathObservers.observe("a/b/c","value");
+        pathObservers.observe("a/b/c","value");
         assertEquals(2,observedPath);
     }
     
