@@ -32,7 +32,7 @@ public class DefaultObserverRegistrationFacade implements ObserverRegistrar {
 
 
     @Override
-    public ObserverRegistrar onAttribute(ValueObserver pathObserver, String string) {
+    public ObserverRegistrar onAttribute(String string, ValueObserver pathObserver) {
         attributeObservers.register(string,pathObserver);
         return this;
     }
@@ -47,6 +47,12 @@ public class DefaultObserverRegistrationFacade implements ObserverRegistrar {
     public ObserverRegistrar onExit(EventObserver eventObserver, String path) {
         exitObservers.register(path,eventObserver);
         return this;
+    }
+
+    @Override
+    public void inElement(String name, Consumer<AttributeRegistrar> attributeRegistration) {
+        AttributeRegistrar t = new AttributeRegistrar(name,attributeObservers);
+        attributeRegistration.accept(t);
     }
 
 

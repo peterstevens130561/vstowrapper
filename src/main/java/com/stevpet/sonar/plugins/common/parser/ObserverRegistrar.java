@@ -29,11 +29,14 @@ public interface ObserverRegistrar {
     
     /**
      * register an observer that matches the full path to an attribute
-     * @param pathObserver - a void method taking the value of the attribute
      * @param attributePath
+     * @param pathObserver - a void method taking the value of the attribute
      * @return
+     * @deprecated
+     * replaced by inElement, as it is much more concise
      */
-    ObserverRegistrar onAttribute(ValueObserver pathObserver, String attributePath);
+    @Deprecated
+    ObserverRegistrar onAttribute(String attributePath, ValueObserver pathObserver);
     
     /**
      * register an observer that is invoked on entry of an element
@@ -45,5 +48,15 @@ public interface ObserverRegistrar {
     ObserverRegistrar onEntry(EventObserver entryObserver, String path);
     
     ObserverRegistrar onExit(EventObserver exitObserver, String path);
+
+    /**
+     * 
+     * @param name - the name of the element on which we want to observe attributes
+     * @param registrar - registration of attribute observers
+     *
+     *<br>
+     * {@code inElement("SomeElement",registrar -> registrar->addAttribute("vc",this::vc).addAttribute("sl",this::sl})
+     */
+    void inElement(String name, Consumer<AttributeRegistrar> registrar);
 
 }

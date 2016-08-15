@@ -38,7 +38,7 @@ public class DefaultObserverRegistrationFacadeTest {
     @Test
     public void testAttribute() {
         ValueObserver observer = this::valueObserver;
-        registrar.onAttribute(observer,"booh");
+        registrar.onAttribute("booh",observer);
         verify(attributeObservers,times(1)).register("booh",observer);
     }
     
@@ -54,6 +54,16 @@ public class DefaultObserverRegistrationFacadeTest {
         EventObserver observer = this::eventObserver;
         registrar.onExit(observer,"booh");
         verify(exitObservers,times(1)).register("booh",observer);
+    }
+    
+    @Test
+    public void testAttributeInElement() {
+        ValueObserver observer = this::valueObserver;      
+        registrar.inElement("element",(registrar -> registrar
+                        .onAttribute("a",observer)
+                        .onAttribute("b",observer)));
+        verify(attributeObservers,times(1)).register("element/a",observer);        
+        verify(attributeObservers,times(1)).register("element/b",observer);         
     }
     
     private void valueObserver(String value) {
