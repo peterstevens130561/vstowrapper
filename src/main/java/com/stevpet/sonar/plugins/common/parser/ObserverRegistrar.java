@@ -59,4 +59,8 @@ public interface ObserverRegistrar {
      */
     void inElement(String name, Consumer<AttributeRegistrar> registrar);
 
+    void inPath(String path, Consumer<ObserverRegistrar> registrar);
+
+    void setName(String name);
+
 }

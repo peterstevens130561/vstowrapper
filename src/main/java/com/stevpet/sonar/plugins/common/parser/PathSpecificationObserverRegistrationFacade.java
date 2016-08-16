@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import org.apache.commons.lang.StringUtils;
 
-public class DefaultObserverRegistrationFacade implements ObserverRegistrar {
+public class PathSpecificationObserverRegistrationFacade implements ObserverRegistrar {
 
     
     private final ValueObservers pathObservers;
@@ -13,8 +13,7 @@ public class DefaultObserverRegistrationFacade implements ObserverRegistrar {
     private EventObservers entryObservers;
     private EventObservers exitObservers;
     private String ancestry;
-    private ObserverRegistrar newFacade;
-    public DefaultObserverRegistrationFacade(String ancestry,ValueObservers elementObservers, ValueObservers pathObservers, ValueObservers attributeObservers, EventObservers entryObservers, EventObservers exitObservers) {
+    public PathSpecificationObserverRegistrationFacade(String ancestry,ValueObservers elementObservers, ValueObservers pathObservers, ValueObservers attributeObservers, EventObservers entryObservers, EventObservers exitObservers) {
         this.ancestry=ancestry;
         this.elementObservers = elementObservers;
         this.pathObservers = pathObservers;
@@ -23,9 +22,8 @@ public class DefaultObserverRegistrationFacade implements ObserverRegistrar {
         this.exitObservers=exitObservers;
     }
 
-
     private ObserverRegistrar create(String parent) {
-        return new DefaultObserverRegistrationFacade(parent,elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
+        return new PathSpecificationObserverRegistrationFacade(parent,elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
     }
     @Override
     public ObserverRegistrar onElement(ValueObserver observer, String element) {
@@ -58,29 +56,27 @@ public class DefaultObserverRegistrationFacade implements ObserverRegistrar {
         return this;
     }
 
-    public void setNewFacade(ObserverRegistrar newFacade) {
-        this.newFacade =newFacade;
-    }
-    
     @Override
     public void inElement(String name, Consumer<AttributeRegistrar> attributeRegistration) {
-        AttributeRegistrar t = new  AttributeRegistrar(name, attributeObservers);
+        AttributeRegistrar t = new AttributeRegistrar(name,attributeObservers);
         attributeRegistration.accept(t);
     }
     
     @Override
     public void inPath(String path,Consumer<ObserverRegistrar> registrar) {
         String parent = createPath(path);
-        ObserverRegistrar t = new PathSpecificationObserverRegistrationFacade(parent, elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
+        ObserverRegistrar t = this.create(parent) ;
         registrar.accept(t);
     }
-    private String createPath(String path) {
-        return path;
-    }
 
+    private String createPath(String path) {
+        String parent = StringUtils.isEmpty(ancestry)?path:ancestry + "/" + path;
+        return parent;
+    }
 
     @Override
     public void setName(String name) {
+        this.ancestry=name;
     }
 
 

@@ -74,7 +74,7 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
     
     
     private ObserverRegistrar NewDefaultObserverRegistrationFacade() {
-        return new DefaultObserverRegistrationFacade(elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
+        return new DefaultObserverRegistrationFacade("",elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
     }
 
     @ElementMatcher(elementName="public") 

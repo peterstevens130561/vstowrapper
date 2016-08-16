@@ -71,9 +71,16 @@ public abstract class XmlParserSubject implements ParserSubject {
     private ValueObservers attributeObservers =  new DefaultValueObservers();
     private EventObservers entryObservers = new DefaultEventObservers();
     private EventObservers exitObservers = new DefaultEventObservers();
-    private DefaultObserverRegistrationFacade registrar = new DefaultObserverRegistrationFacade(
+    private DefaultObserverRegistrationFacade registrar = new DefaultObserverRegistrationFacade("",
             elementObservers, pathObservers, attributeObservers,entryObservers,exitObservers);
     
+    private ValueObservers pathElementObservers = new DefaultValueObservers();
+    private ValueObservers pathPathObservers= new DefaultValueObservers();
+    private ValueObservers pathAttributeObservers= new DefaultValueObservers();
+    private EventObservers pathEntryObservers = new DefaultEventObservers();
+    private EventObservers pathExitObservers = new DefaultEventObservers();
+    private PathSpecificationObserverRegistrationFacade newFacade = new PathSpecificationObserverRegistrationFacade(
+                    "", pathElementObservers, pathPathObservers, pathAttributeObservers, pathEntryObservers, pathExitObservers);
     public XmlParserSubject() {
         String[] names = getHierarchy();
         for (String name : names) {
@@ -150,6 +157,7 @@ public abstract class XmlParserSubject implements ParserSubject {
 
     private void parse(SMInputCursor rootCursor) throws XMLStreamException {
         observerPathCache.setParserData(parserData);
+        registrar.setNewFacade(newFacade); //TODO: remove at end
         SMInputCursor childCursor = rootCursor.childElementCursor();
         parseChild("", childCursor);
     }
@@ -211,7 +219,8 @@ public abstract class XmlParserSubject implements ParserSubject {
      * @param path
      */
     protected void onEntry(String path) {
-        entryObservers.observe(path);
+        entryObservers.observe(path); // TODO remove at end
+        pathEntryObservers.observe(path);
         elementEventObserverInvoker.invokeObservers(path, Event.ENTRY);
     }
     
@@ -222,8 +231,9 @@ public abstract class XmlParserSubject implements ParserSubject {
      * @param path
      */
     protected void onExit(String path) {
-        exitObservers.observe(path);
-        elementEventObserverInvoker.invokeObservers(path, Event.EXIT);
+        exitObservers.observe(path); // TODO remove at end
+        pathExitObservers.observe(path);
+        elementEventObserverInvoker.invokeObservers(path, Event.EXIT); // TODO: remove at end
     }
 
     
@@ -235,8 +245,9 @@ public abstract class XmlParserSubject implements ParserSubject {
         } else {
             updateLocation(childCursor);
             String text = getTrimmedElementStringValue(childCursor);
-            elementObserverInvoker.invokeElementObservers(elementPath, name, text);
-            elementObservers.observe(name, text);
+            elementObserverInvoker.invokeElementObservers(elementPath, name, text);// TODO: remove at end
+            pathElementObservers.observe(elementPath,text);
+            elementObservers.observe(name, text);// TODO: remove at end
             pathObservers.observe(elementPath, text);
         }
     }
@@ -248,8 +259,9 @@ public abstract class XmlParserSubject implements ParserSubject {
             String attributeValue = elementCursor.getAttrValue(index);
             String attributeName = elementCursor.getAttrLocalName(index);
             updateLocation(elementCursor);
-            elementObserverInvoker.invokeAttributeObservers(name, path, attributeValue, attributeName);
+            elementObserverInvoker.invokeAttributeObservers(name, path, attributeValue, attributeName);// TODO: remove at end
             attributeObservers.observe(name + "/" + attributeName, attributeValue);
+            pathAttributeObservers.observe(path + "/" + attributeName, attributeValue);
         }
     }
 

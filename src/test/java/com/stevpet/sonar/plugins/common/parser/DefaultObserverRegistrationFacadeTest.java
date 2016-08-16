@@ -18,7 +18,7 @@ public class DefaultObserverRegistrationFacadeTest {
     @Before
     public void before() {
         org.mockito.MockitoAnnotations.initMocks(this);
-        registrar = new DefaultObserverRegistrationFacade(elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
+        registrar = new DefaultObserverRegistrationFacade("",elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
     }
     
     @Test
