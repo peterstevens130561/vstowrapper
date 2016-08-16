@@ -24,8 +24,8 @@ public class RegistrationBuilderTests {
             ( modules -> modules
                 .inPath("Module", 
                     (module -> module
-                        .onElement(value -> moduleName = value, "ModuleName")
-                        .onElement(value -> modulePath=value,"ModulePath")
+                        .onElement("ModuleName", value -> moduleName = value)
+                        .onElement("ModulePath",value -> modulePath=value)
                         .inPath("Summary",
                             (summary -> summary.onAttribute("numBranchPoints",(value -> numBranchPoints=value))
                             )

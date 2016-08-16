@@ -26,7 +26,7 @@ public class PathSpecificationObserverRegistrationFacade implements ObserverRegi
         return new PathSpecificationObserverRegistrationFacade(parent,elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
     }
     @Override
-    public ObserverRegistrar onElement(ValueObserver observer, String element) {
+    public ObserverRegistrar onElement(String element, ValueObserver observer) {
         elementObservers.register(createPath(element), observer);
         return this;
     }

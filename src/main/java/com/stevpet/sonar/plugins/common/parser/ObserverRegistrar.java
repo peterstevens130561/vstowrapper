@@ -11,12 +11,12 @@ public interface ObserverRegistrar {
 
     /**
      * register an observer that matches the specified element
-     * 
-     * @param elementObserver a void method taking the value of the element
      * @param element - the name of the element
+     * @param elementObserver a void method taking the value of the element
+     * 
      * @return
      */
-    ObserverRegistrar onElement(ValueObserver elementObserver,String element );
+    ObserverRegistrar onElement(String element,ValueObserver elementObserver );
 
     /**
      * register an observer that matches a full path, matches on an element

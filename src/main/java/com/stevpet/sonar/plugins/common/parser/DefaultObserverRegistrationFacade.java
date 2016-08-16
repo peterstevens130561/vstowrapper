@@ -27,8 +27,9 @@ public class DefaultObserverRegistrationFacade implements ObserverRegistrar {
     private ObserverRegistrar create(String parent) {
         return new DefaultObserverRegistrationFacade(parent,elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
     }
+    @Deprecated
     @Override
-    public ObserverRegistrar onElement(ValueObserver observer, String element) {
+    public ObserverRegistrar onElement(String element, ValueObserver observer) {
         elementObservers.register(createPath(element), observer);
         return this;
     }

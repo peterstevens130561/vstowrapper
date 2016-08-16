@@ -24,7 +24,7 @@ public class DefaultObserverRegistrationFacadeTest {
     @Test
     public void testElement() {
         ValueObserver observer = this::valueObserver;
-        registrar.onElement(observer,"booh");
+        registrar.onElement("booh",observer);
         verify(elementObservers,times(1)).register("booh",observer);
     }
     
