@@ -86,6 +86,7 @@ public abstract class XmlParserSubject implements ParserSubject {
         for (String name : names) {
             parentElements.add(name);
         }
+        registrar.setNewFacade(newFacade); //TODO: remove at end
     }
 
 
@@ -157,7 +158,7 @@ public abstract class XmlParserSubject implements ParserSubject {
 
     private void parse(SMInputCursor rootCursor) throws XMLStreamException {
         observerPathCache.setParserData(parserData);
-        registrar.setNewFacade(newFacade); //TODO: remove at end
+
         SMInputCursor childCursor = rootCursor.childElementCursor();
         parseChild("", childCursor);
     }
