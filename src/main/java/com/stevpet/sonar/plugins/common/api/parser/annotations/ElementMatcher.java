@@ -27,6 +27,7 @@ import java.lang.annotation.RetentionPolicy;
 
 
 @Retention(value = RetentionPolicy.RUNTIME)
+@Deprecated
 public @interface ElementMatcher {
     /**
      * element to match

@@ -26,6 +26,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(value = RetentionPolicy.RUNTIME)
+@Deprecated
 /**
  * use to match a literal path, i.e. when there are multiple elements with the same name
  *
