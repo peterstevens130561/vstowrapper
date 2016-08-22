@@ -60,7 +60,7 @@ public abstract class XmlParserSubject implements ParserSubject {
     private List<String> parentElements = new ArrayList<String>();
     private int line;
     private int column;
-    private ParserData parserData = new ParserData();
+    private final ParserData parserData;
     private RegisteredParserObservers observerPathCache = new RegisteredParserObservers();
     private ElementEventObserverInvoker elementEventObserverInvoker = new ElementEventObserverInvoker(observerPathCache);
     private ElementObservers elementObserverInvoker = new ElementObservers(observerPathCache);
@@ -82,14 +82,22 @@ public abstract class XmlParserSubject implements ParserSubject {
     private PathSpecificationObserverRegistrationFacade newFacade = new PathSpecificationObserverRegistrationFacade(
                     "", pathElementObservers, pathPathObservers, pathAttributeObservers, pathEntryObservers, pathExitObservers);
     public XmlParserSubject() {
+        this(new ParserData());
+    }
+
+    /**
+     * mainly intended for unit testing, normally you should not be concerned about
+     * the parserData
+     * @param parserData
+     */
+    public XmlParserSubject(ParserData parserData) {
+        this.parserData = parserData;
         String[] names = getHierarchy();
         for (String name : names) {
             parentElements.add(name);
         }
         registrar.setNewFacade(newFacade); //TODO: remove at end
     }
-
-
     /**
      * an array of all elements that have children.
      * @return

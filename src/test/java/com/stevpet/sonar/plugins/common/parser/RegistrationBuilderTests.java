@@ -18,7 +18,8 @@ public class RegistrationBuilderTests {
 
     @Test
     public void example() {
-        ObserverRegistrar registrar = new DefaultObserverRegistrationFacade("",elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
+        DefaultObserverRegistrationFacade registrar = new DefaultObserverRegistrationFacade("",elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
+        registrar.setNewFacade(new PathSpecificationObserverRegistrationFacade("", elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers) );
         registrar.inPath
         ("Modules", 
             ( modules -> modules
