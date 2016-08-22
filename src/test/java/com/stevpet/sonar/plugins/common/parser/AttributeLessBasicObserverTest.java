@@ -39,8 +39,8 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
         .onElement("private",this::private_method)
         .onPath(this::path_method,"a/b/c")
         .onAttribute("element/a",this::attributeMatcher_a)
-        .onEntry(this::elementObserverEntry, "a/b/c")
-        .onExit(this::elementObserverExit,"a/b/c");
+        .onEntry("a/b/c", this::elementObserverEntry)
+        .onExit("a/b/c",this::elementObserverExit);
     }
     
     @Test

@@ -35,19 +35,24 @@ public interface ObserverRegistrar {
      * @deprecated
      * replaced by inElement, as it is much more concise
      */
-    @Deprecated
     ObserverRegistrar onAttribute(String attributePath, ValueObserver pathObserver);
     
     /**
      * register an observer that is invoked on entry of an element
-     * 
+     * @param element - to the element
      * @param entryObserver - a void method without arguments
-     * @param path - to the element
+     * 
      * @return
      */
-    ObserverRegistrar onEntry(EventObserver entryObserver, String path);
+    ObserverRegistrar onEntry(String element, EventObserver entryObserver);
     
-    ObserverRegistrar onExit(EventObserver exitObserver, String path);
+    /**
+     * register an observer that is invoked on exit of an element
+     * @param element - to the element
+     * @param entryObserver - a void method without arguments
+     * @return
+     */
+    ObserverRegistrar onExit(String element, EventObserver exitObserver);
 
     /**
      * 

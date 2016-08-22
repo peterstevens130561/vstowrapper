@@ -45,14 +45,14 @@ public class DefaultObserverRegistrationFacadeTest {
     @Test
     public void testEntry() {
         EventObserver observer = this::eventObserver;
-        registrar.onEntry(observer,"booh");
+        registrar.onEntry("booh",observer);
         verify(entryObservers,times(1)).register("booh",observer);
     }
     
     @Test
     public void testExit() {
         EventObserver observer = this::eventObserver;
-        registrar.onExit(observer,"booh");
+        registrar.onExit("booh",observer);
         verify(exitObservers,times(1)).register("booh",observer);
     }
     

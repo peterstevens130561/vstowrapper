@@ -48,14 +48,14 @@ public class DefaultObserverRegistrationFacade implements ObserverRegistrar {
     }
 
     @Override
-    public ObserverRegistrar onEntry(EventObserver eventObserver, String path) {
+    public ObserverRegistrar onEntry(String path, EventObserver eventObserver) {
         entryObservers.register(createPath(path),eventObserver);
         return this;
     }
 
     @Override
-    public ObserverRegistrar onExit(EventObserver eventObserver, String path) {
-        exitObservers.register(createPath(path),eventObserver);
+    public ObserverRegistrar onExit(String element, EventObserver eventObserver) {
+        exitObservers.register(createPath(element),eventObserver);
         return this;
     }
 
