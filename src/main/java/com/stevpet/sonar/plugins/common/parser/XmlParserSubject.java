@@ -43,7 +43,6 @@ import org.slf4j.LoggerFactory;
 
 import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
 import com.stevpet.sonar.plugins.common.api.parser.ParserSubject;
-import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver.Event;
 
 /**
  * Each parser should implement this class, and the getHierarchy method
@@ -61,9 +60,6 @@ public abstract class XmlParserSubject implements ParserSubject {
     private int line;
     private int column;
     private final ParserData parserData;
-    private RegisteredParserObservers observerPathCache = new RegisteredParserObservers();
-    private ElementEventObserverInvoker elementEventObserverInvoker = new ElementEventObserverInvoker(observerPathCache);
-    private ElementObservers elementObserverInvoker = new ElementObservers(observerPathCache);
 
     //TODO: should encapsulate thissomewhere
     private ValueObservers elementObservers = new DefaultValueObservers();
@@ -161,11 +157,11 @@ public abstract class XmlParserSubject implements ParserSubject {
         } finally {
             closeStream(cursor);
         }
-        observerPathCache.checkOnErrors(file);
+        //observerPathCache.checkOnErrors(file);
     }
 
     private void parse(SMInputCursor rootCursor) throws XMLStreamException {
-        observerPathCache.setParserData(parserData);
+        //observerPathCache.setParserData(parserData);
 
         SMInputCursor childCursor = rootCursor.childElementCursor();
         parseChild("", childCursor);
@@ -188,7 +184,6 @@ public abstract class XmlParserSubject implements ParserSubject {
 
     
     public void registerObserver(ParserObserver observer) {
-        observerPathCache.add(observer);
         observer.registerObservers(registrar);
     }
 
@@ -230,7 +225,6 @@ public abstract class XmlParserSubject implements ParserSubject {
     protected void onEntry(String path) {
         entryObservers.observe(path); // TODO remove at end
         pathEntryObservers.observe(path);
-        elementEventObserverInvoker.invokeObservers(path, Event.ENTRY);
     }
     
     /**
@@ -242,7 +236,6 @@ public abstract class XmlParserSubject implements ParserSubject {
     protected void onExit(String path) {
         exitObservers.observe(path); // TODO remove at end
         pathExitObservers.observe(path);
-        elementEventObserverInvoker.invokeObservers(path, Event.EXIT); // TODO: remove at end
     }
 
     
@@ -254,7 +247,6 @@ public abstract class XmlParserSubject implements ParserSubject {
         } else {
             updateLocation(childCursor);
             String text = getTrimmedElementStringValue(childCursor);
-            elementObserverInvoker.invokeElementObservers(elementPath, name, text);// TODO: remove at end
             pathElementObservers.observe(elementPath,text);
             elementObservers.observe(name, text);// TODO: remove at end
             pathObservers.observe(elementPath, text);
@@ -268,7 +260,6 @@ public abstract class XmlParserSubject implements ParserSubject {
             String attributeValue = elementCursor.getAttrValue(index);
             String attributeName = elementCursor.getAttrLocalName(index);
             updateLocation(elementCursor);
-            elementObserverInvoker.invokeAttributeObservers(name, path, attributeValue, attributeName);// TODO: remove at end
             attributeObservers.observe(name + "/" + attributeName, attributeValue);
             pathAttributeObservers.observe(path + "/" + attributeName, attributeValue);
         }
@@ -285,7 +276,6 @@ public abstract class XmlParserSubject implements ParserSubject {
         }
         line = location.getLineNumber();
         column = location.getColumnNumber();
-        elementObserverInvoker.setPlace(line, column);
     }
 
     private String getTrimmedElementStringValue(SMInputCursor childCursor)
