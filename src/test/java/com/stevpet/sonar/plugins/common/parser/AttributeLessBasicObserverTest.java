@@ -7,12 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.stevpet.sonar.plugins.common.api.parser.BaseParserObserver;
-import com.stevpet.sonar.plugins.common.api.parser.annotations.AttributeMatcher;
-import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementMatcher;
-import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver;
-import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver.Event;
-import com.stevpet.sonar.plugins.common.api.parser.annotations.PathMatcher;
-
 public class AttributeLessBasicObserverTest extends BaseParserObserver  {
 
     private int observedPath;
@@ -77,27 +71,27 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
         return new DefaultObserverRegistrationFacade("",elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
     }
 
-    @ElementMatcher(elementName="public") 
+    //@ElementMatcher(elementName="public") 
     public void public_method(String a) {
         
     }
     
-    @ElementMatcher(elementName="private")
+    //@ElementMatcher(elementName="private")
     public void private_method(String a) {
         
     }
     
-    @PathMatcher(path="a/b/c")
+    //@PathMatcher(path="a/b/c")
     public void path_method(String value) {
         observedPath +=1;
     }
     
-    @AttributeMatcher(attributeName = "a", elementName = "element")
+    //@AttributeMatcher(attributeName = "a", elementName = "element")
     public void attributeMatcher_a(String value) {
         
     }
     
-    @AttributeMatcher(attributeName = "b", elementName = "element")
+    //@AttributeMatcher(attributeName = "b", elementName = "element")
     public void attributeMatcher_b() {
         
     }

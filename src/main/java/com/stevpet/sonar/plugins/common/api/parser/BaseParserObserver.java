@@ -25,8 +25,6 @@ package com.stevpet.sonar.plugins.common.api.parser;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.stevpet.sonar.plugins.common.parser.ObserverRegistrar;
-import com.stevpet.sonar.plugins.common.parser.ObserverRegistration;
 import com.stevpet.sonar.plugins.common.parser.ParserData;
 
 

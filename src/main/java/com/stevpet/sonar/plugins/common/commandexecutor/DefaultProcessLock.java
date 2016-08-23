@@ -67,7 +67,6 @@ public class DefaultProcessLock implements BatchExtension, ProcessLock {
             lock = channel.lock();
             LOG.debug("Acquired processlock on " + lockFile.getAbsolutePath());
         } catch (IOException e) {
-
             throw new IllegalStateException("Could not lock " + lockFile.getAbsolutePath(), e);
         }
     }

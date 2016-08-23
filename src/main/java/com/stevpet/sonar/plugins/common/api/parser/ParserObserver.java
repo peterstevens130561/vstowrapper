@@ -22,7 +22,6 @@
  *******************************************************************************/
 package com.stevpet.sonar.plugins.common.api.parser;
 
-import com.stevpet.sonar.plugins.common.parser.ElementObservers;
 import com.stevpet.sonar.plugins.common.parser.ObserverRegistration;
 import com.stevpet.sonar.plugins.common.parser.ParserData;
 

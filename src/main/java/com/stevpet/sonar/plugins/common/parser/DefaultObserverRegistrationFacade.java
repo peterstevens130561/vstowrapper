@@ -2,7 +2,6 @@ package com.stevpet.sonar.plugins.common.parser;
 
 import java.util.function.Consumer;
 
-import org.apache.commons.lang.StringUtils;
 
 public class DefaultObserverRegistrationFacade implements ObserverRegistrar {
 
@@ -64,17 +63,19 @@ public class DefaultObserverRegistrationFacade implements ObserverRegistrar {
     }
     
     @Override
-    public void inElement(String name, Consumer<AttributeRegistrar> attributeRegistration) {
+    public ObserverRegistrar inElement(String name, Consumer<AttributeRegistrar> attributeRegistration) {
         AttributeRegistrar t = new  AttributeRegistrar(name, attributeObservers);
         attributeRegistration.accept(t);
+        return this;
     }
     
     @Override
-    public void inPath(String path,Consumer<ObserverRegistrar> registrar) {
+    public ObserverRegistrar inPath(String path,Consumer<ObserverRegistrar> registrar) {
         String parent = createPath(path);
         ObserverRegistrar t = newFacade;
         t.setName(parent);
         registrar.accept(t);
+        return this;
     }
     private String createPath(String path) {
         return path;
