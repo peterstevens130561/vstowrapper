@@ -68,4 +68,12 @@ public interface ObserverRegistrar {
 
     void setName(String name);
 
+    /**
+     * Select the specified path, followed by the observers. Does not allow nesting, but provides often for a cleaner
+     * look
+     * @param path 
+     * @return
+     */
+	ObserverRegistrar inPath(String path);
+
 }

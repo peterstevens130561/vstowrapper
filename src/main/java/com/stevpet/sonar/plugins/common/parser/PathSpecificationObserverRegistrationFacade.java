@@ -71,6 +71,13 @@ public class PathSpecificationObserverRegistrationFacade implements ObserverRegi
         registrar.accept(t);
         return this;
     }
+    
+	@Override
+	public ObserverRegistrar inPath(String path) {
+        String parent = createPath(path);
+        ObserverRegistrar t = this.create(parent);
+        return t;
+	}
 
     private String createPath(String path) {
         String parent = StringUtils.isEmpty(ancestry)?path:ancestry + "/" + path;
@@ -81,6 +88,8 @@ public class PathSpecificationObserverRegistrationFacade implements ObserverRegi
     public void setName(String name) {
         this.ancestry=name;
     }
+
+
 
 
 

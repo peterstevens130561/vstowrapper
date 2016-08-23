@@ -77,6 +77,14 @@ public class DefaultObserverRegistrationFacade implements ObserverRegistrar {
         registrar.accept(t);
         return this;
     }
+    
+    @Override
+    public ObserverRegistrar inPath(String path) {
+        String parent = createPath(path);
+        ObserverRegistrar t = newFacade;
+        t.setName(parent);
+        return t ;
+    }
     private String createPath(String path) {
         return path;
     }
