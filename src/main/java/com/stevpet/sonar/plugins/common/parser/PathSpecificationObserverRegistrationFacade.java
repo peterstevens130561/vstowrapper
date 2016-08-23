@@ -57,16 +57,19 @@ public class PathSpecificationObserverRegistrationFacade implements ObserverRegi
     }
 
     @Override
-    public void inElement(String name, Consumer<AttributeRegistrar> attributeRegistration) {
-        AttributeRegistrar t = new AttributeRegistrar(name,attributeObservers);
+    public ObserverRegistrar inElement(String name, Consumer<AttributeRegistrar> attributeRegistration) {
+        String parent = createPath(name);
+        AttributeRegistrar t = new AttributeRegistrar(parent,attributeObservers);
         attributeRegistration.accept(t);
+        return this;
     }
     
     @Override
-    public void inPath(String path,Consumer<ObserverRegistrar> registrar) {
+    public ObserverRegistrar inPath(String path,Consumer<ObserverRegistrar> registrar) {
         String parent = createPath(path);
         ObserverRegistrar t = this.create(parent) ;
         registrar.accept(t);
+        return this;
     }
 
     private String createPath(String path) {

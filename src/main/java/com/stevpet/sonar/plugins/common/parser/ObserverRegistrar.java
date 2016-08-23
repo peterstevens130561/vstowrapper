@@ -62,9 +62,9 @@ public interface ObserverRegistrar {
      *<br>
      * {@code inElement("SomeElement",registrar -> registrar->addAttribute("vc",this::vc).addAttribute("sl",this::sl})
      */
-    void inElement(String name, Consumer<AttributeRegistrar> registrar);
+    ObserverRegistrar inElement(String name, Consumer<AttributeRegistrar> registrar);
 
-    void inPath(String path, Consumer<ObserverRegistrar> registrar);
+    ObserverRegistrar inPath(String path, Consumer<ObserverRegistrar> registrar);
 
     void setName(String name);
 
