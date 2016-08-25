@@ -55,6 +55,18 @@ public class PathSpecificationObserverRegistrationFacade implements ObserverRegi
         exitObservers.register(createPath(element),eventObserver);
         return this;
     }
+    
+	@Override
+	public ObserverRegistrar onEntry(EventObserver entryObserver) {
+		entryObservers.register(ancestry, entryObserver);
+		return this;
+	}
+
+	@Override
+	public ObserverRegistrar onExit(EventObserver exitObserver) {
+		exitObservers.register(ancestry, exitObserver);
+		return this;
+	}
 
     @Override
     public ObserverRegistrar inElement(String name, Consumer<AttributeRegistrar> attributeRegistration) {
@@ -89,7 +101,12 @@ public class PathSpecificationObserverRegistrationFacade implements ObserverRegi
         this.ancestry=name;
     }
 
-
+	@Override
+	public AttributeRegistrar inElement(String name) {
+        String parent = createPath(name);
+        AttributeRegistrar t = new  AttributeRegistrar(parent, attributeObservers);
+        return t;
+	}
 
 
 

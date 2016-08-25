@@ -32,8 +32,6 @@ public interface ObserverRegistrar {
      * @param attributePath
      * @param pathObserver - a void method taking the value of the attribute
      * @return
-     * @deprecated
-     * replaced by inElement, as it is much more concise
      */
     ObserverRegistrar onAttribute(String attributePath, ValueObserver pathObserver);
     
@@ -55,6 +53,16 @@ public interface ObserverRegistrar {
     ObserverRegistrar onExit(String element, EventObserver exitObserver);
 
     /**
+     * register an observer on the current paths entry
+     */
+    ObserverRegistrar onEntry(EventObserver entryObserver) ;
+    
+    /**
+     * register an observer on the current paths exit
+     */
+    ObserverRegistrar onExit(EventObserver exitObserver) ;
+    
+    /**
      * 
      * @param name - the name of the element on which we want to observe attributes
      * @param registrar - registration of attribute observers
@@ -64,6 +72,12 @@ public interface ObserverRegistrar {
      */
     ObserverRegistrar inElement(String name, Consumer<AttributeRegistrar> registrar);
 
+    /**
+     * select the path for the observers
+     * @param path - starting path
+     * @param registrar observers
+     * @return
+     */
     ObserverRegistrar inPath(String path, Consumer<ObserverRegistrar> registrar);
 
     void setName(String name);
@@ -75,5 +89,7 @@ public interface ObserverRegistrar {
      * @return
      */
 	ObserverRegistrar inPath(String path);
+
+	AttributeRegistrar inElement(String string);
 
 }

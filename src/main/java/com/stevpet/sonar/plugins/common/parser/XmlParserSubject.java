@@ -71,7 +71,7 @@ public abstract class XmlParserSubject implements ParserSubject {
     private ValueObservers attributeObservers =  new DefaultValueObservers();
     private EventObservers entryObservers = new DefaultEventObservers();
     private EventObservers exitObservers = new DefaultEventObservers();
-    private DefaultObserverRegistrationFacade registrar = new DefaultObserverRegistrationFacade("",
+    private PathSpecificationObserverRegistrationFacade oldFacade = new PathSpecificationObserverRegistrationFacade("",
             elementObservers, pathObservers, attributeObservers,entryObservers,exitObservers);
     
     private ValueObservers pathElementObservers = new DefaultValueObservers();
@@ -79,7 +79,7 @@ public abstract class XmlParserSubject implements ParserSubject {
     private ValueObservers pathAttributeObservers= new DefaultValueObservers();
     private EventObservers pathEntryObservers = new DefaultEventObservers();
     private EventObservers pathExitObservers = new DefaultEventObservers();
-    private PathSpecificationObserverRegistrationFacade newFacade = new PathSpecificationObserverRegistrationFacade(
+    private PathSpecificationObserverRegistrationFacade observerRegistrationFacade = new PathSpecificationObserverRegistrationFacade(
                     "", pathElementObservers, pathPathObservers, pathAttributeObservers, pathEntryObservers, pathExitObservers);
     public XmlParserSubject() {
         this(new ParserData());
@@ -96,7 +96,7 @@ public abstract class XmlParserSubject implements ParserSubject {
         for (String name : names) {
             parentElements.add(name);
         }
-        registrar.setNewFacade(newFacade); //TODO: remove at end
+        //observerRegistrationFacade.setNewFacade(newFacade); //TODO: remove at end
     }
     /**
      * an array of all elements that have children.
@@ -189,7 +189,7 @@ public abstract class XmlParserSubject implements ParserSubject {
     
     public void registerObserver(ParserObserver observer) {
         observerPathCache.add(observer);
-        observer.registerObservers(registrar);
+        observer.registerObservers(observerRegistrationFacade);
     }
 
     private boolean parseChild(String path, SMInputCursor childCursor)

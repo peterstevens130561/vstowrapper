@@ -2,6 +2,8 @@ package com.stevpet.sonar.plugins.common.parser;
 
 import java.util.function.Consumer;
 
+import org.apache.commons.lang.NotImplementedException;
+
 
 public class DefaultObserverRegistrationFacade implements ObserverRegistrar {
 
@@ -69,6 +71,13 @@ public class DefaultObserverRegistrationFacade implements ObserverRegistrar {
         return this;
     }
     
+	@Override
+	public AttributeRegistrar inElement(String name) {
+        AttributeRegistrar t = new  AttributeRegistrar(name, attributeObservers);
+        return t;
+	}
+
+    
     @Override
     public ObserverRegistrar inPath(String path,Consumer<ObserverRegistrar> registrar) {
         String parent = createPath(path);
@@ -93,6 +102,20 @@ public class DefaultObserverRegistrationFacade implements ObserverRegistrar {
     @Override
     public void setName(String name) {
     }
+
+
+	@Override
+	public ObserverRegistrar onEntry(EventObserver entryObserver) {
+		throw new NotImplementedException();
+	}
+
+
+	@Override
+	public ObserverRegistrar onExit(EventObserver exitObserver) {
+		throw new NotImplementedException();
+	}
+
+
 
 
 
