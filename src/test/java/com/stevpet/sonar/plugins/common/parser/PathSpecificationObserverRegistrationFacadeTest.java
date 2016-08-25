@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class DefaultObserverRegistrationFacadeTest {
+public class PathSpecificationObserverRegistrationFacadeTest {
     private ObserverRegistrar registrar ;
     @Mock private ValueObservers elementObservers;
     @Mock private ValueObservers pathObservers;
@@ -18,7 +18,7 @@ public class DefaultObserverRegistrationFacadeTest {
     @Before
     public void before() {
         org.mockito.MockitoAnnotations.initMocks(this);
-        registrar = new DefaultObserverRegistrationFacade("",elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
+        registrar = new PathSpecificationObserverRegistrationFacade("",elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
     }
     
     @Test

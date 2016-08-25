@@ -39,7 +39,7 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
     
     @Test
     public void invokeTest() {
-        ObserverRegistrar methodRegistry = NewDefaultObserverRegistrationFacade();
+        ObserverRegistrar methodRegistry = newDefaultObse1rverRegistrationFacade();
         registerObservers(methodRegistry);
         observedPath=0;
         pathObservers.observe("a/b/c","value");
@@ -48,7 +48,7 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
     
     @Test
     public void invokeRegisterTwice() {
-        ObserverRegistrar methodRegistry = NewDefaultObserverRegistrationFacade();
+        ObserverRegistrar methodRegistry = newDefaultObse1rverRegistrationFacade();
         registerObservers(methodRegistry);
         registerObservers(methodRegistry);
         observedPath=0;
@@ -58,7 +58,7 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
     
     @Test
     public void invokeObserverTwice() {
-        ObserverRegistrar methodRegistry = NewDefaultObserverRegistrationFacade();
+        ObserverRegistrar methodRegistry = newDefaultObse1rverRegistrationFacade();
         registerObservers(methodRegistry);
         observedPath=0;
         pathObservers.observe("a/b/c","value");
@@ -67,8 +67,8 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
     }
     
     
-    private ObserverRegistrar NewDefaultObserverRegistrationFacade() {
-        return new DefaultObserverRegistrationFacade("",elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
+    private ObserverRegistrar newDefaultObse1rverRegistrationFacade() {
+        return new PathSpecificationObserverRegistrationFacade("",elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
     }
 
     //@ElementMatcher(elementName="public") 
