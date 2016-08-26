@@ -4,6 +4,16 @@ import java.util.function.Consumer;
 
 /**
  * allows to register all observers through a fluent interface 
+ * following convention is used
+ * 
+ *- method starting with
+ *<p>
+ *<li>
+ *on: use to register an observer. 
+ *<li>
+ *  	First argument is a string to select a name or attribute.
+ *  	Second argument is a lambda to register the observer
+ *  - in: selects a path or element
  * @author stevpet
  *
  */

@@ -49,9 +49,12 @@ public abstract class BaseParserObserver implements ParserObserver {
     public void setSkipTillNextElement(String elementName) {
         parserData.setSkipThisLevel();
     }
+    
+    @Override
     public boolean hasError() {
         return hasError;
     }
+    
     public final boolean isMatch(String path) {
         if(pattern==null) {
             throw new IllegalArgumentException("No patterns defined (did you use setPattern in the creation of your observer?) ");
@@ -64,8 +67,9 @@ public abstract class BaseParserObserver implements ParserObserver {
      * Pattern to use when matching
      * @param regex to use. observeElement and observAttribute will be invoked for paths matching the regex
      */
+    @Deprecated
     protected void setPattern(String regex) {
-        pattern = Pattern.compile(regex);
+        //pattern = Pattern.compile(regex);
     }
     
 
