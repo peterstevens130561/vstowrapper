@@ -37,6 +37,10 @@ public abstract class BaseParserObserver implements ParserObserver {
         hasError=true;
     }
     
+    @Override
+    public boolean hasError() {
+        return hasError;
+    }
 
     /**
      * parser state data to be manipulated by the observer, to be inserted by the parser.
@@ -49,42 +53,6 @@ public abstract class BaseParserObserver implements ParserObserver {
     public void setSkipTillNextElement(String elementName) {
         parserData.setSkipThisLevel();
     }
-    
-    @Override
-    public boolean hasError() {
-        return hasError;
-    }
-    
-    public final boolean isMatch(String path) {
-        if(pattern==null) {
-            throw new IllegalArgumentException("No patterns defined (did you use setPattern in the creation of your observer?) ");
-        }
-        Matcher matcher = pattern.matcher(path);
-        return matcher.matches();      
-    }
-
-    /**
-     * Pattern to use when matching
-     * @param regex to use. observeElement and observAttribute will be invoked for paths matching the regex
-     */
-    @Deprecated
-    protected void setPattern(String regex) {
-        //pattern = Pattern.compile(regex);
-    }
-    
-
-    /* (non-Javadoc)
-     * @see com.stevpet.sonar.plugins.dotnet.mscover.parser.ParserObserver#observeElement(java.lang.String, java.lang.String)
-     */
-    public void observeElement(String name, String text) {
-    }
-
-
-    /* (non-Javadoc)
-     * @see com.stevpet.sonar.plugins.dotnet.mscover.parser.ParserObserver#observeAttribute(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
-     */
-    public void observeAttribute(String elementName, String path,
-            String attributeValue, String attributeName) {
-        // to be overridden when needed
-    }
 }
+    
+

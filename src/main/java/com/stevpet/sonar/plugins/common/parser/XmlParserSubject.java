@@ -61,7 +61,6 @@ public abstract class XmlParserSubject implements ParserSubject {
     private int column;
     private final ParserData parserData;
     private RegisteredParserObservers registeredObserverClasses = new RegisteredParserObservers();
-    private ElementObservers elementObserverInvoker = new ElementObservers(registeredObserverClasses);
    
     private ValueObservers pathElementObservers = new DefaultValueObservers();
     private ValueObservers pathPathObservers= new DefaultValueObservers();
@@ -265,7 +264,6 @@ public abstract class XmlParserSubject implements ParserSubject {
         }
         line = location.getLineNumber();
         column = location.getColumnNumber();
-        elementObserverInvoker.setPlace(line, column);
     }
 
     private String getTrimmedElementStringValue(SMInputCursor childCursor)

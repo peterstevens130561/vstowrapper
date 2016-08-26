@@ -25,7 +25,6 @@ public class ParserObserverMethods{
 
     public ParserObserverMethods(ParserObserver observer) {
         this.observer=observer;
-        loadCaches();
     }
     public boolean hasError() {
         return observer.hasError();
@@ -33,58 +32,12 @@ public class ParserObserverMethods{
     public void setParserData(ParserData parserData) {
         observer.setParserData(parserData);
     }
-    public boolean isMatch(String path) {
-        return observer.isMatch(path);
-    }
-    public void observeElement(String name, String text) {
-        observer.observeElement(name, text);
-    }
-    public void observeAttribute(String elementName, String path, String attributeValue, String attributeName) {
-        observer.observeAttribute(elementName, path, attributeValue, attributeName);
-    }
-    
+  
     public ParserObserver getParserObserver() {
         return observer;
     }
     
-    private void loadCaches() {
-        for( Method method:observer.getClass().getDeclaredMethods()) {
-            cachePathMatcher(method);
-            cacheElementMatcher(method);
-            cacheAttributeMatcher(method);
-            cacheElementObserver(method);
-        }
-    }
 
-    private void cacheElementObserver(Method method) {
-        ElementObserver elementObserver = method.getAnnotation(ElementObserver.class);
-        if(elementObserver!=null){
-            String key=getElementEventObserverKey(elementObserver.path(),elementObserver.event());
-            elemenEventMatchers.put(key,method);
-        }
-    }
-
-    private void cacheAttributeMatcher(Method method) {
-        AttributeMatcher attributeMatcher = method.getAnnotation(AttributeMatcher.class);
-        if(attributeMatcher!=null) {
-            attributeMatchers.put(attributeMatcher.elementName() + "!" + attributeMatcher.attributeName(),method );
-        }
-    }
-
-    private void cacheElementMatcher(Method method) {
-        ElementMatcher elementMatcher = method.getAnnotation(ElementMatcher.class);
-        if(elementMatcher!=null) {
-            elementMatchers.put(elementMatcher.elementName(),method);
-        }
-    }
-
-    private void cachePathMatcher(Method method) {
-        PathMatcher pathMatcher= method.getAnnotation(PathMatcher.class);
-        if(pathMatcher !=null) {
-            pathMatchers.put(pathMatcher.path(),method);
-        }
-    }
-    
 
 
     /**

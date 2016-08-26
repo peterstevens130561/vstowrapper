@@ -28,21 +28,6 @@ import com.stevpet.sonar.plugins.common.parser.ParserData;
 
 
 public interface ParserObserver extends ObserverRegistration  {
-    /**
-     * Determine whether the current element with text is to be observed
-     * @param path to current element
-     * @return true if the path matches the element to observe
-     */
-    boolean isMatch(String path);
-    /**
-     * Invoked when element is found of which the localName matches the pattern
-     * @param name of this element
-     * @param text of this element
-     */
-    void observeElement(String name,String text);
-    void observeAttribute(String elementName, String path,
-            String attributeValue, String attributeName);
-    
     
     /**
      * true if one or more errors have been found during parsing. The observer
