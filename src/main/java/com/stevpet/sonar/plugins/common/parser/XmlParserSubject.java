@@ -43,7 +43,6 @@ import org.slf4j.LoggerFactory;
 
 import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
 import com.stevpet.sonar.plugins.common.api.parser.ParserSubject;
-import com.stevpet.sonar.plugins.common.api.parser.annotations.ElementObserver.Event;
 
 /**
  * Each parser should implement this class, and the getHierarchy method
