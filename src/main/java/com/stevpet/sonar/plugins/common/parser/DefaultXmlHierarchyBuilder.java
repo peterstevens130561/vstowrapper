@@ -3,18 +3,22 @@ package com.stevpet.sonar.plugins.common.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultXmlHierarchyService {
+public class DefaultXmlHierarchyBuilder implements XmlHierarchyBuilder {
 
 	private List<String> hierarchy = new ArrayList<>();
 
-	/**
-	 * builds the elements in the hierarchy
-	 * @return
+	/* (non-Javadoc)
+	 * @see com.stevpet.sonar.plugins.common.parser.XmlHierarchyService#build()
 	 */
+	@Override
 	public List<String> build() {
 		return hierarchy;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.stevpet.sonar.plugins.common.parser.XmlHierarchyService#add(java.lang.String)
+	 */
+	@Override
 	public void add(String path) {
 		for(String element : path.split("/")) {
 			if(!hierarchy.contains(element)) {
@@ -22,5 +26,6 @@ public class DefaultXmlHierarchyService {
 			}
 		}
 	}
+
 
 }

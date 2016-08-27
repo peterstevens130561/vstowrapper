@@ -11,7 +11,7 @@ import org.junit.Test;
 
 public class DefaultXmlHierarchyServiceTest {
 
-	DefaultXmlHierarchyService service = new DefaultXmlHierarchyService() ;
+	XmlHierarchyBuilder service = new DefaultXmlHierarchyBuilder() ;
 	@Before
 	public void before() {
 		
