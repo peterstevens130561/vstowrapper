@@ -32,4 +32,23 @@ public class DefaultXmlHierarchyServiceTest {
 		assertTrue(hierarchy.contains("Module"));
 	}
 	
+	@Test
+	public void testTwoLevels() {
+		service.add("Modules/Module");
+		List <String> hierarchy = service.build();
+		assertEquals("two elements" ,2,hierarchy.size());
+		assertTrue("should contain Modules",hierarchy.contains("Modules"));
+		assertTrue("should contain Module",hierarchy.contains("Module"));		
+	}
+	
+	@Test
+	public void testTwoLevelsDuplicated() {
+		service.add("Modules/Module");
+		service.add("Modules/Module");
+		List <String> hierarchy = service.build();
+		assertEquals("two elements" ,2,hierarchy.size());
+		assertTrue("should contain Modules",hierarchy.contains("Modules"));
+		assertTrue("should contain Module",hierarchy.contains("Module"));		
+		
+	}
 }

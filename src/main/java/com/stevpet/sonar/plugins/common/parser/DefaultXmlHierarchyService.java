@@ -12,11 +12,15 @@ public class DefaultXmlHierarchyService {
 	 * @return
 	 */
 	public List<String> build() {
-		return new ArrayList<String>();
+		return hierarchy;
 	}
 
 	public void add(String path) {
-		hierarchy.add(path);
+		for(String element : path.split("/")) {
+			if(!hierarchy.contains(element)) {
+				hierarchy.add(element);
+			}
+		}
 	}
 
 }
