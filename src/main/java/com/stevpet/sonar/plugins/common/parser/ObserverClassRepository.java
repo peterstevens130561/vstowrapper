@@ -8,27 +8,25 @@ import java.util.Map;
 
 import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
 
-public class RegisteredParserObservers {
-    private Map<String,List<ParserObserverMethods>> cache = new HashMap<>();
-    private List<ParserObserverMethods> parserObservers =new ArrayList<>();
+public class ObserverClassRepository {
+    private List<ParserObserver> parserObservers =new ArrayList<>();
     
     /**
      * Add a parser observer
      * @param observer
      */
     public void add(ParserObserver observer) {
-        ParserObserverMethods parserObserverMethods = new ParserObserverMethods(observer);
-        parserObservers.add(parserObserverMethods);
+        parserObservers.add(observer);
     }
 
     public void setParserData(ParserData parserData) {
-        for (ParserObserverMethods observer : parserObservers) {
+        for (ParserObserver observer : parserObservers) {
             observer.setParserData(parserData);
         } 
     }
 
     public void checkOnErrors(File file) {
-        for (ParserObserverMethods observer : parserObservers) {
+        for (ParserObserver observer : parserObservers) {
             if (observer.hasError()) {
                 throw new ParserSubjectErrorException(file);
             }

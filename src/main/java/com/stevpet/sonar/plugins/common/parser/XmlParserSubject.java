@@ -60,7 +60,7 @@ public abstract class XmlParserSubject implements ParserSubject {
     private int line;
     private int column;
     private final ParserData parserData;
-    private RegisteredParserObservers registeredObserverClasses = new RegisteredParserObservers();
+    private ObserverClassRepository registeredObserverClasses = new ObserverClassRepository();
    
     private ValueObservers pathElementObservers = new DefaultValueObservers();
     private ValueObservers pathPathObservers= new DefaultValueObservers();
