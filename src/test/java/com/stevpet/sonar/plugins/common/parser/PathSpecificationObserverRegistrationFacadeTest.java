@@ -28,12 +28,6 @@ public class PathSpecificationObserverRegistrationFacadeTest {
         verify(elementObservers,times(1)).register("booh",observer);
     }
     
-    @Test
-    public void testPath() {
-        ValueObserver observer = this::valueObserver;
-        registrar.onPath(observer,"booh");
-        verify(pathObservers,times(1)).register("booh",observer);
-    }
     
     @Test
     public void testAttribute() {

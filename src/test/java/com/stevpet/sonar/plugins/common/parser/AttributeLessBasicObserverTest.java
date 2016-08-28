@@ -39,7 +39,7 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
     
     @Test
     public void invokeTest() {
-        ObserverRegistrar methodRegistry = newDefaultObse1rverRegistrationFacade();
+        ObserverRegistrar methodRegistry = newObserverRegistrationFacade();
         registerObservers(methodRegistry);
         observedPath=0;
         pathObservers.observe("a/b/c","value");
@@ -48,7 +48,7 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
     
     @Test
     public void invokeRegisterTwice() {
-        ObserverRegistrar methodRegistry = newDefaultObse1rverRegistrationFacade();
+        ObserverRegistrar methodRegistry = newObserverRegistrationFacade();
         registerObservers(methodRegistry);
         registerObservers(methodRegistry);
         observedPath=0;
@@ -58,7 +58,7 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
     
     @Test
     public void invokeObserverTwice() {
-        ObserverRegistrar methodRegistry = newDefaultObse1rverRegistrationFacade();
+        ObserverRegistrar methodRegistry = newObserverRegistrationFacade();
         registerObservers(methodRegistry);
         observedPath=0;
         pathObservers.observe("a/b/c","value");
@@ -67,7 +67,7 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
     }
     
     
-    private ObserverRegistrar newDefaultObse1rverRegistrationFacade() {
+    private ObserverRegistrar newObserverRegistrationFacade() {
         return new PathSpecificationObserverRegistrationFacade("",elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
     }
 
