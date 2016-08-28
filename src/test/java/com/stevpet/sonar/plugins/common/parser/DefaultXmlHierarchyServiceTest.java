@@ -9,6 +9,9 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.DefaultXmlHierarchyBuilder;
+import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.XmlHierarchyBuilder;
+
 public class DefaultXmlHierarchyServiceTest {
 
 	XmlHierarchyBuilder service = new DefaultXmlHierarchyBuilder() ;
