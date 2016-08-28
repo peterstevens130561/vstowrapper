@@ -4,6 +4,8 @@ import java.util.function.Consumer;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.XmlHierarchyBuilder;
+
 public class PathSpecificationObserverRegistrationFacade implements ObserverRegistrar {
 
     
@@ -12,18 +14,20 @@ public class PathSpecificationObserverRegistrationFacade implements ObserverRegi
     private ValueObservers elementObservers;
     private EventObservers entryObservers;
     private EventObservers exitObservers;
+    private XmlHierarchyBuilder hierarchyBuilder;
     private String ancestry;
-    public PathSpecificationObserverRegistrationFacade(String ancestry,ValueObservers elementObservers, ValueObservers pathObservers, ValueObservers attributeObservers, EventObservers entryObservers, EventObservers exitObservers) {
+    public PathSpecificationObserverRegistrationFacade(String ancestry,XmlHierarchyBuilder hierarchyBuilder, ValueObservers elementObservers, ValueObservers pathObservers, ValueObservers attributeObservers, EventObservers entryObservers, EventObservers exitObservers) {
         this.ancestry=ancestry;
         this.elementObservers = elementObservers;
         this.pathObservers = pathObservers;
         this.attributeObservers=attributeObservers;
         this.entryObservers=entryObservers;
         this.exitObservers=exitObservers;
+        this.hierarchyBuilder=hierarchyBuilder;
     }
 
     private ObserverRegistrar create(String parent) {
-        return new PathSpecificationObserverRegistrationFacade(parent,elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
+        return new PathSpecificationObserverRegistrationFacade(parent,hierarchyBuilder,elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
     }
     @Override
     public ObserverRegistrar onElement(String element, ValueObserver observer) {
@@ -78,8 +82,7 @@ public class PathSpecificationObserverRegistrationFacade implements ObserverRegi
     
     @Override
     public ObserverRegistrar inPath(String path,Consumer<ObserverRegistrar> registrar) {
-        String parent = createPath(path);
-        ObserverRegistrar t = this.create(parent) ;
+        ObserverRegistrar t = inPath(path);
         registrar.accept(t);
         return this;
     }
@@ -87,6 +90,7 @@ public class PathSpecificationObserverRegistrationFacade implements ObserverRegi
 	@Override
 	public ObserverRegistrar inPath(String path) {
         String parent = createPath(path);
+        hierarchyBuilder.add(parent);
         ObserverRegistrar t = this.create(parent);
         return t;
 	}

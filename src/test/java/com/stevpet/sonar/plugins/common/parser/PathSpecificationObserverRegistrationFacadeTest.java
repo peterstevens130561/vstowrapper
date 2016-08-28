@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.XmlHierarchyBuilder;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObserver;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.ObserverRegistrar;
@@ -21,11 +22,12 @@ public class PathSpecificationObserverRegistrationFacadeTest {
     @Mock private ValueObservers attributeObservers;
     @Mock private EventObservers entryObservers;
     @Mock private EventObservers exitObservers;
+	@Mock private XmlHierarchyBuilder xmlHierarchyBuilder;
     
     @Before
     public void before() {
         org.mockito.MockitoAnnotations.initMocks(this);
-        registrar = new PathSpecificationObserverRegistrationFacade("",elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
+        registrar = new PathSpecificationObserverRegistrationFacade("",xmlHierarchyBuilder, elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
     }
     
     @Test

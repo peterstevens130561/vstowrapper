@@ -2,8 +2,12 @@ package com.stevpet.sonar.plugins.common.parser;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.List;
+
 import org.junit.Test;
 
+import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.DefaultXmlHierarchyBuilder;
+import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.XmlHierarchyBuilder;
 import com.stevpet.sonar.plugins.common.parser.observer.DefaultEventObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.DefaultValueObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
@@ -20,11 +24,13 @@ public class RegistrationBuilderTests {
     private ValueObservers attributeObservers= new DefaultValueObservers();
     private EventObservers entryObservers = new DefaultEventObservers();
     private EventObservers exitObservers = new DefaultEventObservers();
+	private XmlHierarchyBuilder xmlHierarchyBuilder = new DefaultXmlHierarchyBuilder();
+	private List<String> hierarchy;
     
 
     @Test
     public void example() {
-        PathSpecificationObserverRegistrationFacade registrar = new PathSpecificationObserverRegistrationFacade("",elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
+        PathSpecificationObserverRegistrationFacade registrar = new PathSpecificationObserverRegistrationFacade("",xmlHierarchyBuilder, elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
         registrar.inPath
         ("Modules", 
             ( modules -> modules
@@ -32,7 +38,7 @@ public class RegistrationBuilderTests {
                     (module -> module
                         .onElement("ModuleName", value -> moduleName = value)
                         .onElement("ModulePath",value -> modulePath=value)
-                        .inPath("Summary",
+                        .inElement("Summary",
                             (summary -> summary.onAttribute("numBranchPoints",(value -> numBranchPoints=value))
                             )
                          )
@@ -46,6 +52,8 @@ public class RegistrationBuilderTests {
         assertEquals("geewizz",moduleName);
         assertEquals("yogibear",modulePath);
         assertEquals("321",numBranchPoints);
+        hierarchy=xmlHierarchyBuilder.build();
+        assertEquals("Only modules and module have children",2,hierarchy.size());
         
     }
 }

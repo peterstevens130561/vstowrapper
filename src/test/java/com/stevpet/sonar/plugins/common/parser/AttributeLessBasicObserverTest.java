@@ -7,6 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.stevpet.sonar.plugins.common.api.parser.BaseParserObserver;
+import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.DefaultXmlHierarchyBuilder;
+import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.XmlHierarchyBuilder;
 import com.stevpet.sonar.plugins.common.parser.observer.DefaultEventObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.DefaultValueObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
@@ -23,6 +25,7 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
     private EventObservers exitObservers;
     private int entryObserved;
     private int exitObserved;
+	private XmlHierarchyBuilder xmlHierarchyBuilder;
 
     @Before
     public void before() {
@@ -31,6 +34,7 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
         attributeObservers = new DefaultValueObservers();
         entryObservers = new DefaultEventObservers();
         exitObservers = new DefaultEventObservers();
+        xmlHierarchyBuilder=new DefaultXmlHierarchyBuilder();
     }
     
     @Override
@@ -74,7 +78,7 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
     
     
     private ObserverRegistrar newObserverRegistrationFacade() {
-        return new PathSpecificationObserverRegistrationFacade("",elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
+        return new PathSpecificationObserverRegistrationFacade("",xmlHierarchyBuilder, elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
     }
 
     //@ElementMatcher(elementName="public") 

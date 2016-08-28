@@ -43,6 +43,8 @@ import org.slf4j.LoggerFactory;
 
 import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
 import com.stevpet.sonar.plugins.common.api.parser.ParserSubject;
+import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.DefaultXmlHierarchyBuilder;
+import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.XmlHierarchyBuilder;
 import com.stevpet.sonar.plugins.common.parser.observer.DefaultEventObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.DefaultValueObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
@@ -72,8 +74,9 @@ public abstract class XmlParserSubject implements ParserSubject {
     private ValueObservers pathAttributeObservers= new DefaultValueObservers();
     private EventObservers pathEntryObservers = new DefaultEventObservers();
     private EventObservers pathExitObservers = new DefaultEventObservers();
+	private XmlHierarchyBuilder hierarchyBuilder = new DefaultXmlHierarchyBuilder();
     private PathSpecificationObserverRegistrationFacade observerRegistrationFacade = new PathSpecificationObserverRegistrationFacade(
-                    "", pathElementObservers, pathPathObservers, pathAttributeObservers, pathEntryObservers, pathExitObservers);
+                    "", hierarchyBuilder, pathElementObservers, pathPathObservers, pathAttributeObservers, pathEntryObservers, pathExitObservers);
     public XmlParserSubject() {
         this(new ParserData());
     }
