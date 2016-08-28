@@ -1,4 +1,4 @@
-package com.stevpet.sonar.plugins.common.parser;
+package com.stevpet.sonar.plugins.common.parser.observer;
 
 public class AttributeRegistrar {
 

@@ -6,6 +6,9 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.stevpet.sonar.plugins.common.parser.observer.DefaultEventObservers;
+import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
+
 public class DefaultEventObserversTest {
 
     private EventObservers observers = new DefaultEventObservers();

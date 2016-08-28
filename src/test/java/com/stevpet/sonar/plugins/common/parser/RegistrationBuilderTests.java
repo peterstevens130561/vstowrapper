@@ -4,6 +4,12 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.stevpet.sonar.plugins.common.parser.observer.DefaultEventObservers;
+import com.stevpet.sonar.plugins.common.parser.observer.DefaultValueObservers;
+import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
+import com.stevpet.sonar.plugins.common.parser.observer.PathSpecificationObserverRegistrationFacade;
+import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
+
 public class RegistrationBuilderTests {
 
     private String moduleName;

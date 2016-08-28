@@ -7,6 +7,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.stevpet.sonar.plugins.common.api.parser.BaseParserObserver;
+import com.stevpet.sonar.plugins.common.parser.observer.DefaultEventObservers;
+import com.stevpet.sonar.plugins.common.parser.observer.DefaultValueObservers;
+import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
+import com.stevpet.sonar.plugins.common.parser.observer.ObserverRegistrar;
+import com.stevpet.sonar.plugins.common.parser.observer.PathSpecificationObserverRegistrationFacade;
+import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
 public class AttributeLessBasicObserverTest extends BaseParserObserver  {
 
     private int observedPath;
