@@ -1,4 +1,4 @@
-package com.stevpet.sonar.plugins.common.parser;
+package com.stevpet.sonar.plugins.common.parser.hierarchybuilder;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -12,7 +12,7 @@ import org.junit.Test;
 import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.DefaultXmlHierarchyBuilder;
 import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.XmlHierarchyBuilder;
 
-public class DefaultXmlHierarchyServiceTest {
+public class DefaultXmlHierarchyBuilderTest {
 
 	XmlHierarchyBuilder service = new DefaultXmlHierarchyBuilder() ;
 	@Before
