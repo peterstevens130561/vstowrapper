@@ -10,11 +10,12 @@ import org.junit.Test;
 import org.sonar.test.TestUtils;
 
 import com.stevpet.sonar.plugins.common.api.parser.BaseParserObserver;
+import com.stevpet.sonar.plugins.common.api.parser.XmlParser;
 import com.stevpet.sonar.plugins.common.parser.observer.ObserverRegistrar;
 
 public class ParserHierarchyTests {
 
-	private XmlParserSubject parser;
+	private XmlParser parser;
 	private File File;
 	private String basic = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Main><Summary></Summary><Child><GrandChild><GrandChildPoint>BLA</GrandChildPoint></GrandChild><Point>POINT1</Point><Point>POINT2</Point></Child></Main>";
 	private int grandChildEntered;
@@ -33,7 +34,7 @@ public class ParserHierarchyTests {
 	 */
 	@Test
 	public void parseBasic() {
-		parser = new XmlParserSubject() {		
+		parser = new DefaultXmlParser() {		
 		};
 		parser.registerObserver(new UninterestedObserver());
 		parser.parseString(basic);
@@ -46,7 +47,7 @@ public class ParserHierarchyTests {
 	
 	@Test
 	public void parseWithTop() {
-		parser = new XmlParserSubject() {		
+		parser = new DefaultXmlParser() {		
 		};
 		parser.registerObserver(new Observer());
 		parser.parseString(basic);

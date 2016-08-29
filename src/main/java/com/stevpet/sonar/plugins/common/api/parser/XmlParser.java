@@ -22,11 +22,12 @@
  *******************************************************************************/
 package com.stevpet.sonar.plugins.common.api.parser;
 
+import java.io.File;
 
-
-
-
-
-public interface ParserSubject {
+public interface XmlParser {
     void registerObserver(ParserObserver observer);
+
+	void parseFile(File file);
+
+	void parseString(String string);
 }

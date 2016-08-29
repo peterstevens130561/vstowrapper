@@ -42,7 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
-import com.stevpet.sonar.plugins.common.api.parser.ParserSubject;
+import com.stevpet.sonar.plugins.common.api.parser.XmlParser;
 import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.DefaultXmlHierarchyBuilder;
 import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.XmlHierarchyBuilder;
 import com.stevpet.sonar.plugins.common.parser.observer.DefaultEventObservers;
@@ -56,12 +56,12 @@ import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
  * 
  * 
  */
-public class XmlParserSubject implements ParserSubject {
+public class DefaultXmlParser implements XmlParser {
 
     private static final String FACTORY_CONFIGURATION_ERROR = "FactoryConfigurationError";
     private static final String COULD_NOT_CREATE_CURSOR = "Could not create cursor ";
     private static final Logger LOG = LoggerFactory
-            .getLogger(XmlParserSubject.class);
+            .getLogger(DefaultXmlParser.class);
 
     private List<String> parentElements = new ArrayList<String>();
     private int line;
@@ -77,7 +77,7 @@ public class XmlParserSubject implements ParserSubject {
 	private XmlHierarchyBuilder hierarchyBuilder = new DefaultXmlHierarchyBuilder();
     private PathSpecificationObserverRegistrationFacade observerRegistrationFacade = new PathSpecificationObserverRegistrationFacade(
                     "", hierarchyBuilder, pathElementObservers, pathPathObservers, pathAttributeObservers, pathEntryObservers, pathExitObservers);
-    public XmlParserSubject() {
+    public DefaultXmlParser() {
         this(new ParserData());
     }
 
@@ -86,12 +86,13 @@ public class XmlParserSubject implements ParserSubject {
      * the parserData
      * @param parserData
      */
-    public XmlParserSubject(ParserData parserData) {
+    public DefaultXmlParser(ParserData parserData) {
         this.parserData = parserData;
     }
 
 
     @SuppressWarnings("ucd")
+    @Override
     public void parseString(String string) {
         SMInputCursor cursor;
         try {
@@ -132,6 +133,7 @@ public class XmlParserSubject implements ParserSubject {
         return result;
     }
 
+    @Override
     public void parseFile(File file) {
         SMInputCursor cursor = null;
         try {
