@@ -56,7 +56,7 @@ import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
  * 
  * 
  */
-public abstract class XmlParserSubject implements ParserSubject {
+public class XmlParserSubject implements ParserSubject {
 
     private static final String FACTORY_CONFIGURATION_ERROR = "FactoryConfigurationError";
     private static final String COULD_NOT_CREATE_CURSOR = "Could not create cursor ";
@@ -88,19 +88,8 @@ public abstract class XmlParserSubject implements ParserSubject {
      */
     public XmlParserSubject(ParserData parserData) {
         this.parserData = parserData;
-        String[] names = getHierarchy();
-        if(names !=null) {
-        for (String name : names) {
-            parentElements.add(name);
-        }
-        }
-        //observerRegistrationFacade.setNewFacade(newFacade); //TODO: remove at end
     }
-    /**
-     * an array of all elements that have children.
-     * @return
-     */
-    public abstract String[] getHierarchy();
+
 
     @SuppressWarnings("ucd")
     public void parseString(String string) {
