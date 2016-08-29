@@ -33,14 +33,7 @@ public class ParserHierarchyTests {
 	 */
 	@Test
 	public void parseBasic() {
-		parser = new XmlParserSubject() {
-
-			@Override
-			public String[] getHierarchy() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
+		parser = new XmlParserSubject() {		
 		};
 		parser.registerObserver(new UninterestedObserver());
 		parser.parseString(basic);
@@ -53,15 +46,7 @@ public class ParserHierarchyTests {
 	
 	@Test
 	public void parseWithTop() {
-		parser = new XmlParserSubject() {
-
-			@Override
-			public String[] getHierarchy() {
-				// TODO Auto-generated method stub
-				String hierarchy[] = {"Child","GrandChild"};
-				return hierarchy;
-			}
-		
+		parser = new XmlParserSubject() {		
 		};
 		parser.registerObserver(new Observer());
 		parser.parseString(basic);
@@ -104,7 +89,5 @@ public class ParserHierarchyTests {
 			}
 	}
 	
-
-
 
  }
