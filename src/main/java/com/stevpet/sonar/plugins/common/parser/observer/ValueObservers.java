@@ -6,4 +6,6 @@ public interface ValueObservers {
 
     void register(String path, ValueObserver observer);
 
+	boolean hasMatch(String elementPath);
+
 }

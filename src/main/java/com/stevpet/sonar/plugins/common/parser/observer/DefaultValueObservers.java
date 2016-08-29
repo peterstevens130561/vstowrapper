@@ -26,4 +26,10 @@ public class DefaultValueObservers implements ValueObservers  {
         }
     }
 
+
+	@Override
+	public boolean hasMatch(String elementPath) {
+		return observerDictionary.get(elementPath) !=null;
+	}
+
 }

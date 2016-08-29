@@ -89,8 +89,10 @@ public abstract class XmlParserSubject implements ParserSubject {
     public XmlParserSubject(ParserData parserData) {
         this.parserData = parserData;
         String[] names = getHierarchy();
+        if(names !=null) {
         for (String name : names) {
             parentElements.add(name);
+        }
         }
         //observerRegistrationFacade.setNewFacade(newFacade); //TODO: remove at end
     }
@@ -162,7 +164,7 @@ public abstract class XmlParserSubject implements ParserSubject {
 
     private void parse(SMInputCursor rootCursor) throws XMLStreamException {
         registeredObserverClasses.setParserData(parserData);
-
+        parentElements=hierarchyBuilder.build();
         SMInputCursor childCursor = rootCursor.childElementCursor();
         parseChild("", childCursor);
     }
@@ -245,8 +247,11 @@ public abstract class XmlParserSubject implements ParserSubject {
             parseChild(elementPath, childCursor.childElementCursor());
         } else {
             updateLocation(childCursor);
-            String text = getTrimmedElementStringValue(childCursor);
-            pathElementObservers.observe(elementPath,text);
+
+            if(pathElementObservers.hasMatch(elementPath)) {
+                String text = getTrimmedElementStringValue(childCursor);
+            	pathElementObservers.observe(elementPath,text);
+            }
         }
     }
 
