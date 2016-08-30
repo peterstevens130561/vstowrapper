@@ -52,9 +52,11 @@ import com.stevpet.sonar.plugins.common.parser.observer.PathSpecificationObserve
 import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
 
 /**
- * Each parser should implement this class, and the getHierarchy method
- * 
- * 
+ * A pretty fast parser, based on Stax. 
+ * <br>
+ * Observers extend <b>BaseParserObserver</b>, and instances are registered using 
+ * <b>registerObserver</b>, after which <b>parseFile</b> or <b>parseString</b> is invoked
+ *  
  */
 public class DefaultXmlParser implements XmlParser {
 
@@ -69,14 +71,8 @@ public class DefaultXmlParser implements XmlParser {
     private final ParserData parserData;
     private ObserverClassRepository registeredObserverClasses = new ObserverClassRepository();
    
-    private ValueObservers pathElementObservers = new DefaultValueObservers();
-    private ValueObservers pathPathObservers= new DefaultValueObservers();
-    private ValueObservers pathAttributeObservers= new DefaultValueObservers();
-    private EventObservers pathEntryObservers = new DefaultEventObservers();
-    private EventObservers pathExitObservers = new DefaultEventObservers();
-	private XmlHierarchyBuilder hierarchyBuilder = new DefaultXmlHierarchyBuilder();
-    private PathSpecificationObserverRegistrationFacade observerRegistrationFacade = new PathSpecificationObserverRegistrationFacade(
-                    "", hierarchyBuilder, pathElementObservers, pathPathObservers, pathAttributeObservers, pathEntryObservers, pathExitObservers);
+
+    private PathSpecificationObserverRegistrationFacade observerRegistrationFacade = new PathSpecificationObserverRegistrationFacade();
     public DefaultXmlParser() {
         this(new ParserData());
     }
@@ -155,7 +151,7 @@ public class DefaultXmlParser implements XmlParser {
 
     private void parse(SMInputCursor rootCursor) throws XMLStreamException {
         registeredObserverClasses.setParserData(parserData);
-        parentElements=hierarchyBuilder.build();
+        parentElements=observerRegistrationFacade.build();
         SMInputCursor childCursor = rootCursor.childElementCursor();
         parseChild("", childCursor);
     }
@@ -217,7 +213,7 @@ public class DefaultXmlParser implements XmlParser {
      * @param path
      */
     protected void onEntry(String path) {
-        pathEntryObservers.observe(path);
+    	observerRegistrationFacade.observeEntry(path);
     }
     
     /**
@@ -227,7 +223,7 @@ public class DefaultXmlParser implements XmlParser {
      * @param path
      */
     protected void onExit(String path) {
-        pathExitObservers.observe(path);
+    	observerRegistrationFacade.observeExit(path);
     }
 
     
@@ -239,9 +235,9 @@ public class DefaultXmlParser implements XmlParser {
         } else {
             updateLocation(childCursor);
 
-            if(pathElementObservers.hasMatch(elementPath)) {
+            if(observerRegistrationFacade.hasElementMatch(elementPath)) {
                 String text = getTrimmedElementStringValue(childCursor);
-            	pathElementObservers.observe(elementPath,text);
+                observerRegistrationFacade.observeElement(elementPath,text);
             }
         }
     }
@@ -253,7 +249,7 @@ public class DefaultXmlParser implements XmlParser {
             String attributeValue = elementCursor.getAttrValue(index);
             String attributeName = elementCursor.getAttrLocalName(index);
             updateLocation(elementCursor);
-            pathAttributeObservers.observe(path + "/" + attributeName, attributeValue);
+            observerRegistrationFacade.observeAttribute(path + "/" + attributeName, attributeValue);
         }
     }
 

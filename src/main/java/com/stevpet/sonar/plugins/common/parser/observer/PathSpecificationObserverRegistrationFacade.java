@@ -1,21 +1,27 @@
 package com.stevpet.sonar.plugins.common.parser.observer;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.DefaultXmlHierarchyBuilder;
 import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.XmlHierarchyBuilder;
 
-public class PathSpecificationObserverRegistrationFacade implements ObserverRegistrar {
+public class PathSpecificationObserverRegistrationFacade implements ObserverRegistrar, ObserversFacade {
 
     
-    private final ValueObservers pathObservers;
-    private final ValueObservers attributeObservers;
-    private ValueObservers elementObservers;
-    private EventObservers entryObservers;
-    private EventObservers exitObservers;
-    private XmlHierarchyBuilder hierarchyBuilder;
+    private ValueObservers elementObservers = new DefaultValueObservers();
+    private ValueObservers attributeObservers= new DefaultValueObservers();
+    private EventObservers entryObservers = new DefaultEventObservers();
+    private EventObservers exitObservers = new DefaultEventObservers();
+	private XmlHierarchyBuilder hierarchyBuilder = new DefaultXmlHierarchyBuilder();
     private String ancestry;
+	private ValueObservers pathObservers = new DefaultValueObservers();
+    
+    public PathSpecificationObserverRegistrationFacade() {
+
+    }
     public PathSpecificationObserverRegistrationFacade(String ancestry,XmlHierarchyBuilder hierarchyBuilder, ValueObservers elementObservers, ValueObservers pathObservers, ValueObservers attributeObservers, EventObservers entryObservers, EventObservers exitObservers) {
         this.ancestry=ancestry;
         this.elementObservers = elementObservers;
@@ -110,6 +116,41 @@ public class PathSpecificationObserverRegistrationFacade implements ObserverRegi
         String parent = createPath(name);
         AttributeRegistrar t = new  AttributeRegistrar(parent, attributeObservers);
         return t;
+	}
+	public List<String> build() {
+		return hierarchyBuilder.build();
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.stevpet.sonar.plugins.common.parser.observer.ObserversFacade#observeEntry(java.lang.String)
+	 */
+	@Override
+	public void observeEntry(String path) {
+        entryObservers.observe(path);
+	}
+	/* (non-Javadoc)
+	 * @see com.stevpet.sonar.plugins.common.parser.observer.ObserversFacade#observeExit(java.lang.String)
+	 */
+	@Override
+	public void observeExit(String path) {
+		exitObservers.observe(path);
+	}
+	public boolean hasElementMatch(String elementPath) {
+		return elementObservers.hasMatch(elementPath) ;
+	}
+	/* (non-Javadoc)
+	 * @see com.stevpet.sonar.plugins.common.parser.observer.ObserversFacade#observeElement(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void observeElement(String elementPath, String text) {
+		elementObservers.observe(elementPath,text);
+	}
+	/* (non-Javadoc)
+	 * @see com.stevpet.sonar.plugins.common.parser.observer.ObserversFacade#observeAttribute(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void observeAttribute(String path, String attributeValue) {
+		attributeObservers.observe(path, attributeValue);
 	}
 
 
