@@ -8,7 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.DefaultXmlHierarchyBuilder;
 import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.XmlHierarchyBuilder;
 
-public class PathSpecificationObserverRegistrationFacade implements ObserverRegistrar, ObserversFacade {
+public class PathSpecificationObserverRegistrationFacade implements ObserverRegistrar,ObserverStartRegistrar, ObserversFacade {
 
     
     private ValueObservers elementObservers = new DefaultValueObservers();

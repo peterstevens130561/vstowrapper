@@ -17,7 +17,7 @@ import java.util.function.Consumer;
  * @author stevpet
  *
  */
-public interface ObserverRegistrar {
+public interface ObserverRegistrar extends ObserverStartRegistrar {
 
     /**
      * register an observer that matches the specified element
@@ -92,13 +92,6 @@ public interface ObserverRegistrar {
 
     void setName(String name);
 
-    /**
-     * Select the specified path, followed by the observers. Does not allow nesting, but provides often for a cleaner
-     * look
-     * @param path 
-     * @return
-     */
-	ObserverRegistrar inPath(String path);
 
 	AttributeRegistrar inElement(String string);
 
