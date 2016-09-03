@@ -17,7 +17,7 @@ import java.util.function.Consumer;
  * @author stevpet
  *
  */
-public interface ObserverRegistrar extends ObserverStartRegistrar {
+public interface ObserverRegistrar extends StartObserverRegistrar {
 
     /**
      * register an observer that matches the specified element
@@ -27,23 +27,7 @@ public interface ObserverRegistrar extends ObserverStartRegistrar {
      * @return
      */
     ObserverRegistrar onElement(String element,ValueObserver elementObserver );
-
-    /**
-     * register an observer that matches a full path, matches on an element
-     * 
-     * @param pathObserver - a void method taking the value of the element
-     * @param path
-     * @return
-     */
-    ObserverRegistrar onPath(ValueObserver pathObserver, String path);
-    
-    /**
-     * register an observer that matches the full path to an attribute
-     * @param attributePath
-     * @param pathObserver - a void method taking the value of the attribute
-     * @return
-     */
-    ObserverRegistrar onAttribute(String attributePath, ValueObserver pathObserver);
+  
     
     /**
      * register an observer that is invoked on entry of an element
@@ -80,7 +64,7 @@ public interface ObserverRegistrar extends ObserverStartRegistrar {
      *<br>
      * {@code inElement("SomeElement",registrar -> registrar->addAttribute("vc",this::vc).addAttribute("sl",this::sl})
      */
-    ObserverRegistrar inElement(String name, Consumer<AttributeRegistrar> registrar);
+    ObserverRegistrar inElement(String name, Consumer<ElementBodyRegistrar> registrar);
 
     /**
      * select the path for the observers
@@ -93,6 +77,6 @@ public interface ObserverRegistrar extends ObserverStartRegistrar {
     void setName(String name);
 
 
-	AttributeRegistrar inElement(String string);
+	ElementBodyRegistrar inElement(String string);
 
 }

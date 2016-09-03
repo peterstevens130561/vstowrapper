@@ -1,9 +1,9 @@
 package com.stevpet.sonar.plugins.common.parser;
 
-import com.stevpet.sonar.plugins.common.parser.observer.ObserverRegistrar;
+import com.stevpet.sonar.plugins.common.parser.observer.StartObserverRegistrar;
 
 public interface ObserverRegistration {
 
-    void registerObservers(ObserverRegistrar registrar);
+    void registerObservers(StartObserverRegistrar registrar);
 
 }

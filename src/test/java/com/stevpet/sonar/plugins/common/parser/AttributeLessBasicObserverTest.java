@@ -10,75 +10,68 @@ import com.stevpet.sonar.plugins.common.api.parser.BaseParserObserver;
 import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.DefaultXmlHierarchyBuilder;
 import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.XmlHierarchyBuilder;
 import com.stevpet.sonar.plugins.common.parser.observer.DefaultEventObservers;
+import com.stevpet.sonar.plugins.common.parser.observer.DefaultObserversRepository;
 import com.stevpet.sonar.plugins.common.parser.observer.DefaultValueObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
-import com.stevpet.sonar.plugins.common.parser.observer.ObserverRegistrar;
+import com.stevpet.sonar.plugins.common.parser.observer.StartObserverRegistrar;
 import com.stevpet.sonar.plugins.common.parser.observer.PathSpecificationObserverRegistrationFacade;
 import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
 public class AttributeLessBasicObserverTest extends BaseParserObserver  {
 
     private int observedPath;
-    private ValueObservers elementObservers;
-    private ValueObservers pathObservers;
-    private ValueObservers attributeObservers;
-    private EventObservers entryObservers;
-    private EventObservers exitObservers;
+
     private int entryObserved;
     private int exitObserved;
 	private XmlHierarchyBuilder xmlHierarchyBuilder;
+	private DefaultObserversRepository observersRepository;
 
     @Before
     public void before() {
-        pathObservers = new DefaultValueObservers();
-        elementObservers = new DefaultValueObservers();
-        attributeObservers = new DefaultValueObservers();
-        entryObservers = new DefaultEventObservers();
-        exitObservers = new DefaultEventObservers();
-        xmlHierarchyBuilder=new DefaultXmlHierarchyBuilder();
+    	observersRepository = new DefaultObserversRepository();
     }
     
     @Override
-    public void registerObservers(ObserverRegistrar methodRegistry) {
-        methodRegistry.onElement("public",this::public_method)
+    public void registerObservers(StartObserverRegistrar methodRegistry) {
+        methodRegistry.inPath("").onElement("public",this::public_method)
         .onElement("private",this::private_method)
-        .onPath(this::path_method,"a/b/c")
-        .onAttribute("element/a",this::attributeMatcher_a)
+        .inPath("a/b").onElement("c",this::path_method)
+        .inElement("element", v-> v.onAttribute("a",this::attributeMatcher_a))
         .onEntry("a/b/c", this::elementObserverEntry)
         .onExit("a/b/c",this::elementObserverExit);
     }
     
     @Test
     public void invokeTest() {
-        ObserverRegistrar methodRegistry = newObserverRegistrationFacade();
+        StartObserverRegistrar methodRegistry = newObserverRegistrationFacade();
         registerObservers(methodRegistry);
         observedPath=0;
-        pathObservers.observe("a/b/c","value");
+        observersRepository.observeElement("a/b/c","value");
         assertEquals(1,observedPath);
     }
     
     @Test
     public void invokeRegisterTwice() {
-        ObserverRegistrar methodRegistry = newObserverRegistrationFacade();
+        StartObserverRegistrar methodRegistry = newObserverRegistrationFacade();
         registerObservers(methodRegistry);
         registerObservers(methodRegistry);
         observedPath=0;
-        pathObservers.observe("a/b/c","value");
+        observersRepository.observeElement("a/b/c","value");
         assertEquals(2,observedPath);
     }
     
     @Test
     public void invokeObserverTwice() {
-        ObserverRegistrar methodRegistry = newObserverRegistrationFacade();
+        StartObserverRegistrar methodRegistry = newObserverRegistrationFacade();
         registerObservers(methodRegistry);
         observedPath=0;
-        pathObservers.observe("a/b/c","value");
-        pathObservers.observe("a/b/c","value");
+        observersRepository.observeElement("a/b/c","value");
+        observersRepository.observeElement("a/b/c","value");
         assertEquals(2,observedPath);
     }
     
     
-    private ObserverRegistrar newObserverRegistrationFacade() {
-        return new PathSpecificationObserverRegistrationFacade("",xmlHierarchyBuilder, elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
+    private StartObserverRegistrar newObserverRegistrationFacade() {
+        return new PathSpecificationObserverRegistrationFacade("",observersRepository);
     }
 
     //@ElementMatcher(elementName="public") 

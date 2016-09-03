@@ -46,9 +46,12 @@ import com.stevpet.sonar.plugins.common.api.parser.XmlParser;
 import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.DefaultXmlHierarchyBuilder;
 import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.XmlHierarchyBuilder;
 import com.stevpet.sonar.plugins.common.parser.observer.DefaultEventObservers;
+import com.stevpet.sonar.plugins.common.parser.observer.DefaultObserversRepository;
 import com.stevpet.sonar.plugins.common.parser.observer.DefaultValueObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
+import com.stevpet.sonar.plugins.common.parser.observer.ObserversRepository;
 import com.stevpet.sonar.plugins.common.parser.observer.PathSpecificationObserverRegistrationFacade;
+import com.stevpet.sonar.plugins.common.parser.observer.StartObserverRegistration;
 import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
 
 /**
@@ -70,9 +73,10 @@ public class DefaultXmlParser implements XmlParser {
     private int column;
     private final ParserData parserData;
     private ObserverClassRepository registeredObserverClasses = new ObserverClassRepository();
+    private ObserversRepository observersRepository = new DefaultObserversRepository();
    
 
-    private PathSpecificationObserverRegistrationFacade observerRegistrationFacade = new PathSpecificationObserverRegistrationFacade();
+    private StartObserverRegistration observerRegistrationFacade = new StartObserverRegistration(observersRepository);
     public DefaultXmlParser() {
         this(new ParserData());
     }
@@ -151,7 +155,7 @@ public class DefaultXmlParser implements XmlParser {
 
     private void parse(SMInputCursor rootCursor) throws XMLStreamException {
         registeredObserverClasses.setParserData(parserData);
-        parentElements=observerRegistrationFacade.build();
+        parentElements=observersRepository.buildHierarchy();
         SMInputCursor childCursor = rootCursor.childElementCursor();
         parseChild("", childCursor);
     }
@@ -213,7 +217,7 @@ public class DefaultXmlParser implements XmlParser {
      * @param path
      */
     protected void onEntry(String path) {
-    	observerRegistrationFacade.observeEntry(path);
+    	observersRepository.observeEntry(path);
     }
     
     /**
@@ -223,7 +227,7 @@ public class DefaultXmlParser implements XmlParser {
      * @param path
      */
     protected void onExit(String path) {
-    	observerRegistrationFacade.observeExit(path);
+    	observersRepository.observeExit(path);
     }
 
     
@@ -235,9 +239,9 @@ public class DefaultXmlParser implements XmlParser {
         } else {
             updateLocation(childCursor);
 
-            if(observerRegistrationFacade.hasElementMatch(elementPath)) {
+            if(observersRepository.hasElementMatch(elementPath)) {
                 String text = getTrimmedElementStringValue(childCursor);
-                observerRegistrationFacade.observeElement(elementPath,text);
+                observersRepository.observeElement(elementPath,text);
             }
         }
     }
@@ -249,7 +253,7 @@ public class DefaultXmlParser implements XmlParser {
             String attributeValue = elementCursor.getAttrValue(index);
             String attributeName = elementCursor.getAttrLocalName(index);
             updateLocation(elementCursor);
-            observerRegistrationFacade.observeAttribute(path + "/" + attributeName, attributeValue);
+            observersRepository.observeAttribute(path + "/" + attributeName, attributeValue);
         }
     }
 

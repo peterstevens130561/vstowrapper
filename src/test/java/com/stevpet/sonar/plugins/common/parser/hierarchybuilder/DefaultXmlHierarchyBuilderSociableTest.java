@@ -9,26 +9,24 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import com.stevpet.sonar.plugins.common.parser.observer.DefaultObserversRepository;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
-import com.stevpet.sonar.plugins.common.parser.observer.ObserverRegistrar;
+import com.stevpet.sonar.plugins.common.parser.observer.StartObserverRegistrar;
 import com.stevpet.sonar.plugins.common.parser.observer.PathSpecificationObserverRegistrationFacade;
 import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
 
 public class DefaultXmlHierarchyBuilderSociableTest {
 	private String ancestry;
-	@Mock private ValueObservers elementObservers;
-	@Mock private ValueObservers pathObservers;
-	@Mock private ValueObservers attributeObservers;
-	@Mock private EventObservers entryObservers;
-	@Mock private EventObservers exitObservers;
+
 	private XmlHierarchyBuilder hierarchyBuilder = new DefaultXmlHierarchyBuilder();
-	private ObserverRegistrar facade;
+	private StartObserverRegistrar facade;
 	private List<String> hierarchy;
+	@Mock private DefaultObserversRepository observersRepository;
 	
 	@Before
 	public void  before() {
 		org.mockito.MockitoAnnotations.initMocks(this);
-		facade = new PathSpecificationObserverRegistrationFacade(ancestry, hierarchyBuilder,elementObservers, pathObservers, attributeObservers, entryObservers, exitObservers);
+		facade = new PathSpecificationObserverRegistrationFacade("",observersRepository);
 	}
 	
 	@Test
