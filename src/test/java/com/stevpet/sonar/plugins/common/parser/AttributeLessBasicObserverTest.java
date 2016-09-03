@@ -14,7 +14,7 @@ import com.stevpet.sonar.plugins.common.parser.observer.DefaultObserversReposito
 import com.stevpet.sonar.plugins.common.parser.observer.DefaultValueObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.TopLevelObserverRegistrar;
-import com.stevpet.sonar.plugins.common.parser.observer.PathSpecificationObserverRegistrationFacade;
+import com.stevpet.sonar.plugins.common.parser.observer.DefaultObserverRegistrar;
 import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
 public class AttributeLessBasicObserverTest extends BaseParserObserver  {
 
@@ -71,7 +71,7 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
     
     
     private TopLevelObserverRegistrar newObserverRegistrationFacade() {
-        return new PathSpecificationObserverRegistrationFacade("",observersRepository);
+        return new DefaultObserverRegistrar("",observersRepository);
     }
 
     //@ElementMatcher(elementName="public") 

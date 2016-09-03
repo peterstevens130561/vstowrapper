@@ -4,18 +4,18 @@ import java.util.function.Consumer;
 
 import org.apache.commons.lang.StringUtils;
 
-public class PathSpecificationObserverRegistrationFacade implements ObserverRegistrar{
+public class DefaultObserverRegistrar implements ObserverRegistrar{
     
     private String ancestry;
 	private ObserversRepository defaultObserversRepository;
     
-    public PathSpecificationObserverRegistrationFacade(String ancestry,ObserversRepository defaultObserversRepository) {
+    public DefaultObserverRegistrar(String ancestry,ObserversRepository defaultObserversRepository) {
         this.ancestry=ancestry;
         this.defaultObserversRepository=defaultObserversRepository;
     }
 
     private ObserverRegistrar create(String parent) {
-        return new PathSpecificationObserverRegistrationFacade(parent,defaultObserversRepository);
+        return new DefaultObserverRegistrar(parent,defaultObserversRepository);
     }
     
     @Override

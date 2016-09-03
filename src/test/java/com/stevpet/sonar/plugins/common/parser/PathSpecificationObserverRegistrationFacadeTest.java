@@ -10,7 +10,7 @@ import com.stevpet.sonar.plugins.common.parser.observer.EventObserver;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.ObserverRegistrar;
 import com.stevpet.sonar.plugins.common.parser.observer.TopLevelObserverRegistrar;
-import com.stevpet.sonar.plugins.common.parser.observer.PathSpecificationObserverRegistrationFacade;
+import com.stevpet.sonar.plugins.common.parser.observer.DefaultObserverRegistrar;
 import com.stevpet.sonar.plugins.common.parser.observer.ValueObserver;
 import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
 
@@ -24,7 +24,7 @@ public class PathSpecificationObserverRegistrationFacadeTest {
     @Before
     public void before() {
         org.mockito.MockitoAnnotations.initMocks(this);
-        registrar = new PathSpecificationObserverRegistrationFacade("",observersRepository);
+        registrar = new DefaultObserverRegistrar("",observersRepository);
     }
     
     @Test

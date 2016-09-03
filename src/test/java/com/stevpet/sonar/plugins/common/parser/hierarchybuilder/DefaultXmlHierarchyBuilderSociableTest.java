@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import com.stevpet.sonar.plugins.common.parser.observer.DefaultObserversRepository;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.TopLevelObserverRegistrar;
-import com.stevpet.sonar.plugins.common.parser.observer.PathSpecificationObserverRegistrationFacade;
+import com.stevpet.sonar.plugins.common.parser.observer.DefaultObserverRegistrar;
 import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
 
 public class DefaultXmlHierarchyBuilderSociableTest {
@@ -25,7 +25,7 @@ public class DefaultXmlHierarchyBuilderSociableTest {
 	@Before
 	public void  before() {
 		org.mockito.MockitoAnnotations.initMocks(this);
-		facade = new PathSpecificationObserverRegistrationFacade("",observersRepository);
+		facade = new DefaultObserverRegistrar("",observersRepository);
 	}
 	
 	@Test

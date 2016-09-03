@@ -13,7 +13,7 @@ public class DefaultTopLevelObserverRegistrar implements TopLevelObserverRegistr
 	@Override
 	public ObserverRegistrar inPath(String path) {
         observersRepository.addPath(path);
-        ObserverRegistrar t = new PathSpecificationObserverRegistrationFacade(path,observersRepository);
+        ObserverRegistrar t = new DefaultObserverRegistrar(path,observersRepository);
         return t;
 	}
 
