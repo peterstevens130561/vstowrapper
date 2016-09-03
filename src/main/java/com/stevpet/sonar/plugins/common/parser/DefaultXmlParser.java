@@ -51,7 +51,7 @@ import com.stevpet.sonar.plugins.common.parser.observer.DefaultValueObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.ObserversRepository;
 import com.stevpet.sonar.plugins.common.parser.observer.PathSpecificationObserverRegistrationFacade;
-import com.stevpet.sonar.plugins.common.parser.observer.StartObserverRegistration;
+import com.stevpet.sonar.plugins.common.parser.observer.DefaultTopLevelObserverRegistrar;
 import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
 
 /**
@@ -76,7 +76,7 @@ public class DefaultXmlParser implements XmlParser {
     private ObserversRepository observersRepository = new DefaultObserversRepository();
    
 
-    private StartObserverRegistration observerRegistrationFacade = new StartObserverRegistration(observersRepository);
+    private DefaultTopLevelObserverRegistrar observerRegistrationFacade = new DefaultTopLevelObserverRegistrar(observersRepository);
     public DefaultXmlParser() {
         this(new ParserData());
     }

@@ -13,7 +13,7 @@ import com.stevpet.sonar.plugins.common.parser.observer.DefaultEventObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.DefaultObserversRepository;
 import com.stevpet.sonar.plugins.common.parser.observer.DefaultValueObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
-import com.stevpet.sonar.plugins.common.parser.observer.StartObserverRegistrar;
+import com.stevpet.sonar.plugins.common.parser.observer.TopLevelObserverRegistrar;
 import com.stevpet.sonar.plugins.common.parser.observer.PathSpecificationObserverRegistrationFacade;
 import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
 public class AttributeLessBasicObserverTest extends BaseParserObserver  {
@@ -31,7 +31,7 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
     }
     
     @Override
-    public void registerObservers(StartObserverRegistrar methodRegistry) {
+    public void registerObservers(TopLevelObserverRegistrar methodRegistry) {
         methodRegistry.inPath("").onElement("public",this::public_method)
         .onElement("private",this::private_method)
         .inPath("a/b").onElement("c",this::path_method)
@@ -42,7 +42,7 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
     
     @Test
     public void invokeTest() {
-        StartObserverRegistrar methodRegistry = newObserverRegistrationFacade();
+        TopLevelObserverRegistrar methodRegistry = newObserverRegistrationFacade();
         registerObservers(methodRegistry);
         observedPath=0;
         observersRepository.observeElement("a/b/c","value");
@@ -51,7 +51,7 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
     
     @Test
     public void invokeRegisterTwice() {
-        StartObserverRegistrar methodRegistry = newObserverRegistrationFacade();
+        TopLevelObserverRegistrar methodRegistry = newObserverRegistrationFacade();
         registerObservers(methodRegistry);
         registerObservers(methodRegistry);
         observedPath=0;
@@ -61,7 +61,7 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
     
     @Test
     public void invokeObserverTwice() {
-        StartObserverRegistrar methodRegistry = newObserverRegistrationFacade();
+        TopLevelObserverRegistrar methodRegistry = newObserverRegistrationFacade();
         registerObservers(methodRegistry);
         observedPath=0;
         observersRepository.observeElement("a/b/c","value");
@@ -70,7 +70,7 @@ public class AttributeLessBasicObserverTest extends BaseParserObserver  {
     }
     
     
-    private StartObserverRegistrar newObserverRegistrationFacade() {
+    private TopLevelObserverRegistrar newObserverRegistrationFacade() {
         return new PathSpecificationObserverRegistrationFacade("",observersRepository);
     }
 

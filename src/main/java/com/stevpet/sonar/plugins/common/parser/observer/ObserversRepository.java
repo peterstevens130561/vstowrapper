@@ -23,7 +23,7 @@ public interface ObserversRepository {
 
 	void registerExitObserver(String path, EventObserver observer);
 
-	void registerAttributeObservers(String path, Consumer<ElementBodyRegistrar> attributeRegistration);
+	void registerAttributeObservers(String path, Consumer<DefaultElementBodyRegistrar> attributeRegistration);
 
 	boolean hasElementMatch(String elementPath);
 

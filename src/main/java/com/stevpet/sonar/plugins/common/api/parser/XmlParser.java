@@ -25,9 +25,21 @@ package com.stevpet.sonar.plugins.common.api.parser;
 import java.io.File;
 
 public interface XmlParser {
+	/**
+	 * Register an observer
+	 * @param observer
+	 */
     void registerObserver(ParserObserver observer);
 
+    /**
+     * parses the xml file, prior to invoking this method make sure that all observers are registered using <b>registerObserver</b>
+     * @param file
+     */
 	void parseFile(File file);
 
+	/**
+	 * parses an xml string, mainly intended for unit testing to verify the observers
+	 * @param string
+	 */
 	void parseString(String string);
 }

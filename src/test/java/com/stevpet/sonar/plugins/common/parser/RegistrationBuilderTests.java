@@ -14,7 +14,7 @@ import com.stevpet.sonar.plugins.common.parser.observer.DefaultValueObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.ObserversRepository;
 import com.stevpet.sonar.plugins.common.parser.observer.PathSpecificationObserverRegistrationFacade;
-import com.stevpet.sonar.plugins.common.parser.observer.StartObserverRegistration;
+import com.stevpet.sonar.plugins.common.parser.observer.DefaultTopLevelObserverRegistrar;
 import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
 
 public class RegistrationBuilderTests {
@@ -30,7 +30,7 @@ public class RegistrationBuilderTests {
     @Test
     public void example() {
     	observersRepository = new DefaultObserversRepository();
-        StartObserverRegistration registrar = new StartObserverRegistration(observersRepository);
+        DefaultTopLevelObserverRegistrar registrar = new DefaultTopLevelObserverRegistrar(observersRepository);
         registrar.inPath("Modules/Module")
                 .onElement("ModuleName", value -> moduleName = value)
                 .onElement("ModulePath",value -> modulePath=value);

@@ -30,8 +30,8 @@ public class DefaultObserversRepository implements ObserversRepository{
 	}
 	
 	@Override
-	public void registerAttributeObservers(String path, Consumer<ElementBodyRegistrar> attributeRegistration) {
-        ElementBodyRegistrar t = new ElementBodyRegistrar(path,this);
+	public void registerAttributeObservers(String path, Consumer<DefaultElementBodyRegistrar> attributeRegistration) {
+        DefaultElementBodyRegistrar t = new DefaultElementBodyRegistrar(path,this);
         attributeRegistration.accept(t);
 	}
 	

@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import org.junit.Test;
 
-import com.stevpet.sonar.plugins.common.parser.observer.ElementBodyRegistrar;
+import com.stevpet.sonar.plugins.common.parser.observer.DefaultElementBodyRegistrar;
 
 public class ElementAttributeObserverTest {
 
@@ -24,7 +24,7 @@ public class ElementAttributeObserverTest {
 		});
 	}
 
-	private void optionalArguments(Consumer<ElementBodyRegistrar> attributeRegistration) {
+	private void optionalArguments(Consumer<DefaultElementBodyRegistrar> attributeRegistration) {
 		
 	}
 	

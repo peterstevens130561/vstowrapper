@@ -49,9 +49,9 @@ public class PathSpecificationObserverRegistrationFacade implements ObserverRegi
 	}
 
     @Override
-    public ObserverRegistrar inElement(String name, Consumer<ElementBodyRegistrar> attributeRegistration) {
+    public ObserverRegistrar inElement(String name, Consumer<DefaultElementBodyRegistrar> attributeRegistration) {
         String parent = createPath(name);
-        ElementBodyRegistrar t = new ElementBodyRegistrar(parent,defaultObserversRepository);
+        DefaultElementBodyRegistrar t = new DefaultElementBodyRegistrar(parent,defaultObserversRepository);
         attributeRegistration.accept(t);
         return this;
     }
@@ -81,9 +81,9 @@ public class PathSpecificationObserverRegistrationFacade implements ObserverRegi
     }
 
 	@Override
-	public ElementBodyRegistrar inElement(String name) {
+	public ElementBodyObserverRegistrar inElement(String name) {
         String parent = createPath(name);
-        ElementBodyRegistrar t = new  ElementBodyRegistrar(parent, defaultObserversRepository);
+        ElementBodyObserverRegistrar t = new  DefaultElementBodyRegistrar(parent, defaultObserversRepository);
         return t;
 	}
 

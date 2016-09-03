@@ -11,7 +11,7 @@ import org.mockito.Mock;
 
 import com.stevpet.sonar.plugins.common.parser.observer.DefaultObserversRepository;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
-import com.stevpet.sonar.plugins.common.parser.observer.StartObserverRegistrar;
+import com.stevpet.sonar.plugins.common.parser.observer.TopLevelObserverRegistrar;
 import com.stevpet.sonar.plugins.common.parser.observer.PathSpecificationObserverRegistrationFacade;
 import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
 
@@ -19,7 +19,7 @@ public class DefaultXmlHierarchyBuilderSociableTest {
 	private String ancestry;
 
 	private XmlHierarchyBuilder hierarchyBuilder = new DefaultXmlHierarchyBuilder();
-	private StartObserverRegistrar facade;
+	private TopLevelObserverRegistrar facade;
 	private List<String> hierarchy;
 	@Mock private DefaultObserversRepository observersRepository;
 	

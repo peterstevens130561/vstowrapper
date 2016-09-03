@@ -17,7 +17,7 @@ import java.util.function.Consumer;
  * @author stevpet
  *
  */
-public interface ObserverRegistrar extends StartObserverRegistrar {
+public interface ObserverRegistrar extends TopLevelObserverRegistrar {
 
     /**
      * register an observer that matches the specified element
@@ -64,7 +64,7 @@ public interface ObserverRegistrar extends StartObserverRegistrar {
      *<br>
      * {@code inElement("SomeElement",registrar -> registrar->addAttribute("vc",this::vc).addAttribute("sl",this::sl})
      */
-    ObserverRegistrar inElement(String name, Consumer<ElementBodyRegistrar> registrar);
+    ObserverRegistrar inElement(String name, Consumer<DefaultElementBodyRegistrar> registrar);
 
     /**
      * select the path for the observers
@@ -77,6 +77,6 @@ public interface ObserverRegistrar extends StartObserverRegistrar {
     void setName(String name);
 
 
-	ElementBodyRegistrar inElement(String string);
+	ElementBodyObserverRegistrar inElement(String string);
 
 }

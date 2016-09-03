@@ -1,17 +1,12 @@
 package com.stevpet.sonar.plugins.common.parser.observer;
 
-import org.apache.commons.lang.StringUtils;
-
-import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.DefaultXmlHierarchyBuilder;
-import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.XmlHierarchyBuilder;
-
-public class StartObserverRegistration implements StartObserverRegistrar {
+public class DefaultTopLevelObserverRegistrar implements TopLevelObserverRegistrar {
 	private ObserversRepository observersRepository;
     
-    public StartObserverRegistration() {
+    public DefaultTopLevelObserverRegistrar() {
 
     }
-    public StartObserverRegistration(ObserversRepository observersRepository) {
+    public DefaultTopLevelObserverRegistrar(ObserversRepository observersRepository) {
         this.observersRepository = observersRepository;
     }
 

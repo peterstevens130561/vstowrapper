@@ -9,7 +9,7 @@ import com.stevpet.sonar.plugins.common.parser.observer.DefaultObserversReposito
 import com.stevpet.sonar.plugins.common.parser.observer.EventObserver;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.ObserverRegistrar;
-import com.stevpet.sonar.plugins.common.parser.observer.StartObserverRegistrar;
+import com.stevpet.sonar.plugins.common.parser.observer.TopLevelObserverRegistrar;
 import com.stevpet.sonar.plugins.common.parser.observer.PathSpecificationObserverRegistrationFacade;
 import com.stevpet.sonar.plugins.common.parser.observer.ValueObserver;
 import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;

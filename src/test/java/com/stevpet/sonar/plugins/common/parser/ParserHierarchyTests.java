@@ -11,7 +11,7 @@ import org.sonar.test.TestUtils;
 
 import com.stevpet.sonar.plugins.common.api.parser.BaseParserObserver;
 import com.stevpet.sonar.plugins.common.api.parser.XmlParser;
-import com.stevpet.sonar.plugins.common.parser.observer.StartObserverRegistrar;
+import com.stevpet.sonar.plugins.common.parser.observer.TopLevelObserverRegistrar;
 
 public class ParserHierarchyTests {
 
@@ -65,7 +65,7 @@ public class ParserHierarchyTests {
 	
 	class UninterestedObserver extends BaseParserObserver {
 		@Override
-		public void registerObservers(StartObserverRegistrar registrar) {
+		public void registerObservers(TopLevelObserverRegistrar registrar) {
 				registrar.inPath("Child/GrandChild")
 				.onExit(()-> {grandChildExited+=1;})
 				.onEntry(()->{grandChildEntered++;});
@@ -79,7 +79,7 @@ public class ParserHierarchyTests {
 
 
 		@Override
-		public void registerObservers(StartObserverRegistrar registrar) {
+		public void registerObservers(TopLevelObserverRegistrar registrar) {
 				registrar.inPath("Child/GrandChild")
 				.onExit(()-> {grandChildExited+=1;})
 				.onEntry(()->{grandChildEntered++;});

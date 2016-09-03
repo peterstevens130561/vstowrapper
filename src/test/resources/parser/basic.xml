@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Main>
+	<Summary></Summary>
+	<Child>
+		<GrandChild>
+		<GrandChildPoint></GrandChildPoint>
+		</GrandChild>
+		
+		<Point></Point>
+	</Child></Main>
