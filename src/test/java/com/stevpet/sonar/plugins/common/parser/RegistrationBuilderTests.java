@@ -44,7 +44,7 @@ public class RegistrationBuilderTests {
         assertEquals("geewizz",moduleName);
         assertEquals("yogibear",modulePath);
         assertEquals("321",numBranchPoints);
-        hierarchy=xmlHierarchyBuilder.build();
+        hierarchy=observersRepository.buildHierarchy();
         assertEquals("Only modules and module have children",2,hierarchy.size());
         
     }

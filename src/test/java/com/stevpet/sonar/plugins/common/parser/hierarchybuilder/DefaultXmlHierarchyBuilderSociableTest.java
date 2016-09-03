@@ -18,10 +18,9 @@ import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
 public class DefaultXmlHierarchyBuilderSociableTest {
 	private String ancestry;
 
-	private XmlHierarchyBuilder hierarchyBuilder = new DefaultXmlHierarchyBuilder();
 	private TopLevelObserverRegistrar facade;
 	private List<String> hierarchy;
-	@Mock private DefaultObserversRepository observersRepository;
+	private DefaultObserversRepository observersRepository = new DefaultObserversRepository();
 	
 	@Before
 	public void  before() {
@@ -32,7 +31,7 @@ public class DefaultXmlHierarchyBuilderSociableTest {
 	@Test
 	public void test() {
 		facade.inPath("a/b/c");
-		hierarchy=hierarchyBuilder.build();
+		hierarchy=observersRepository.buildHierarchy();
 		assertEquals("three elements expected",3,hierarchy.size());
 		assertTrue("a",hierarchy.contains("a"));
 		assertTrue("b",hierarchy.contains("b"));
