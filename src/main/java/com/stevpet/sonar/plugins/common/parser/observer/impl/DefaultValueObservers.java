@@ -1,7 +1,11 @@
-package com.stevpet.sonar.plugins.common.parser.observer;
+package com.stevpet.sonar.plugins.common.parser.observer.impl;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
+
+import com.stevpet.sonar.plugins.common.parser.observer.PathValueObservers;
+import com.stevpet.sonar.plugins.common.parser.observer.ValueObserver;
+import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
 
 public class DefaultValueObservers implements ValueObservers  {
 

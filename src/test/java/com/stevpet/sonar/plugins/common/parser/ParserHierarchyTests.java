@@ -11,7 +11,7 @@ import org.sonar.test.TestUtils;
 
 import com.stevpet.sonar.plugins.common.api.parser.BaseParserObserver;
 import com.stevpet.sonar.plugins.common.api.parser.XmlParser;
-import com.stevpet.sonar.plugins.common.parser.observer.TopLevelObserverRegistrar;
+import com.stevpet.sonar.plugins.common.parser.observerdsl.TopLevelObserverRegistrar;
 
 public class ParserHierarchyTests {
 

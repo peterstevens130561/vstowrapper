@@ -1,10 +1,14 @@
-package com.stevpet.sonar.plugins.common.parser.observer;
+package com.stevpet.sonar.plugins.common.parser.observer.impl;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.stevpet.sonar.plugins.common.parser.observer.EventObserver;
+import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
+import com.stevpet.sonar.plugins.common.parser.observer.PathEventObservers;
 
 public class DefaultEventObservers implements EventObservers {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultEventObservers.class);

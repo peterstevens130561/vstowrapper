@@ -1,4 +1,4 @@
-package com.stevpet.sonar.plugins.common.parser.observer;
+package com.stevpet.sonar.plugins.common.parser.observerdsl;
 
 /**
  * select the first level where we'll start observing.

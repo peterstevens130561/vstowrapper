@@ -1,4 +1,6 @@
-package com.stevpet.sonar.plugins.common.parser.observer;
+package com.stevpet.sonar.plugins.common.parser.observerdsl;
+
+import com.stevpet.sonar.plugins.common.parser.observer.ObserversRepository;
 
 public class DefaultTopLevelObserverRegistrar implements TopLevelObserverRegistrar {
 	private ObserversRepository observersRepository;

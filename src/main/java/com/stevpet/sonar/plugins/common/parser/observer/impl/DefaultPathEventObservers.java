@@ -1,7 +1,10 @@
-package com.stevpet.sonar.plugins.common.parser.observer;
+package com.stevpet.sonar.plugins.common.parser.observer.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.stevpet.sonar.plugins.common.parser.observer.EventObserver;
+import com.stevpet.sonar.plugins.common.parser.observer.PathEventObservers;
 
 public class DefaultPathEventObservers implements PathEventObservers {
 

@@ -1,6 +1,7 @@
-package com.stevpet.sonar.plugins.common.parser.observer;
+package com.stevpet.sonar.plugins.common.parser.observer.impl;
 
 import com.stevpet.sonar.plugins.common.parser.ParserData;
+import com.stevpet.sonar.plugins.common.parser.observer.ParserEventArgs;
 
 public class DefaultParserEventArgs implements ParserEventArgs {
 

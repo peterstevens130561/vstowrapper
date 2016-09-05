@@ -3,6 +3,8 @@ package com.stevpet.sonar.plugins.common.parser.observer;
 import java.util.List;
 import java.util.function.Consumer;
 
+import com.stevpet.sonar.plugins.common.parser.observerdsl.DefaultElementBodyRegistrar;
+
 public interface ObserversRepository {
 
 	void observeEntry(String path);

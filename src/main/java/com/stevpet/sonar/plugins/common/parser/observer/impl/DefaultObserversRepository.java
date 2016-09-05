@@ -1,10 +1,16 @@
-package com.stevpet.sonar.plugins.common.parser.observer;
+package com.stevpet.sonar.plugins.common.parser.observer.impl;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.DefaultXmlHierarchyBuilder;
 import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.XmlHierarchyBuilder;
+import com.stevpet.sonar.plugins.common.parser.observer.EventObserver;
+import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
+import com.stevpet.sonar.plugins.common.parser.observer.ObserversRepository;
+import com.stevpet.sonar.plugins.common.parser.observer.ValueObserver;
+import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
+import com.stevpet.sonar.plugins.common.parser.observerdsl.DefaultElementBodyRegistrar;
 
 public class DefaultObserversRepository implements ObserversRepository{
     private ValueObservers elementObservers = new DefaultValueObservers();

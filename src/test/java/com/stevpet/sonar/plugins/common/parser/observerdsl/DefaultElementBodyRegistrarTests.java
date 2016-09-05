@@ -1,10 +1,17 @@
-package com.stevpet.sonar.plugins.common.parser.observer;
+package com.stevpet.sonar.plugins.common.parser.observerdsl;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+
+import com.stevpet.sonar.plugins.common.parser.observer.EventObserver;
+import com.stevpet.sonar.plugins.common.parser.observer.ObserversRepository;
+import com.stevpet.sonar.plugins.common.parser.observer.ValueObserver;
+import com.stevpet.sonar.plugins.common.parser.observerdsl.DefaultElementBodyRegistrar;
+import com.stevpet.sonar.plugins.common.parser.observerdsl.ElementBodyObserverRegistrar;
+
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 

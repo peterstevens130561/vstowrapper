@@ -1,6 +1,9 @@
-package com.stevpet.sonar.plugins.common.parser.observer;
+package com.stevpet.sonar.plugins.common.parser.observerdsl;
 
 import java.util.function.Consumer;
+
+import com.stevpet.sonar.plugins.common.parser.observer.EventObserver;
+import com.stevpet.sonar.plugins.common.parser.observer.ValueObserver;
 
 /**
  * allows to register all observers through a fluent interface 
@@ -57,9 +60,19 @@ public interface ObserverRegistrar extends TopLevelObserverRegistrar {
     ObserverRegistrar onExit(EventObserver exitObserver) ;
     
     /**
-     * 
+     * Register observers on an element. You can observe
+     * <dl>
+     * <li>
+     * entry
+     * <li>
+     * exit
+     * <li>
+     * value
+     * <li>
+     * attribute
+     * </dl>
      * @param name - the name of the element on which we want to observe attributes
-     * @param registrar - registration of attribute observers
+     * @param registrar - registration of attribute observers 
      *
      *<br>
      * {@code inElement("SomeElement",registrar -> registrar->addAttribute("vc",this::vc).addAttribute("sl",this::sl})

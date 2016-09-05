@@ -1,10 +1,10 @@
-package com.stevpet.sonar.plugins.common.parser;
+package com.stevpet.sonar.plugins.common.parser.observerdsl;
 
 import java.util.function.Consumer;
 
 import org.junit.Test;
 
-import com.stevpet.sonar.plugins.common.parser.observer.DefaultElementBodyRegistrar;
+import com.stevpet.sonar.plugins.common.parser.observerdsl.DefaultElementBodyRegistrar;
 
 public class ElementAttributeObserverTest {
 

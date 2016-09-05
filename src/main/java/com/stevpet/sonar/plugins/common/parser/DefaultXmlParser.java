@@ -45,14 +45,14 @@ import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
 import com.stevpet.sonar.plugins.common.api.parser.XmlParser;
 import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.DefaultXmlHierarchyBuilder;
 import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.XmlHierarchyBuilder;
-import com.stevpet.sonar.plugins.common.parser.observer.DefaultEventObservers;
-import com.stevpet.sonar.plugins.common.parser.observer.DefaultObserversRepository;
-import com.stevpet.sonar.plugins.common.parser.observer.DefaultValueObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.ObserversRepository;
-import com.stevpet.sonar.plugins.common.parser.observer.DefaultObserverRegistrar;
-import com.stevpet.sonar.plugins.common.parser.observer.DefaultTopLevelObserverRegistrar;
 import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
+import com.stevpet.sonar.plugins.common.parser.observer.impl.DefaultEventObservers;
+import com.stevpet.sonar.plugins.common.parser.observer.impl.DefaultObserversRepository;
+import com.stevpet.sonar.plugins.common.parser.observer.impl.DefaultValueObservers;
+import com.stevpet.sonar.plugins.common.parser.observerdsl.DefaultObserverRegistrar;
+import com.stevpet.sonar.plugins.common.parser.observerdsl.DefaultTopLevelObserverRegistrar;
 
 /**
  * A pretty fast parser, based on Stax. 
