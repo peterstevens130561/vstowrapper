@@ -8,13 +8,8 @@ import org.junit.Test;
 
 import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.DefaultXmlHierarchyBuilder;
 import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.XmlHierarchyBuilder;
-import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.ObserversRepository;
-import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
-import com.stevpet.sonar.plugins.common.parser.observer.impl.DefaultEventObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.impl.DefaultObserversRepository;
-import com.stevpet.sonar.plugins.common.parser.observer.impl.DefaultValueObservers;
-import com.stevpet.sonar.plugins.common.parser.observerdsl.DefaultObserverRegistrar;
 import com.stevpet.sonar.plugins.common.parser.observerdsl.DefaultTopLevelObserverRegistrar;
 
 public class RegistrationBuilderTests {

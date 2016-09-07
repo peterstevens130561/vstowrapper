@@ -4,16 +4,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.XmlHierarchyBuilder;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObserver;
-import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.ValueObserver;
-import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.impl.DefaultObserversRepository;
 import com.stevpet.sonar.plugins.common.parser.observerdsl.DefaultObserverRegistrar;
 import com.stevpet.sonar.plugins.common.parser.observerdsl.ObserverRegistrar;
-import com.stevpet.sonar.plugins.common.parser.observerdsl.TopLevelObserverRegistrar;
-
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -34,13 +29,6 @@ public class PathSpecificationObserverRegistrationFacadeTest {
         verify(observersRepository,times(1)).registerElementObserver("booh",observer);
     }
     
-    
-    @Test
-    public void testAttribute() {
-        ValueObserver observer = this::valueObserver;
-        //registrar.onAttribute("booh",observer);
-        //verify(observersRepository,times(1)).registerAttributeObservers("booh",observer);
-    }
     
     @Test
     public void testEntry() {

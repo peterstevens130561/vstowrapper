@@ -3,12 +3,8 @@ package com.stevpet.sonar.plugins.common.parser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import java.io.File;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.sonar.test.TestUtils;
-
 import com.stevpet.sonar.plugins.common.api.parser.BaseParserObserver;
 import com.stevpet.sonar.plugins.common.api.parser.XmlParser;
 import com.stevpet.sonar.plugins.common.parser.observerdsl.TopLevelObserverRegistrar;
@@ -16,7 +12,6 @@ import com.stevpet.sonar.plugins.common.parser.observerdsl.TopLevelObserverRegis
 public class ParserHierarchyTests {
 
 	private XmlParser parser;
-	private File File;
 	private String basic = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Main><Summary></Summary><Child><GrandChild><GrandChildPoint>BLA</GrandChildPoint></GrandChild><Point>POINT1</Point><Point>POINT2</Point></Child></Main>";
 	private int grandChildEntered;
 	private int grandChildExited;

@@ -2,10 +2,7 @@ package com.stevpet.sonar.plugins.common.parser;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
 
 public class ObserverClassRepository {
