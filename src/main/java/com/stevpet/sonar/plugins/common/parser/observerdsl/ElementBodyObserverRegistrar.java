@@ -3,6 +3,7 @@ package com.stevpet.sonar.plugins.common.parser.observerdsl;
 import java.util.function.Consumer;
 
 import com.stevpet.sonar.plugins.common.parser.observer.EventObserver;
+import com.stevpet.sonar.plugins.common.parser.observer.ParserEventArgs;
 
 /**
  * register observers on the element through fluent interface
@@ -42,5 +43,11 @@ public interface ElementBodyObserverRegistrar {
 	 * @return
 	 */
 	ElementBodyObserverRegistrar onValue(Consumer<String> observer);
+
+	/**
+	 * register an observer which will get the eventArgs as argument
+	 * @param observer
+	 */
+	ElementBodyObserverRegistrar withEventArgs(Consumer<ParserEventArgs> observer);
 
 }

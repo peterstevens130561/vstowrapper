@@ -31,4 +31,6 @@ public interface ObserversRepository {
 
 	void registerAttributeObserver(String string, Consumer<String> observer);
 
+	void registerElementEventArgsObserver(String name, Consumer<ParserEventArgs> observer);
+
 }

@@ -9,6 +9,7 @@ import com.stevpet.sonar.plugins.common.parser.observer.ArgumentObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObserver;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.ObserversRepository;
+import com.stevpet.sonar.plugins.common.parser.observer.ParserEventArgs;
 import com.stevpet.sonar.plugins.common.parser.observerdsl.DefaultElementBodyRegistrar;
 
 public class DefaultObserversRepository implements ObserversRepository{
@@ -82,6 +83,11 @@ public class DefaultObserversRepository implements ObserversRepository{
 	@Override
 	public void registerAttributeObserver(String path, Consumer<String> observer) {
 		attributeObservers.register(path, observer);
+	}
+
+	@Override
+	public void registerElementEventArgsObserver(String name, Consumer<ParserEventArgs> observer) {
+		
 	}
 	
 }

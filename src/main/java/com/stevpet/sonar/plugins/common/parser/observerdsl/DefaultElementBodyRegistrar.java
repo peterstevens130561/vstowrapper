@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 
 import com.stevpet.sonar.plugins.common.parser.observer.EventObserver;
 import com.stevpet.sonar.plugins.common.parser.observer.ObserversRepository;
+import com.stevpet.sonar.plugins.common.parser.observer.ParserEventArgs;
 
 public class DefaultElementBodyRegistrar implements ElementBodyObserverRegistrar {
 
@@ -47,6 +48,14 @@ public class DefaultElementBodyRegistrar implements ElementBodyObserverRegistrar
 	public ElementBodyObserverRegistrar onValue(Consumer<String> observer) {
 		observersRepository.registerElementObserver(name,observer);
 		return this;
+	}
+
+
+	@Override
+	public ElementBodyObserverRegistrar  withEventArgs(Consumer<ParserEventArgs> observer) {
+		observersRepository.registerElementEventArgsObserver(name,observer);
+		return this;
+		
 	}
 	
     
