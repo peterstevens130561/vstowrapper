@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.stevpet.sonar.plugins.common.parser.observer.ArgumentObserver;
 import com.stevpet.sonar.plugins.common.parser.observer.PathArgumentObservers;
 
 public class DefaultPathArgumentObservers<T> implements PathArgumentObservers<T> {

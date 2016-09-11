@@ -3,7 +3,6 @@ package com.stevpet.sonar.plugins.common.parser.observerdsl;
 import java.util.function.Consumer;
 
 import com.stevpet.sonar.plugins.common.parser.observer.EventObserver;
-import com.stevpet.sonar.plugins.common.parser.observer.ValueObserver;
 
 /**
  * register observers on the element through fluent interface

@@ -4,7 +4,6 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.function.Consumer;
 
-import com.stevpet.sonar.plugins.common.parser.observer.ArgumentObserver;
 import com.stevpet.sonar.plugins.common.parser.observer.ArgumentObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.PathArgumentObservers;
 

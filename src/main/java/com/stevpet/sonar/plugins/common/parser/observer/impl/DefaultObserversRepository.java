@@ -9,7 +9,6 @@ import com.stevpet.sonar.plugins.common.parser.observer.ArgumentObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObserver;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.ObserversRepository;
-import com.stevpet.sonar.plugins.common.parser.observer.ValueObserver;
 import com.stevpet.sonar.plugins.common.parser.observerdsl.DefaultElementBodyRegistrar;
 
 public class DefaultObserversRepository implements ObserversRepository{

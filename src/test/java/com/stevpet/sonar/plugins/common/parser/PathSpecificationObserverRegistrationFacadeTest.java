@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import com.stevpet.sonar.plugins.common.parser.observer.EventObserver;
-import com.stevpet.sonar.plugins.common.parser.observer.ValueObserver;
 import com.stevpet.sonar.plugins.common.parser.observer.impl.DefaultObserversRepository;
 import com.stevpet.sonar.plugins.common.parser.observerdsl.DefaultObserverRegistrar;
 import com.stevpet.sonar.plugins.common.parser.observerdsl.ObserverRegistrar;
