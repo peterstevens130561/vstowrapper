@@ -4,10 +4,6 @@ public interface ParserEventArgs {
 
 	String getValue();
 
-	String getPath();
-
 	void setError();
-
-	void setSkipTillNextElement();
 
 }

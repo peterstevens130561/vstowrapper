@@ -44,7 +44,9 @@ import org.slf4j.LoggerFactory;
 import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
 import com.stevpet.sonar.plugins.common.api.parser.XmlParser;
 import com.stevpet.sonar.plugins.common.parser.observer.ObserversRepository;
+import com.stevpet.sonar.plugins.common.parser.observer.ParserEventArgs;
 import com.stevpet.sonar.plugins.common.parser.observer.impl.DefaultObserversRepository;
+import com.stevpet.sonar.plugins.common.parser.observer.impl.DefaultParserEventArgs;
 import com.stevpet.sonar.plugins.common.parser.observerdsl.DefaultTopLevelObserverRegistrar;
 
 /**
@@ -67,7 +69,7 @@ public class DefaultXmlParser implements XmlParser {
     private final ParserData parserData;
     private ObserverClassRepository registeredObserverClasses = new ObserverClassRepository();
     private ObserversRepository observersRepository = new DefaultObserversRepository();
-   
+    private DefaultParserEventArgs parserEventArgs = new DefaultParserEventArgs();
 
     private DefaultTopLevelObserverRegistrar observerRegistrationFacade = new DefaultTopLevelObserverRegistrar(observersRepository);
     public DefaultXmlParser() {
@@ -142,6 +144,9 @@ public class DefaultXmlParser implements XmlParser {
             throw new IllegalStateException(msg, e);
         } finally {
             closeStream(cursor);
+        }
+        if(parserEventArgs.isError()) {
+        	throw new ParserSubjectErrorException(file);
         }
         registeredObserverClasses.checkOnErrors(file);
     }
@@ -235,6 +240,8 @@ public class DefaultXmlParser implements XmlParser {
             if(observersRepository.hasElementMatch(elementPath)) {
                 String text = getTrimmedElementStringValue(childCursor);
                 observersRepository.observeElement(elementPath,text);
+                parserEventArgs.setValue(text);
+                observersRepository.observeElement(elementPath, parserEventArgs);
             }
         }
     }
