@@ -33,4 +33,6 @@ public interface ObserversRepository {
 
 	void registerElementEventArgsObserver(String name, Consumer<ParserEventArgs> observer);
 
+	void observeElement(String path, ParserEventArgs eventArgs);
+
 }

@@ -14,6 +14,7 @@ import com.stevpet.sonar.plugins.common.parser.observerdsl.DefaultElementBodyReg
 
 public class DefaultObserversRepository implements ObserversRepository{
     private ArgumentObservers<String> elementObservers = new DefaultArgumentObservers<>();
+    private ArgumentObservers<ParserEventArgs> elementEventArgsObservers = new DefaultArgumentObservers<>();
     private ArgumentObservers<String> attributeObservers= new DefaultArgumentObservers<>();
     private EventObservers entryObservers = new DefaultEventObservers();
     private EventObservers exitObservers = new DefaultEventObservers();
@@ -86,8 +87,13 @@ public class DefaultObserversRepository implements ObserversRepository{
 	}
 
 	@Override
-	public void registerElementEventArgsObserver(String name, Consumer<ParserEventArgs> observer) {
-		
+	public void registerElementEventArgsObserver(String path, Consumer<ParserEventArgs> observer) {
+		elementEventArgsObservers.register(path, observer);
+	}
+
+	@Override
+	public void observeElement(String path, ParserEventArgs eventArgs) {
+		elementEventArgsObservers.observe(path, eventArgs);
 	}
 	
 }

@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import com.stevpet.sonar.plugins.common.parser.observer.EventObserver;
+import com.stevpet.sonar.plugins.common.parser.observer.ParserEventArgs;
 import com.stevpet.sonar.plugins.common.parser.observer.impl.DefaultObserversRepository;
 import com.stevpet.sonar.plugins.common.parser.observerdsl.DefaultObserverRegistrar;
 import com.stevpet.sonar.plugins.common.parser.observerdsl.ObserverRegistrar;
@@ -15,9 +16,10 @@ import static org.mockito.Mockito.verify;
 
 import java.util.function.Consumer;
 
-public class PathSpecificationObserverRegistrationFacadeTest {
+public class DefaultObserversRegistrarTest {
     private ObserverRegistrar registrar ;
 	@Mock private DefaultObserversRepository observersRepository;
+	@Mock private ParserEventArgs eventArgs ;
     
     @Before
     public void before() {
@@ -65,6 +67,7 @@ public class PathSpecificationObserverRegistrationFacadeTest {
         verify(observersRepository,times(1)).registerAttributeObserver("element/b",observer);         
     }
     
+
     private void valueObserver(String value) {
         
     }
