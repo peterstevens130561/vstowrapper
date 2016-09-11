@@ -145,9 +145,7 @@ public class DefaultXmlParser implements XmlParser {
         } finally {
             closeStream(cursor);
         }
-        if(parserEventArgs.isError()) {
-        	throw new ParserSubjectErrorException(file);
-        }
+
         registeredObserverClasses.checkOnErrors(file);
     }
 
@@ -156,6 +154,9 @@ public class DefaultXmlParser implements XmlParser {
         parentElements=observersRepository.buildHierarchy();
         SMInputCursor childCursor = rootCursor.childElementCursor();
         parseChild("", childCursor);
+        if(parserEventArgs.isError()) {
+        	throw new ParserSubjectErrorException("Error during parsing");
+        }
     }
 
     public void closeStream(SMInputCursor cursor) {

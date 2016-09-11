@@ -17,16 +17,10 @@ public class ObserverClassRepository {
     }
 
     public void setParserData(ParserData parserData) {
-        for (ParserObserver observer : parserObservers) {
-            observer.setParserData(parserData);
-        } 
+
     }
 
     public void checkOnErrors(File file) {
-        for (ParserObserver observer : parserObservers) {
-            if (observer.hasError()) {
-                throw new ParserSubjectErrorException(file);
-            }
-        }
+
     }
 }

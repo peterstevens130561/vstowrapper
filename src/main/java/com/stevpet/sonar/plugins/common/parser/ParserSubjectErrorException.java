@@ -36,4 +36,8 @@ public class ParserSubjectErrorException extends XmlParserSubjectException {
         super("One or more errors detected during parsing " + file.getAbsolutePath());
     }
 
+	public ParserSubjectErrorException(String detailMessage) {
+		super(detailMessage);
+	}
+
 }

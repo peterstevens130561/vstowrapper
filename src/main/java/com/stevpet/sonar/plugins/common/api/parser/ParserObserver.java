@@ -29,11 +29,5 @@ import com.stevpet.sonar.plugins.common.parser.ParserData;
 
 public interface ParserObserver extends ObserverRegistration  {
     
-    /**
-     * true if one or more errors have been found during parsing. The observer
-     * is responsible for logging;
-     */
-    boolean hasError();
-    void setParserData(ParserData parserData);
     
 }

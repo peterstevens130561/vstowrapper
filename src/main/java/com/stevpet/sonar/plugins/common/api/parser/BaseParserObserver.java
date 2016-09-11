@@ -22,32 +22,10 @@
  *******************************************************************************/
 package com.stevpet.sonar.plugins.common.api.parser;
 
-import com.stevpet.sonar.plugins.common.parser.ParserData;
+
 
 public abstract class BaseParserObserver implements ParserObserver {
 
-    private boolean hasError =false;
-    private ParserData parserData;
-    protected void setError() {
-        hasError=true;
-    }
-    
-    @Override
-    public boolean hasError() {
-        return hasError;
-    }
-
-    /**
-     * parser state data to be manipulated by the observer, to be inserted by the parser.
-     * @param parserData - valid parserData object
-     */
-    public void setParserData(ParserData parserData) {
-        this.parserData = parserData;
-    }
-    
-    public void setSkipTillNextElement(String elementName) {
-        parserData.setSkipThisLevel();
-    }
 }
     
 

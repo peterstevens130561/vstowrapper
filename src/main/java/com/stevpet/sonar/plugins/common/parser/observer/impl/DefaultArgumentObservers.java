@@ -9,7 +9,7 @@ import com.stevpet.sonar.plugins.common.parser.observer.PathArgumentObservers;
 
 public class DefaultArgumentObservers<T> implements ArgumentObservers<T> {
 
-    Dictionary<String,PathArgumentObservers<T>> observerDictionary = new Hashtable<String,PathArgumentObservers<T>>(1024);
+    Dictionary<String,PathArgumentObservers<T>> observerDictionary = new Hashtable<String,PathArgumentObservers<T>>(10);
 
     @Override
     public void register(String path, Consumer<T> observer) {

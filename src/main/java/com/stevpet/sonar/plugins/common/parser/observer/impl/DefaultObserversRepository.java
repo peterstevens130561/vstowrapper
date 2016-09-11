@@ -54,7 +54,7 @@ public class DefaultObserversRepository implements ObserversRepository{
 		exitObservers.observe(path);
 	}
 	public boolean hasElementMatch(String elementPath) {
-		return elementObservers.hasMatch(elementPath) ;
+		return elementObservers.hasMatch(elementPath) || elementEventArgsObservers.hasMatch(elementPath);
 	}
 	/* (non-Javadoc)
 	 * @see com.stevpet.sonar.plugins.common.parser.observer.ObserversFacade#observeElement(java.lang.String, java.lang.String)
