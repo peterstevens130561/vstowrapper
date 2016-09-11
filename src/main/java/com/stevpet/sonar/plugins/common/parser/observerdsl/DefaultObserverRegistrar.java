@@ -23,7 +23,7 @@ public class DefaultObserverRegistrar implements ObserverRegistrar{
     }
     
     @Override
-    public ObserverRegistrar onElement(String element, ValueObserver observer) {
+    public ObserverRegistrar onElement(String element, Consumer<String> observer) {
         defaultObserversRepository.registerElementObserver(createPath(element), observer);
         return this;
     }

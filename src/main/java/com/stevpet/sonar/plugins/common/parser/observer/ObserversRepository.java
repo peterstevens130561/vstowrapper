@@ -19,7 +19,7 @@ public interface ObserversRepository {
 
 	List<String> buildHierarchy();
 
-	void registerElementObserver(String path, ValueObserver observer);
+	void registerElementObserver(String path, Consumer<String> observer);
 
 	void registerEntryObserver(String path, EventObserver observer);
 
@@ -29,6 +29,6 @@ public interface ObserversRepository {
 
 	boolean hasElementMatch(String elementPath);
 
-	void registerAttributeObserver(String string, ValueObserver observer);
+	void registerAttributeObserver(String string, Consumer<String> observer);
 
 }

@@ -10,7 +10,6 @@ import com.stevpet.sonar.plugins.common.parser.observer.EventObserver;
 import com.stevpet.sonar.plugins.common.parser.observer.EventObservers;
 import com.stevpet.sonar.plugins.common.parser.observer.ObserversRepository;
 import com.stevpet.sonar.plugins.common.parser.observer.ValueObserver;
-import com.stevpet.sonar.plugins.common.parser.observer.ValueObservers;
 import com.stevpet.sonar.plugins.common.parser.observerdsl.DefaultElementBodyRegistrar;
 
 public class DefaultObserversRepository implements ObserversRepository{
@@ -21,7 +20,7 @@ public class DefaultObserversRepository implements ObserversRepository{
 	private XmlHierarchyBuilder hierarchyBuilder = new DefaultXmlHierarchyBuilder();
 	
 	@Override
-	public void registerElementObserver(String path, ValueObserver observer) {
+	public void registerElementObserver(String path, Consumer<String> observer) {
 		elementObservers.register(path, observer);
 		
 	}
@@ -82,7 +81,7 @@ public class DefaultObserversRepository implements ObserversRepository{
 	}
 
 	@Override
-	public void registerAttributeObserver(String path, ValueObserver observer) {
+	public void registerAttributeObserver(String path, Consumer<String> observer) {
 		attributeObservers.register(path, observer);
 	}
 	

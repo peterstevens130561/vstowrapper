@@ -1,5 +1,7 @@
 package com.stevpet.sonar.plugins.common.parser.observerdsl;
 
+import java.util.function.Consumer;
+
 import com.stevpet.sonar.plugins.common.parser.observer.EventObserver;
 import com.stevpet.sonar.plugins.common.parser.observer.ValueObserver;
 
@@ -18,7 +20,7 @@ public interface ElementBodyObserverRegistrar {
 	 * @param observer
 	 * @return this
 	 */
-	ElementBodyObserverRegistrar onAttribute(String attribute, ValueObserver observer);
+	ElementBodyObserverRegistrar onAttribute(String attribute, Consumer<String> observer);
 
 	/**
 	 * register an observer which will be triggered on entry of the element
@@ -40,6 +42,6 @@ public interface ElementBodyObserverRegistrar {
 	 * @param observer
 	 * @return
 	 */
-	ElementBodyObserverRegistrar onValue(ValueObserver observer);
+	ElementBodyObserverRegistrar onValue(Consumer<String> observer);
 
 }

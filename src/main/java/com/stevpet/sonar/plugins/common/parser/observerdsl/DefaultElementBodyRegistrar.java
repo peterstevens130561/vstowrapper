@@ -1,5 +1,7 @@
 package com.stevpet.sonar.plugins.common.parser.observerdsl;
 
+import java.util.function.Consumer;
+
 import com.stevpet.sonar.plugins.common.parser.observer.EventObserver;
 import com.stevpet.sonar.plugins.common.parser.observer.ObserversRepository;
 import com.stevpet.sonar.plugins.common.parser.observer.ValueObserver;
@@ -19,7 +21,7 @@ public class DefaultElementBodyRegistrar implements ElementBodyObserverRegistrar
 	 * @see com.stevpet.sonar.plugins.common.parser.observer.ElementBodyObserverRegistrar#onAttribute(java.lang.String, com.stevpet.sonar.plugins.common.parser.observer.ValueObserver)
 	 */
 	@Override
-	public ElementBodyObserverRegistrar onAttribute(String attribute, ValueObserver observer) {
+	public ElementBodyObserverRegistrar onAttribute(String attribute, Consumer<String> observer) {
         observersRepository.registerAttributeObserver(name + "/" + attribute, observer);
         return this;
     }
@@ -43,7 +45,7 @@ public class DefaultElementBodyRegistrar implements ElementBodyObserverRegistrar
 	}
 	
 	@Override
-	public ElementBodyObserverRegistrar onValue(ValueObserver observer) {
+	public ElementBodyObserverRegistrar onValue(Consumer<String> observer) {
 		observersRepository.registerElementObserver(name,observer);
 		return this;
 	}

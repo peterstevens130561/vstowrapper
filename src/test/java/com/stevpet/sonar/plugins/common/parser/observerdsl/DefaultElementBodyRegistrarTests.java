@@ -15,6 +15,8 @@ import com.stevpet.sonar.plugins.common.parser.observerdsl.ElementBodyObserverRe
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.util.function.Consumer;
+
 public class DefaultElementBodyRegistrarTests {
 
 	private ElementBodyObserverRegistrar registrar;
@@ -45,7 +47,7 @@ public class DefaultElementBodyRegistrarTests {
 	
 	@Test
 	public void onAttributeTest() {
-		ValueObserver observer = this::valueObserver;
+		Consumer<String> observer = this::valueObserver;
 		ElementBodyObserverRegistrar result = registrar.onAttribute("a",observer);
 		assertEquals("should return same",registrar,result);
 		verify(observersRepository,times(1)).registerAttributeObserver(name + "/a", observer);
@@ -53,7 +55,7 @@ public class DefaultElementBodyRegistrarTests {
 	
 	@Test
 	public void onValueTest() {
-		ValueObserver observer = this::valueObserver;
+		Consumer<String> observer = this::valueObserver;
 		ElementBodyObserverRegistrar result = registrar.onValue(observer);
 		assertEquals("should return same",registrar,result);
 		verify(observersRepository,times(1)).registerElementObserver(name , observer);

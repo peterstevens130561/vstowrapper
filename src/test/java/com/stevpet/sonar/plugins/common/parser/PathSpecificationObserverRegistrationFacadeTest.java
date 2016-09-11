@@ -9,8 +9,12 @@ import com.stevpet.sonar.plugins.common.parser.observer.ValueObserver;
 import com.stevpet.sonar.plugins.common.parser.observer.impl.DefaultObserversRepository;
 import com.stevpet.sonar.plugins.common.parser.observerdsl.DefaultObserverRegistrar;
 import com.stevpet.sonar.plugins.common.parser.observerdsl.ObserverRegistrar;
+
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
+import java.util.function.Consumer;
 
 public class PathSpecificationObserverRegistrationFacadeTest {
     private ObserverRegistrar registrar ;
@@ -22,9 +26,17 @@ public class PathSpecificationObserverRegistrationFacadeTest {
         registrar = new DefaultObserverRegistrar("",observersRepository);
     }
     
+    private String touched;
+    @Test
+    public void testLambda() {
+    	DefaultObserversRepository localRepository = new DefaultObserversRepository();
+    	localRepository.registerElementObserver("booh", r -> touched=r);
+    	localRepository.observeElement("booh", "john");
+    	assertEquals("john",touched);
+    }
     @Test
     public void testElement() {
-        ValueObserver observer = this::valueObserver;
+        Consumer<String> observer = this::valueObserver;
         registrar.onElement("booh",observer);
         verify(observersRepository,times(1)).registerElementObserver("booh",observer);
     }
@@ -46,7 +58,7 @@ public class PathSpecificationObserverRegistrationFacadeTest {
     
     @Test
     public void testAttributeInElement() {
-        ValueObserver observer = this::valueObserver;      
+    	Consumer<String> observer = this::valueObserver;      
         registrar.inElement("element",(registrar -> registrar
                         .onAttribute("a",observer)
                         .onAttribute("b",observer)));

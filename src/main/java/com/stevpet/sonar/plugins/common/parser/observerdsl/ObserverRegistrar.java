@@ -29,7 +29,7 @@ public interface ObserverRegistrar extends TopLevelObserverRegistrar {
      * 
      * @return
      */
-    ObserverRegistrar onElement(String element,ValueObserver elementObserver );
+    ObserverRegistrar onElement(String element,Consumer<String> elementObserver );
   
     
     /**
