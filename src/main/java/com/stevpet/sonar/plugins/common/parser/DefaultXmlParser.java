@@ -44,7 +44,6 @@ import org.slf4j.LoggerFactory;
 import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
 import com.stevpet.sonar.plugins.common.api.parser.XmlParser;
 import com.stevpet.sonar.plugins.common.parser.observer.ObserversRepository;
-import com.stevpet.sonar.plugins.common.parser.observer.ParserEventArgs;
 import com.stevpet.sonar.plugins.common.parser.observer.impl.DefaultObserversRepository;
 import com.stevpet.sonar.plugins.common.parser.observer.impl.DefaultParserEventArgs;
 import com.stevpet.sonar.plugins.common.parser.observerdsl.DefaultTopLevelObserverRegistrar;
