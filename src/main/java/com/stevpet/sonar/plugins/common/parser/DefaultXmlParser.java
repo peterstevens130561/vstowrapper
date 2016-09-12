@@ -67,7 +67,6 @@ public class DefaultXmlParser implements XmlParser {
     private int line;
     private int column;
     private final ParserData parserData;
-    private ObserverClassRepository registeredObserverClasses = new ObserverClassRepository();
     private ObserversRepository observersRepository = new DefaultObserversRepository();
     private final DefaultParserEventArgs parserEventArgs ;
 
@@ -146,12 +145,9 @@ public class DefaultXmlParser implements XmlParser {
         } finally {
             closeStream(cursor);
         }
-
-        registeredObserverClasses.checkOnErrors(file);
     }
 
     private void parse(SMInputCursor rootCursor) throws XMLStreamException {
-        registeredObserverClasses.setParserData(parserData);
         parentElements=observersRepository.buildHierarchy();
         SMInputCursor childCursor = rootCursor.childElementCursor();
         parseChild("", childCursor);
@@ -177,7 +173,6 @@ public class DefaultXmlParser implements XmlParser {
 
     
     public void registerObserver(ParserObserver observer) {
-        registeredObserverClasses.add(observer);
         observer.registerObservers(observerRegistrationFacade);
     }
 
