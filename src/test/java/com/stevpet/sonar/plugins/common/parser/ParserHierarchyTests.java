@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import com.stevpet.sonar.plugins.common.api.parser.BaseParserObserver;
+import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
 import com.stevpet.sonar.plugins.common.api.parser.XmlParser;
 import com.stevpet.sonar.plugins.common.parser.observerdsl.TopLevelObserverRegistrar;
 
@@ -58,7 +59,7 @@ public class ParserHierarchyTests {
 	}
 	
 	
-	class UninterestedObserver extends BaseParserObserver {
+	class UninterestedObserver implements ParserObserver {
 		@Override
 		public void registerObservers(TopLevelObserverRegistrar registrar) {
 				registrar.inPath("Child/GrandChild")

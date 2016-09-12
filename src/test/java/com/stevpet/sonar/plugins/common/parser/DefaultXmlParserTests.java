@@ -25,11 +25,10 @@ public class DefaultXmlParserTests {
 	public void errorCatch() {
 		String basic = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Main><fun><Summary>booh</Summary></fun></Main>";
 		try {
-			BaseParserObserver observer = new BaseParserObserver() {
+			ParserObserver observer = new ParserObserver() {
 
 				@Override
 				public void registerObservers(TopLevelObserverRegistrar registrar) {
-					// TODO Auto-generated method stub
 					registrar.inPath("fun").inElement("Summary",i -> i.withEventArgs(o -> {o.setError();}));
 				}
 				
