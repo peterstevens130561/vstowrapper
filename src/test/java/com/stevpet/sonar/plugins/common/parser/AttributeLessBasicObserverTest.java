@@ -6,7 +6,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stevpet.sonar.plugins.common.api.parser.BaseParserObserver;
 import com.stevpet.sonar.plugins.common.api.parser.ParserObserver;
 import com.stevpet.sonar.plugins.common.parser.hierarchybuilder.XmlHierarchyBuilder;
 import com.stevpet.sonar.plugins.common.parser.observer.impl.DefaultObserversRepository;
