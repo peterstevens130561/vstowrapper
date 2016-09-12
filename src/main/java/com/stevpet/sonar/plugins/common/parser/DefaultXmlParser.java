@@ -69,7 +69,7 @@ public class DefaultXmlParser implements XmlParser {
     private final ParserData parserData;
     private ObserverClassRepository registeredObserverClasses = new ObserverClassRepository();
     private ObserversRepository observersRepository = new DefaultObserversRepository();
-    private DefaultParserEventArgs parserEventArgs = new DefaultParserEventArgs();
+    private final DefaultParserEventArgs parserEventArgs ;
 
     private DefaultTopLevelObserverRegistrar observerRegistrationFacade = new DefaultTopLevelObserverRegistrar(observersRepository);
     public DefaultXmlParser() {
@@ -83,6 +83,7 @@ public class DefaultXmlParser implements XmlParser {
      */
     public DefaultXmlParser(ParserData parserData) {
         this.parserData = parserData;
+        parserEventArgs= new DefaultParserEventArgs(parserData);
     }
 
 

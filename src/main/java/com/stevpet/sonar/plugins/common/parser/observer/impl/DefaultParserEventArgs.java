@@ -7,12 +7,12 @@ public class DefaultParserEventArgs implements ParserEventArgs {
 
 	private String value;
 	private boolean error;
+	private final ParserData parserData;
 
-
-	public DefaultParserEventArgs() {
-
+	public DefaultParserEventArgs(ParserData parserData) {
+		this.parserData=parserData;
 	}
-	
+
 
 	/* (non-Javadoc)
 	 * @see com.stevpet.sonar.plugins.common.parser.observer.ParserEventArgs#getValue()
@@ -41,4 +41,10 @@ public class DefaultParserEventArgs implements ParserEventArgs {
 		return error;
 	}
 
+
+	@Override
+	public void setSkipTillNextElement(String string) {
+		parserData.setSkipThisLevel();
+	}
+	
 }

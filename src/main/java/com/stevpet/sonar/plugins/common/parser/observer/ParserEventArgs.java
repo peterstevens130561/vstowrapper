@@ -6,4 +6,6 @@ public interface ParserEventArgs {
 
 	void setError();
 
+	void setSkipTillNextElement(String string);
+
 }
