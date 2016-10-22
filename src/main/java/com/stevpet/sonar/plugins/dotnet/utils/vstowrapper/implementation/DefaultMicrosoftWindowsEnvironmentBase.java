@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 
 import com.google.common.base.Preconditions;
@@ -22,13 +23,16 @@ public class DefaultMicrosoftWindowsEnvironmentBase implements
     private FileSystem fileSystem;
     private boolean didBuild = false;
     private VisualStudioSolution solution;
+    private final Settings settings;
 
     public DefaultMicrosoftWindowsEnvironmentBase(
             HierarchyBuilder hierarchyBuilder, FileSystem fileSystem,
-            Project project) {
+            Project project,
+            Settings settings) {
         this.hierarchyBuilder = hierarchyBuilder;
         this.fileSystem = fileSystem;
         this.project = project;
+        this.settings=settings;
     }
 
     @Override

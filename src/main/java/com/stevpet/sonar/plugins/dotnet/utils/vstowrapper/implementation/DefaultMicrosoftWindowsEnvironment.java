@@ -47,7 +47,7 @@ public class DefaultMicrosoftWindowsEnvironment extends DefaultMicrosoftWindowsE
 
 	public DefaultMicrosoftWindowsEnvironment(Settings settings, FileSystem fs, Project project) {
 		super(new VisualStudioSolutionHierarchyHelper(settings,
-				new VisualStudioAssemblyLocator(settings)),fs,project);
+				new VisualStudioAssemblyLocator(settings)),fs,project,settings);
 	}
 	
 }
