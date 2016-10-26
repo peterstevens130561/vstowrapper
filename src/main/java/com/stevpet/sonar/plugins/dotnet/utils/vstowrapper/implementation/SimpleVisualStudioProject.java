@@ -25,7 +25,8 @@ package com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.base.Preconditions;
+
+
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
 
 import java.io.File;

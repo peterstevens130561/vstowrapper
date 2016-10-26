@@ -10,16 +10,14 @@ import java.util.regex.PatternSyntaxException;
 import javax.annotation.Nullable;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.BatchExtension;
 import org.sonar.api.config.Settings;
+import org.sonar.api.internal.google.common.base.Splitter;
+import org.sonar.api.internal.google.common.base.Throwables;
 
-
-import com.google.common.base.Preconditions;
-import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
-import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.AssemblyLocator;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
@@ -67,11 +65,11 @@ public class VisualStudioSolutionHierarchyHelper implements BatchExtension, Hier
 
 		String solutionPath = settings
 				.getString(VisualStudioPlugin.VISUAL_STUDIO_SOLUTION_PROPERTY_KEY);
-		if (Strings.nullToEmpty(solutionPath).isEmpty()) {
+		if (StringUtils.isEmpty(solutionPath)) {
 			solutionPath = settings
 					.getString(VisualStudioPlugin.VISUAL_STUDIO_OLD_SOLUTION_PROPERTY_KEY);
 		}
-		if (!Strings.nullToEmpty(solutionPath).isEmpty()) {
+		if (!StringUtils.isEmpty(solutionPath)) {
 			result = new File(projectBaseDir, solutionPath);
 		} else {
 			Collection<File> solutionFiles = FileUtils.listFiles(
@@ -145,6 +143,7 @@ public class VisualStudioSolutionHierarchyHelper implements BatchExtension, Hier
 				+ VisualStudioPlugin.VISUAL_STUDIO_SKIPPED_PROJECT_PATTERN
 				+ "\".");
 
+		
 		return ImmutableSet
 				.<String> builder()
 				.addAll(Splitter.on(',').omitEmptyStrings()
