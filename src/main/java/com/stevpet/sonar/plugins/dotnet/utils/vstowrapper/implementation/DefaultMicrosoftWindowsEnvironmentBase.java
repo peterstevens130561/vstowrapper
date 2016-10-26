@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
@@ -38,16 +38,7 @@ public class DefaultMicrosoftWindowsEnvironmentBase implements
     @Override
     public VisualStudioSolution getCurrentSolution() {
         if (!didBuild) {
-            File solutionDir;
-            if (!project.isRoot()) {
-                int relativePathLength = project.getPath().length();
-                String absolutePath = fileSystem.baseDir().getAbsolutePath();
-                String parentPath = StringUtils.left(absolutePath,
-                        absolutePath.length() - relativePathLength);
-                solutionDir = new File(parentPath);
-            } else {
-                solutionDir = fileSystem.baseDir();
-            }
+            File solutionDir = getSolutionDirectory();
             hierarchyBuilder.build(solutionDir);
             solution = hierarchyBuilder.getSolution();
             List<VisualStudioProject> projects = hierarchyBuilder.getProjects();
@@ -55,6 +46,21 @@ public class DefaultMicrosoftWindowsEnvironmentBase implements
             didBuild = true;
         }
         return solution;
+    }
+
+    @Override
+    public File getSolutionDirectory() {
+        File solutionDir;
+        if (!project.isRoot()) {
+            int relativePathLength = project.getPath().length();
+            String absolutePath = fileSystem.baseDir().getAbsolutePath();
+            String parentPath = StringUtils.left(absolutePath,
+                    absolutePath.length() - relativePathLength);
+            solutionDir = new File(parentPath);
+        } else {
+            solutionDir = fileSystem.baseDir();
+        }
+        return solutionDir;
     }
 
     @Override

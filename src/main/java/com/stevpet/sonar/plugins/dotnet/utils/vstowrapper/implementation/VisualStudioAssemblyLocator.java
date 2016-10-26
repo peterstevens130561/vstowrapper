@@ -28,7 +28,7 @@ import com.google.common.collect.Lists;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.AssemblyLocator;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.config.Settings;

@@ -77,5 +77,8 @@ public interface MicrosoftWindowsEnvironment {
 
 
     List<VisualStudioProject> getTestProjects(Pattern pattern);
+
+
+    File getSolutionDirectory();
     
 }

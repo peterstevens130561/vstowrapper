@@ -2,7 +2,7 @@ package com.stevpet.sonar.plugins.common.parser.observerdsl;
 
 import java.util.function.Consumer;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.stevpet.sonar.plugins.common.parser.observer.EventObserver;
 import com.stevpet.sonar.plugins.common.parser.observer.ObserversRepository;
