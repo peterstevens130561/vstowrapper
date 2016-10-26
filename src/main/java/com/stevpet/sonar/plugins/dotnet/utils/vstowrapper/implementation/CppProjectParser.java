@@ -117,7 +117,7 @@ public class CppProjectParser implements VisualStudioProjectParser {
               throw new IllegalStateException("Error while parsing the Visual Studio project file: " + projectFile.getAbsolutePath(), e);
             } finally {
               closeXmlStream();
-              Closeables.closeQuietly(reader);
+              //Closeables.closeQuietly(reader);
             }
     }
     private boolean evalCondition(String value) {

@@ -124,7 +124,6 @@ public class VisualStudioCsProjectParser implements VisualStudioProjectParser {
                 throw new IllegalStateException("Error while parsing the Visual Studio project file: " + projectFile.getAbsolutePath(), e);
             } finally {
                 closeXmlStream();
-                Closeables.closeQuietly(reader);
             }
             project.setSourceFiles(filesBuilder.build())
             	.setOutputPaths(outputPathsBuilder.build())
