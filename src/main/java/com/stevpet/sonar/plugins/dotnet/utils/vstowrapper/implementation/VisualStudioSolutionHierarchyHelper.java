@@ -18,6 +18,7 @@ import org.sonar.api.config.Settings;
 import org.sonar.api.internal.google.common.base.Splitter;
 import org.sonar.api.internal.google.common.base.Throwables;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.AssemblyLocator;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;

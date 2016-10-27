@@ -7,6 +7,7 @@ import org.sonar.api.config.Settings;
 
 import org.sonar.api.resources.Project;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Predicates;
 
 public class MsBuildRunnerMicrosoftWindowsEnvironment extends DefaultMicrosoftWindowsEnvironment {

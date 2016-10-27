@@ -11,6 +11,7 @@ import org.sonar.api.config.Settings;
 
 import org.sonar.api.resources.Project;
 
+import com.google.common.base.Preconditions;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.MicrosoftWindowsEnvironment;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioSolution;
