@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
-
 import org.sonar.api.resources.Project;
 
 import com.google.common.base.Preconditions;
