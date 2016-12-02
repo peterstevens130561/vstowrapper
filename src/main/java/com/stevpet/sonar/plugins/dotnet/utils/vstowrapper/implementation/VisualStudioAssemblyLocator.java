@@ -40,6 +40,10 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
 
 class VisualStudioAssemblyLocator implements AssemblyLocator {
 
@@ -132,7 +136,7 @@ public File locateAssembly(String projectName, File projectFile, VisualStudioPro
   }
 
 private boolean isRelative(String path) {
-    return !path.matches("^\\/|([A-Z]:\\/).*");
+    return !path.matches("^\\/|([A-Za-z]:\\/).*");
 }
 
   private static class FileLastModifiedComparator implements Comparator<File>, Serializable {

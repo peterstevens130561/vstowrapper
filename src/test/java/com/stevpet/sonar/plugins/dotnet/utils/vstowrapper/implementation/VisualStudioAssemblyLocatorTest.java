@@ -96,6 +96,22 @@ public class VisualStudioAssemblyLocatorTest {
     }
 
     /**
+     * Created as result of strange behavior on December 1
+     */
+    @Test
+    public void AssemblyDefined_OutputPathsDefinedButWeird_ExpectSomething() {
+        File projectFile = new File("e:\\90.704\\JewelEarth\\Core\\Primitives\\.\\Primitives.Application.Core.UnitTest\\Primitives.Application.Core.UnitTest.csproj");
+        String outputType = "library";
+        String assemblyName="Primitives.Application.Core.UnitTest";
+        String path="e:\\90.704\\bin\\Debug\\.";
+
+        when(settings.getString("sonar.visualstudio.outputPaths")).thenReturn(path);
+        File artifactFile=whenLocatingAssembly(projectFile, outputType,assemblyName);
+        assertNotNull(artifactFile);
+        assertEquals("e:\\90.704\\bin\\Debug\\.\\Primitives.Application.Core.UnitTest.dll",artifactFile.getAbsolutePath());
+
+    }
+    /**
      * absolute outputpath defined, and project is setup ok, expect assembly to be in outputpath dir
      */
     @Test
