@@ -18,9 +18,21 @@ public class MsBuildRunnerMicrosoftWindowsEnvironment extends DefaultMicrosoftWi
     }
 
     @Override
-    public
-    File getSolutionDirectory() {
+    public File getSolutionDirectory() {
         File workDir = fileSystem.workDir();
+        if(workDir.getName().equals(".sonar")) {
+            LOG.info("using old resolution");
+            // this is the old way
+            return super.getSolutionDirectory();
+        }
+        // this is the new way
+        LOG.info("using new resolution");
+        if(!workDir.getAbsolutePath().contains(".sonarqube\\out\\.sonar")) {
+            String logMsg = "workdir can't be translated to solutiondir " + workDir.getAbsolutePath();
+            LOG.error(logMsg);
+            throw new IllegalStateException(logMsg);
+        }
+        
         while( workDir!=null && !workDir.getName().equals(".sonarqube")) {
             workDir=workDir.getParentFile();
         }

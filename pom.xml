@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.stevpet.sonar</groupId>
   <artifactId>plugins-dotnet-utils</artifactId>
-  <version>4.0</version>
+  <version>4.1-SNAPSHOT</version>
   <name>Own utilities</name>
   <description>Simple wrapper for the visualstudio solution &amp; project</description>
   <packaging>jar</packaging>
