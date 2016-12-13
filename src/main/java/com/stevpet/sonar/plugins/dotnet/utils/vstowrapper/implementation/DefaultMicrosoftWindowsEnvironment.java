@@ -22,6 +22,9 @@
  *******************************************************************************/
 package com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation;
 
+import java.io.File;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.BatchExtension;
@@ -49,5 +52,24 @@ public class DefaultMicrosoftWindowsEnvironment extends DefaultMicrosoftWindowsE
 		super(new VisualStudioSolutionHierarchyHelper(settings,
 				new VisualStudioAssemblyLocator(settings)),fs,project,settings);
 	}
+
+	public DefaultMicrosoftWindowsEnvironment(HierarchyBuilder hierarchyBuilder, FileSystem fileSystem, Project project,
+			Settings settings) {
+		super(hierarchyBuilder,fileSystem,project,settings);
+	}
 	
+    @Override
+    public File getSolutionDirectory(Project project, FileSystem fileSystem) {
+        File solutionDir;
+        if (!project.isRoot()) {
+            int relativePathLength = project.getPath().length();
+            String absolutePath = fileSystem.baseDir().getAbsolutePath();
+            String parentPath = StringUtils.left(absolutePath,
+                    absolutePath.length() - relativePathLength);
+            solutionDir = new File(parentPath);
+        } else {
+            solutionDir = fileSystem.baseDir();
+        }
+        return solutionDir;
+    }
 }

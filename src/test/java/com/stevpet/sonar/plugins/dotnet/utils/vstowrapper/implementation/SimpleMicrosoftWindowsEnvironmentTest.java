@@ -176,6 +176,6 @@ public class SimpleMicrosoftWindowsEnvironmentTest {
 	}
 
 	private void instantiate() {
-		microsoftWindowsEnvironment = new DefaultMicrosoftWindowsEnvironmentBase(hierarchyHelper,fileSystem,project,settings);
+		microsoftWindowsEnvironment = new DefaultMicrosoftWindowsEnvironment(hierarchyHelper,fileSystem,project,settings);
 	}
 }

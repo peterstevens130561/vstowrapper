@@ -18,12 +18,12 @@ public class MsBuildRunnerMicrosoftWindowsEnvironment extends DefaultMicrosoftWi
     }
 
     @Override
-    public File getSolutionDirectory() {
+    public File getSolutionDirectory(Project project, FileSystem fileSystem) {
         File workDir = fileSystem.workDir();
         if(workDir.getName().equals(".sonar")) {
             LOG.info("using old resolution");
             // this is the old way
-            return super.getSolutionDirectory();
+            return super.getSolutionDirectory(project,fileSystem);
         }
         // this is the new way
         LOG.info("using new resolution");
@@ -32,8 +32,9 @@ public class MsBuildRunnerMicrosoftWindowsEnvironment extends DefaultMicrosoftWi
             LOG.error(logMsg);
             throw new IllegalStateException(logMsg);
         }
-        
+    	LOG.warn("starting {} ",workDir.getAbsolutePath());
         while( workDir!=null && !workDir.getName().equals(".sonarqube")) {
+        	LOG.warn("trying {} ",workDir.getAbsolutePath());
             workDir=workDir.getParentFile();
         }
         

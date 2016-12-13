@@ -15,11 +15,11 @@ import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.MicrosoftWindowsEnviro
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioProject;
 import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.VisualStudioSolution;
 
-public class DefaultMicrosoftWindowsEnvironmentBase implements
+public abstract class DefaultMicrosoftWindowsEnvironmentBase implements
         MicrosoftWindowsEnvironment {
 
     private HierarchyBuilder hierarchyBuilder;
-    private Project project;
+    protected Project project;
     private FileSystem fileSystem;
     private boolean didBuild = false;
     private VisualStudioSolution solution;
@@ -38,7 +38,7 @@ public class DefaultMicrosoftWindowsEnvironmentBase implements
     @Override
     public VisualStudioSolution getCurrentSolution() {
         if (!didBuild) {
-            File solutionDir = getSolutionDirectory();
+            File solutionDir = getSolutionDirectory(project,fileSystem);
             hierarchyBuilder.build(solutionDir);
             solution = hierarchyBuilder.getSolution();
             List<VisualStudioProject> projects = hierarchyBuilder.getProjects();
@@ -48,21 +48,7 @@ public class DefaultMicrosoftWindowsEnvironmentBase implements
         return solution;
     }
 
-    @Override
-    public File getSolutionDirectory() {
-        File solutionDir;
-        if (!project.isRoot()) {
-            int relativePathLength = project.getPath().length();
-            String absolutePath = fileSystem.baseDir().getAbsolutePath();
-            String parentPath = StringUtils.left(absolutePath,
-                    absolutePath.length() - relativePathLength);
-            solutionDir = new File(parentPath);
-        } else {
-            solutionDir = fileSystem.baseDir();
-        }
-        return solutionDir;
-    }
-
+    public abstract File getSolutionDirectory(Project project, FileSystem fileSystem);
     @Override
     public void setCurrentSolution(VisualStudioSolution currentSolution) {
         Preconditions

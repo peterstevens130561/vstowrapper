@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.sonar.api.batch.InstantiationStrategy;
+import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.resources.Project;
 
 @InstantiationStrategy(InstantiationStrategy.PER_BATCH)
@@ -79,6 +80,6 @@ public interface MicrosoftWindowsEnvironment {
     List<VisualStudioProject> getTestProjects(Pattern pattern);
 
 
-    File getSolutionDirectory();
+    File getSolutionDirectory(Project project, FileSystem fs);
     
 }

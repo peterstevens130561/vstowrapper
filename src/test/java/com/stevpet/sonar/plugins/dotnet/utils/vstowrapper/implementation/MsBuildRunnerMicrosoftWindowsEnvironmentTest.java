@@ -33,7 +33,7 @@ public class MsBuildRunnerMicrosoftWindowsEnvironmentTest {
         String solution = "E:\\Development\\Radiant\\Main\\JewelEarth\\Core\\JewelExplorer";
         String path=solution + "\\.sonarqube\\out\\.sonar\\JewelExplorer_JewelExplorer_";
         when(fs.workDir()).thenReturn(new File(path));
-        File actualDir = mwe.getSolutionDirectory();
+        File actualDir = mwe.getSolutionDirectory(project,fs);
         assertEquals(solution,actualDir.getAbsolutePath());
     }
 }

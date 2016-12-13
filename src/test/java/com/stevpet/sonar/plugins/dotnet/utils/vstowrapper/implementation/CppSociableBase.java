@@ -57,7 +57,7 @@ public class CppSociableBase {
         when(settings.getString("sonar.dotnet.visualstudio.solution.file")).thenReturn(pureCppSolutionFile.getName());
         when(project.isRoot()).thenReturn(true);
         HierarchyBuilder hierarchyBuilder = new VisualStudioSolutionHierarchyHelper(settings,assemblyLocator);
-        microsoftWindowsEnvironment = new DefaultMicrosoftWindowsEnvironmentBase(hierarchyBuilder,fileSystem,project,settings);
+        microsoftWindowsEnvironment = new DefaultMicrosoftWindowsEnvironment(hierarchyBuilder,fileSystem,project,settings);
         builder = new VisualStudioProjectBuilder(settings, microsoftWindowsEnvironment,assemblyLocator);
 
 
