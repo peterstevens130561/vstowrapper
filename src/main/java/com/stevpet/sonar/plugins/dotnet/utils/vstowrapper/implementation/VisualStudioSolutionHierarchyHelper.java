@@ -76,6 +76,7 @@ public class VisualStudioSolutionHierarchyHelper implements BatchExtension, Hier
 			Collection<File> solutionFiles = FileUtils.listFiles(
 					projectBaseDir, new String[] { "sln" }, false);
 			if (solutionFiles.isEmpty()) {
+				LOG.error("No solution files found in {}" + projectBaseDir.getAbsolutePath() );
 				result = null;
 			} else if (solutionFiles.size() == 1) {
 				result = solutionFiles.iterator().next();
