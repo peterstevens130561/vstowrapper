@@ -1,7 +1,9 @@
 package com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.implementation;
 
 import java.io.File;
+import java.util.Collection;
 
+import org.apache.commons.io.FileUtils;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
@@ -20,6 +22,7 @@ public class MsBuildRunnerMicrosoftWindowsEnvironment extends DefaultMicrosoftWi
     @Override
     public File getSolutionDirectory(Project project, FileSystem fileSystem) {
         File workDir = fileSystem.workDir();
+        File baseDir = fileSystem.baseDir();
         if(workDir.getName().equals(".sonar")) {
             LOG.info("using old resolution");
             // this is the old way
@@ -27,18 +30,24 @@ public class MsBuildRunnerMicrosoftWindowsEnvironment extends DefaultMicrosoftWi
         }
         // this is the new way
         LOG.info("using new resolution");
-        if(!workDir.getAbsolutePath().contains(".sonarqube\\out\\.sonar")) {
-            String logMsg = "workdir can't be translated to solutiondir " + workDir.getAbsolutePath();
-            LOG.error(logMsg);
-            throw new IllegalStateException(logMsg);
+        Collection<File> solutions;
+    	File currentDir=baseDir;
+        if(project.isModule()) {
+
+        	do {
+        		currentDir=currentDir.getParentFile();
+        		if(currentDir == null) {
+        			String msg = "could not find solution for module " +fileSystem.baseDir().getAbsolutePath();
+        			LOG.error(msg);
+        			throw new IllegalStateException(msg);
+        		}
+        		LOG.info("trying {}",currentDir.getAbsolutePath());
+        		solutions=FileUtils.listFiles(currentDir, new String[] { "sln" }, false);
+        		LOG.info("found {} solutions",solutions.size());
+        	} while(solutions.size()==0)  ;
+
         }
-    	LOG.warn("starting {} ",workDir.getAbsolutePath());
-        while( workDir!=null && !workDir.getName().equals(".sonarqube")) {
-        	LOG.warn("trying {} ",workDir.getAbsolutePath());
-            workDir=workDir.getParentFile();
-        }
-        
-        Preconditions.checkNotNull(workDir,"could not find solutionDir for " + fileSystem.workDir());
-        return workDir.getParentFile();
+
+        return currentDir;
     }
 }
