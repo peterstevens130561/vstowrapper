@@ -92,6 +92,37 @@ public class MsBuildRunnerMicrosoftWindowsEnvironmentTest {
         assertSolutionFound(actualDir);
     }
     
+    @Test
+    public void projectBaseDirNotSet_ShouldThrowException() {
+    	File baseDir=solutionFile.getParentFile();
+    	File workDir=new File(baseDir,".sonarqube\\out\\.sonar\\ReferenceArchitecture_ReferenceArchitecture_02728809-7D73-4");
+        setupModuleMocks(baseDir, workDir);
+        when(settings.getString(eq("sonar.projectBaseDir"))).thenReturn(null);
+    	try {
+            File actualDir = mwe.getSolutionDirectory(project,fs);
+            
+    	} catch (IllegalStateException e) {
+    		return ;
+    	}
+    	fail("expected exception, as the projectBaseDir property is not set");
+    }
+    
+    @Test
+    public void NoSolutionInProjectBaseDir_ShouldThrowException() {
+    	File baseDir=solutionFile.getParentFile();
+    	File workDir=new File(baseDir,".sonarqube\\out\\.sonar\\ReferenceArchitecture_ReferenceArchitecture_02728809-7D73-4");
+        setupModuleMocks(baseDir, workDir);
+        when(settings.getString(eq("sonar.projectBaseDir"))).thenReturn(solutionFile.getParentFile().getParentFile().getAbsolutePath());
+    	try {
+    		mwe.getSolutionDirectory(project,fs);
+            
+    	} catch (IllegalStateException e) {
+    		assertTrue("expected other message, but got" + e.getMessage(),e.getMessage().contains("has no solutions"));
+    		return ;
+    	}
+    	fail("expected exception, as the projectBaseDir property points to a directory without solution");
+    }
+    
 	private File getModuleDir() {
 		File moduleProject = TestUtils.getResource(solutionRoot+"\\Reference.Addin\\Reference.Addin.csproj");
     	assertNotNull(moduleProject);
@@ -117,6 +148,7 @@ public class MsBuildRunnerMicrosoftWindowsEnvironmentTest {
     	File workDir=new File(rootDir,".sonarqube\\out\\.sonar\\ReferenceArchitecture_ReferenceArchitecture_02728809-7D73-4");
 		return workDir;
 	}
+
     
 	/**
 	 * In the current setup then we have a baseDir, a workDir, and a projectBaseDir

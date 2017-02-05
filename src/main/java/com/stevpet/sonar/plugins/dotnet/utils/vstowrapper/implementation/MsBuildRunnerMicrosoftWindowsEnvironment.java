@@ -21,13 +21,13 @@ public class MsBuildRunnerMicrosoftWindowsEnvironment extends DefaultMicrosoftWi
     @Override
     public File getSolutionDirectory(Project project, FileSystem fileSystem) {
         File workDir = fileSystem.workDir();
-        File baseDir = fileSystem.baseDir();
         if(workDir.getName().equals(".sonar")) {
             LOG.info("using old resolution");
             // this is the old way
             return super.getSolutionDirectory(project,fileSystem);
         }
         // this is the new way
+        // msbuild pre/end step will make sure sonar.projectBaseDir is set
         LOG.info("using new resolution");
         String solutionBaseDirSetting=settings.getString("sonar.projectBaseDir");
         if(StringUtils.isEmpty(solutionBaseDirSetting)) {
@@ -41,25 +41,4 @@ public class MsBuildRunnerMicrosoftWindowsEnvironment extends DefaultMicrosoftWi
         return solutionBaseDir;
     }
 
-	private File findSolutionInParents(FileSystem fileSystem, File currentDir) {
-		Collection<File> solutions;
-		do {
-			currentDir=currentDir.getParentFile();
-			solutions = getSolutionsInDir(fileSystem, currentDir);
-			LOG.info("found {} solutions",solutions.size());
-		} while(solutions.size()==0)  ;
-		return currentDir;
-	}
-
-	private Collection<File> getSolutionsInDir(FileSystem fileSystem, File currentDir) {
-		Collection<File> solutions;
-		if(currentDir == null) {
-			String msg = "could not find solution for module " +fileSystem.baseDir().getAbsolutePath();
-			LOG.error(msg);
-			throw new IllegalStateException(msg);
-		}
-		LOG.info("trying {}",currentDir.getAbsolutePath());
-		solutions=FileUtils.listFiles(currentDir, new String[] { "sln" }, false);
-		return solutions;
-	}
 }
