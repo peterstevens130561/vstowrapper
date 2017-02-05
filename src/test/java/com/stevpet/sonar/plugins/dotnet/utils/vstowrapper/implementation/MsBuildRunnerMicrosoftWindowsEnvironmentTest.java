@@ -10,6 +10,7 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import static org.mockito.Mockito.*;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
@@ -25,8 +26,8 @@ public class MsBuildRunnerMicrosoftWindowsEnvironmentTest {
     @Mock private FileSystem fs;
     @Mock private Project project;
     private MicrosoftWindowsEnvironment mwe;
-
-    
+    private String solutionRoot = "MsBuildRunnerMicrosoftWindowsEnvironment\\Addins\\ReferenceArchitecture";
+    private File solutionFile = TestUtils.getResource(solutionRoot + "\\ReferenceArchitecture.sln");
     @Before()
     public void before() {
         org.mockito.MockitoAnnotations.initMocks(this);
@@ -34,18 +35,21 @@ public class MsBuildRunnerMicrosoftWindowsEnvironmentTest {
     }
     
     /**
-     * Tests that we find the solution for a module
+     * Tests that we find the solutionRoot for a module
      */
     @Test
     public void moduleInHierarchy() {
     	File baseDir = getModuleDir();
     	File workDir = getWorkDirBelowSolution(baseDir);
-        String solution = "MsBuildRunnerMicrosoftWindowsEnvironment\\Addins\\ReferenceArchitecture";
         setupModuleMocks(baseDir, workDir);
         
         File actualDir = mwe.getSolutionDirectory(project,fs);
-        assertTrue(actualDir.getAbsolutePath() + " does not end with " + solution,actualDir.getAbsolutePath().endsWith(solution));
+        assertSolutionFound(actualDir);
     }
+
+	private void assertSolutionFound(File actualDir) {
+		assertTrue(actualDir.getAbsolutePath() + " does not end with " + solutionRoot,actualDir.getAbsolutePath().endsWith(solutionRoot));
+	}
 
     
     /**
@@ -56,54 +60,40 @@ public class MsBuildRunnerMicrosoftWindowsEnvironmentTest {
     	File baseDir = getModuleDir();
     	File workDir = getWorkDirOutsideHierarchy();
         setupModuleMocks(baseDir, workDir);
-        
-        String solution = "MsBuildRunnerMicrosoftWindowsEnvironment\\Addins\\ReferenceArchitecture";
-
-        
+               
         File actualDir = mwe.getSolutionDirectory(project,fs);
-        assertTrue(actualDir.getAbsolutePath() + " does not end with " + solution,actualDir.getAbsolutePath().endsWith(solution));
+        assertSolutionFound(actualDir);
     }
 
+    /**
+     * The directory is outside the solution, but we should still have the solution.
+     */
     @Test
     public void moduleNotInHierarchy() {
     	File baseDir = getCorruptModuleDir();
     	File workDir = getWorkDirBelowSolution(baseDir);
-    	
         setupModuleMocks(baseDir, workDir);
         
-        try {
-        	mwe.getSolutionDirectory(project,fs);
-        } catch ( IllegalStateException e ) {
-        	return ;
-        }
-        fail("should not have found solution");
+        File actualDir=mwe.getSolutionDirectory(project,fs);
+        assertSolutionFound(actualDir);
     }
 
-	private void setupModuleMocks(File baseDir, File workDir) {
-		when(fs.baseDir()).thenReturn(baseDir);
-        when(fs.workDir()).thenReturn(workDir);
-        when(project.isModule()).thenReturn(true);
-	}
+
     /**
-     * Tests that we find the solution for the root project
+     * Tests that we find the solutionRoot for the root project
      */
     @Test
     public void rootInHierarchy() {
-    	File moduleProject = TestUtils.getResource("MsBuildRunnerMicrosoftWindowsEnvironment\\Addins\\ReferenceArchitecture\\ReferenceArchitecture.sln");
-    	assertNotNull(moduleProject);
-    	File baseDir=moduleProject.getParentFile();
+    	File baseDir=solutionFile.getParentFile();
     	File workDir=new File(baseDir,".sonarqube\\out\\.sonar\\ReferenceArchitecture_ReferenceArchitecture_02728809-7D73-4");
-        String solution = "MsBuildRunnerMicrosoftWindowsEnvironment\\Addins\\ReferenceArchitecture";
-        String path=solution + "\\Reference.Addin";
-        when(fs.baseDir()).thenReturn(baseDir);
-        when(fs.workDir()).thenReturn(workDir);
-        when(project.isModule()).thenReturn(false);
+        setupModuleMocks(baseDir, workDir);
         
         File actualDir = mwe.getSolutionDirectory(project,fs);
-        assertTrue(actualDir.getAbsolutePath() + " does not end with " + solution,actualDir.getAbsolutePath().endsWith(solution));
+        assertSolutionFound(actualDir);
     }
+    
 	private File getModuleDir() {
-		File moduleProject = TestUtils.getResource("MsBuildRunnerMicrosoftWindowsEnvironment\\Addins\\ReferenceArchitecture\\Reference.Addin\\Reference.Addin.csproj");
+		File moduleProject = TestUtils.getResource(solutionRoot+"\\Reference.Addin\\Reference.Addin.csproj");
     	assertNotNull(moduleProject);
     	File baseDir=moduleProject.getParentFile();
 		return baseDir;
@@ -128,6 +118,16 @@ public class MsBuildRunnerMicrosoftWindowsEnvironmentTest {
 		return workDir;
 	}
     
-    
+	/**
+	 * In the current setup then we have a baseDir, a workDir, and a projectBaseDir
+	 * @param baseDir
+	 * @param workDir
+	 */
+	private void setupModuleMocks(File baseDir, File workDir) {
+		when(fs.baseDir()).thenReturn(baseDir);
+        when(fs.workDir()).thenReturn(workDir);
+        when(project.isModule()).thenReturn(true);
+        when(settings.getString(eq("sonar.projectBaseDir"))).thenReturn(solutionFile.getParentFile().getAbsolutePath());
+	}
 
 }
