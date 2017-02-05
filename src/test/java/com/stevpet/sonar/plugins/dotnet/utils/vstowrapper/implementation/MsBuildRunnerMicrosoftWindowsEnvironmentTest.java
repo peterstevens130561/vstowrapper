@@ -22,7 +22,8 @@ import com.stevpet.sonar.plugins.dotnet.utils.vstowrapper.MicrosoftWindowsEnviro
 
 public class MsBuildRunnerMicrosoftWindowsEnvironmentTest {
     
-    @Mock private Settings settings;
+    private static final String SONAR_SOLUTION_DIR_PROPERTY = "sonar.solutionDir";
+	@Mock private Settings settings;
     @Mock private FileSystem fs;
     @Mock private Project project;
     private MicrosoftWindowsEnvironment mwe;
@@ -97,14 +98,14 @@ public class MsBuildRunnerMicrosoftWindowsEnvironmentTest {
     	File baseDir=solutionFile.getParentFile();
     	File workDir=new File(baseDir,".sonarqube\\out\\.sonar\\ReferenceArchitecture_ReferenceArchitecture_02728809-7D73-4");
         setupModuleMocks(baseDir, workDir);
-        when(settings.getString(eq("sonar.projectBaseDir"))).thenReturn(null);
+        when(settings.getString(eq(SONAR_SOLUTION_DIR_PROPERTY))).thenReturn(null);
     	try {
             File actualDir = mwe.getSolutionDirectory(project,fs);
             
     	} catch (IllegalStateException e) {
     		return ;
     	}
-    	fail("expected exception, as the projectBaseDir property is not set");
+    	fail("expected exception, as the solutionDir property is not set");
     }
     
     @Test
@@ -112,7 +113,7 @@ public class MsBuildRunnerMicrosoftWindowsEnvironmentTest {
     	File baseDir=solutionFile.getParentFile();
     	File workDir=new File(baseDir,".sonarqube\\out\\.sonar\\ReferenceArchitecture_ReferenceArchitecture_02728809-7D73-4");
         setupModuleMocks(baseDir, workDir);
-        when(settings.getString(eq("sonar.projectBaseDir"))).thenReturn(solutionFile.getParentFile().getParentFile().getAbsolutePath());
+        when(settings.getString(eq(SONAR_SOLUTION_DIR_PROPERTY))).thenReturn(solutionFile.getParentFile().getParentFile().getAbsolutePath());
     	try {
     		mwe.getSolutionDirectory(project,fs);
             
@@ -159,7 +160,7 @@ public class MsBuildRunnerMicrosoftWindowsEnvironmentTest {
 		when(fs.baseDir()).thenReturn(baseDir);
         when(fs.workDir()).thenReturn(workDir);
         when(project.isModule()).thenReturn(true);
-        when(settings.getString(eq("sonar.projectBaseDir"))).thenReturn(solutionFile.getParentFile().getAbsolutePath());
+        when(settings.getString(eq(SONAR_SOLUTION_DIR_PROPERTY))).thenReturn(solutionFile.getParentFile().getAbsolutePath());
 	}
 
 }

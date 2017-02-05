@@ -12,6 +12,8 @@ import org.sonar.api.resources.Project;
 
 public class MsBuildRunnerMicrosoftWindowsEnvironment extends DefaultMicrosoftWindowsEnvironment {
 
+
+	private static final String SONAR_SOLUTION_DIR_PROPERTY = "sonar.solutionDir";
 	private Settings settings ;
     public MsBuildRunnerMicrosoftWindowsEnvironment(Settings settings, FileSystem fs, Project project) {
         super(settings, fs, project);
@@ -29,14 +31,14 @@ public class MsBuildRunnerMicrosoftWindowsEnvironment extends DefaultMicrosoftWi
         // this is the new way
         // msbuild pre/end step will make sure sonar.projectBaseDir is set
         LOG.info("using new resolution");
-        String solutionBaseDirSetting=settings.getString("sonar.projectBaseDir");
+        String solutionBaseDirSetting=settings.getString(SONAR_SOLUTION_DIR_PROPERTY);
         if(StringUtils.isEmpty(solutionBaseDirSetting)) {
-        	throw new IllegalStateException("sonar.projectBaseDir is not set");
+        	throw new IllegalStateException(SONAR_SOLUTION_DIR_PROPERTY + " is not set");
         }
         File solutionBaseDir=new File(solutionBaseDirSetting);
         Collection<File> solutionFiles=FileUtils.listFiles(solutionBaseDir, new String[] { "sln" }, false);
         if(solutionFiles.size()==0) {
-        	throw new IllegalStateException("sonar.projectBaseDir=" + solutionBaseDirSetting + " has no solutions");
+        	throw new IllegalStateException(SONAR_SOLUTION_DIR_PROPERTY + "=" + solutionBaseDirSetting + " has no solutions");
         }
         return solutionBaseDir;
     }
